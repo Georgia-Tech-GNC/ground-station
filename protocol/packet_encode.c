@@ -109,4 +109,6 @@ int process_incoming_byte(const uint8_t inputted_byte, uint8_t *buffer, const in
             return -buffer[2];
         }
     }
+    
+    return current_buffer_size + 1;
 }
