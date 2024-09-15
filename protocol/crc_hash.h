@@ -1,4 +1,3 @@
-
 #ifndef CRC_HASH
 #define CRC_HASH
 
