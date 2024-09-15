@@ -1,7 +1,7 @@
 import dearpygui.dearpygui as dpg
 from typing import Callable
 
-class ButtonInput:
+class RocketCommands:
 
     def __init__(self, button_names: list[str], button_callbacks: list[Callable]):
         self.button_tags = [dpg.generate_uuid() for _ in range(len(button_names))]
