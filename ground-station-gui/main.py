@@ -1,6 +1,6 @@
 import dearpygui.dearpygui as dpg
 import numpy as np
-from gui_templates.DataViewerWindow import DataViewerWindow
+from gui_templates.DataViewerWindow import DataViewerWindow, DataTypes
 from gui_templates.RocketCommandsWindow import RocketCommands
 from gui_templates.AltitudeGraphWindow import AltitudeGraph
 from gui_templates.VelocityGraphWindow import VelocityGraph
@@ -62,7 +62,7 @@ dpg.create_context()
 dpg.configure_app(docking=True, docking_space=True)
 
 with dpg.window(label="Data Viewer",width=500, height=250, tag="data_viewer", pos=(50, 50)):
-    dvw = DataViewerWindow(["Altitude", "Velocity", "Attitude", "Health Status"], [expand_altitude, expand_velocity, expand_attitude, expand_health_status])
+    dvw = DataViewerWindow([("Altitude", "meters"), ("Velocity", "m/s"), ("Current", "amps"), "Attitude", "Health Status"], [DataTypes.FLOAT, DataTypes.VECTOR, DataTypes.FLOAT, DataTypes.QUATERNION, DataTypes.STRING])
     
 with dpg.window(label="Commands to Rocket",width=300, height=200, tag="rocket_commands", pos=(1000, 50)):
     RocketCommands(["Sleep to Ground", "Gound to Armed"], [sleep_to_ground, ground_to_armed])
@@ -87,14 +87,16 @@ vg.update_graph_data(x_scale, y2)
 a2g.update_graph_data(x_scale, y3)
 
 dvw.set_value(0, y1[-1])
-dvw.set_value(1, y2[-1])
+dvw.set_value(1, np.array([0.2345, -.1451, .412]))
 dvw.set_value(2, y3[-1])
+dvw.set_value(3, np.array([0.2807942, 0.2685945, -0.5123368, 0.7658476]))
+dvw.set_value(4, "Armed")
 
 
-dpg.create_viewport(title='Custom Title', width=1400, height=900)
+dpg.create_viewport(title='GNC Ground Station', width=1400, height=900)
 # dpg.maximize_viewport()
 
-log = mvLogger()
+log = mvLogger(dpg.add_window(label='Debug Log'))
 log.log("Initialized Ground Station")
 log.log_warning("NO RASBERRY PI CONNECTED")
 log.log_critical("ABORTING!!")
