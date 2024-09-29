@@ -1,6 +1,10 @@
 {
     "files.associations": {
         "*.tex": "latex",
-        "stdbool.h": "c"
+        "stdbool.h": "c",
+        "transmission_manager.h": "c",
+        "stdnoreturn.h": "c",
+        "crc_hash.h": "c",
+        "string": "c"
     }
 }

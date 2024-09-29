@@ -7,7 +7,7 @@
 #define ATTEMPT_MESSAGE_SENDS 5 
 
 #define MAX_SIMULTANEOUS_MESSAGE_SENDS 5
-
+/*
 struct PendingCommand {
     time_t last_send_time;
     uint8_t commandId;
@@ -70,3 +70,4 @@ void send_command(uint8_t command_stack_index) {
 void confirm_command_send(uint8_t commandId) {
     // TODO
 }
+*/

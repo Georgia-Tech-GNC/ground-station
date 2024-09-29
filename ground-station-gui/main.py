@@ -98,7 +98,7 @@ dpg.create_viewport(title='GNC Ground Station', width=1400, height=900)
 
 log = mvLogger(dpg.add_window(label='Debug Log'))
 log.log("Initialized Ground Station")
-log.log_warning("NO RASBERRY PI CONNECTED")
+log.log_warning("NO RASPBERRY PI CONNECTED")
 log.log_critical("ABORTING!!")
 
 dpg.setup_dearpygui()

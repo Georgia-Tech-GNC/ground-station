@@ -38,18 +38,18 @@ int cobs_encode(const uint8_t *rawData, const uint8_t dataSize, uint8_t *encoded
 
 
 int generate_packet(const uint8_t *rawData, const uint8_t dataSize, uint8_t *packetizedData, const uint8_t messageID) {
-    packetizedData[0] = 0x00;                               // Byte 1: 0x00
-    packetizedData[1] = messageID;                          // Byte 2: message id
-    packetizedData[2] = dataSize;                           // Byte 3: payload size
+    packetizedData[0] = 0x00;                               // Byte 0: 0x00
+    packetizedData[1] = messageID;                          // Byte 1: message id
+    packetizedData[2] = dataSize;                           // Byte 2: payload size
     int cobs_overwrite_index = cobs_encode(rawData, dataSize, packetizedData, 3);  
-                                                            // Byte 4 COBS byte         
-                                                            // Bytes 5 - dataSize+3: payload
+                                                            // Byte 3 COBS byte         
+                                                            // Bytes 4 - dataSize+3: payload
 
     // Calculate the CRC-8 checksum
     uint8_t crc = calculate_crc8_hash(packetizedData, dataSize + 4);
                                                    
     if (crc == 0x00) {                                      // Byte dataSize+4: checksum
-        packetizedData[dataSize + 4] = 0xFF;
+        packetizedData[dataSize + 4] = 1;
     } else {
         packetizedData[dataSize + 4] = crc;
         packetizedData[cobs_overwrite_index]++;     // cobs encoding automatically assumed that crc == 0, so we correct the assumption by
@@ -61,13 +61,16 @@ int generate_packet(const uint8_t *rawData, const uint8_t dataSize, uint8_t *pac
 
 
 bool verify_packet(uint8_t *rawData, const size_t dataSize) {
+    if (dataSize < 5) return false;
     // First either de-stuff the crc_hash byte if needed or move back the last cobs pointer
     
     int next_cobs_byte = 3;
     while (next_cobs_byte < dataSize) {
         int increment = rawData[next_cobs_byte];
-        if (next_cobs_byte + increment == dataSize - 1) {
+        if (increment == 0) return false; // Avoid infinite loops
+        else if (next_cobs_byte + increment == dataSize - 1) {
             rawData[dataSize-1] = 0;
+            break;
         } else if (next_cobs_byte + increment >= dataSize) {
             rawData[next_cobs_byte]--;
         }
@@ -79,17 +82,22 @@ bool verify_packet(uint8_t *rawData, const size_t dataSize) {
 }
 
 
-void extract_packet(uint8_t *rawData, const size_t dataSize, uint8_t *extractedData) {
+uint8_t extract_packet(uint8_t *rawData, const size_t dataSize, uint8_t *extractedData) {
+    uint8_t message_id = rawData[1];
+
     // First de-stuff the packet
     int next_cobs_byte = 3;
-    while (next_cobs_byte < dataSize) {
+    while (next_cobs_byte < dataSize - 1) {
         int increment = rawData[next_cobs_byte];
+        if (increment == 0) return 0;
         rawData[next_cobs_byte] = 0;
 
         next_cobs_byte += increment;
     }  
 
     memcpy(extractedData, rawData + 4, dataSize - 5);
+
+    return message_id;
 }
 
 int process_incoming_byte(const uint8_t inputted_byte, uint8_t *buffer, const int current_buffer_size) {

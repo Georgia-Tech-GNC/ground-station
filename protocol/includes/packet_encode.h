@@ -6,7 +6,7 @@
 #include <stddef.h>
 
 /** 
- * Takes any raw data, and converts into a packet (complete with byte stuffing and a checksum)
+ * Takes any raw data (up to 253 bytes), and converts into a packet (complete with byte stuffing and a checksum)
  * Packet format: 0x00 [messageID - 1 byte] [payload size - 1 byte] [COBS] [payload] [checksum(CRC-8) - 1 byte]
  * 
  * @param rawData           the raw payload data as an array of uint8_t
@@ -26,8 +26,10 @@ bool verify_packet(uint8_t *rawData, size_t dataSize);
 /** Extracts the stored data from a packet and copies it to the extractedData location 
  * 
  * This method assumes that the packet was verified. Please use verify_packet first.
+ * 
+ * @return      the message id, or 0 if the message was corrupted
  */
-void extract_packet(uint8_t *rawData, const size_t dataSize, uint8_t *extractedData);
+uint8_t extract_packet(uint8_t *rawData, const size_t dataSize, uint8_t *extractedData);
 
 
 /** Process the incoming byte and add it to a buffer

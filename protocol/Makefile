@@ -1,8 +1,46 @@
-CC=gcc
-CFLAGS=-I.
+TARGET_EXEC ?= tests.out
 
-main: main.c crc_hash.c packet_encode.c
-	$(CC) -o main main.c crc_hash.c packet_encode.c -I.
+BUILD_DIR ?= ./build
+SRC_DIRS ?= ./src ./includes ./lib ./test
+
+SRCS := $(shell find $(SRC_DIRS) -name *.cpp -or -name *.c -or -name *.s)
+OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
+DEPS := $(OBJS:.o=.d)
+
+INC_DIRS := $(shell find $(SRC_DIRS) -type d)
+INC_FLAGS := $(addprefix -I,$(INC_DIRS))
+
+CPPFLAGS ?= $(INC_FLAGS) -MMD -MP
+
+$(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
+	$(CC) $(OBJS) -o $@ $(LDFLAGS)
+
+# assembly
+$(BUILD_DIR)/%.s.o: %.s
+	$(MKDIR_P) $(dir $@)
+	$(AS) $(ASFLAGS) -c $< -o $@
+
+# c source
+$(BUILD_DIR)/%.c.o: %.c
+	$(MKDIR_P) $(dir $@)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+
+# c++ source
+$(BUILD_DIR)/%.cpp.o: %.cpp
+	$(MKDIR_P) $(dir $@)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
+
+all: run-tests
+
+.PHONY: clean
 
 clean:
-	rm -f ./*.o ./*~ 
+	$(RM) -r $(BUILD_DIR)
+
+run-tests:
+	./build/tests.out
+
+-include $(DEPS)
+
+MKDIR_P ?= mkdir -p
+

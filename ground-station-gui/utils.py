@@ -19,7 +19,7 @@ def quaternion_to_euler(quat: np.ndarray[np.float32]) -> np.ndarray[np.float32]:
     t4 = +1.0 - 2.0 * (quat[2] * quat[2] + quat[3] * quat[3])
     yaw_z = math.atan2(t3, t4)
     
-    return np.array([roll_x, pitch_y, yaw_z]) * RAD_2_DEG 
+    return np.array([roll_x, pitch_y, yaw_z], dtype=np.float32) * RAD_2_DEG
 
 
 # {w, x, y, z}
