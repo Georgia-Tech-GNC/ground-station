@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "crc_hash.h"
 
@@ -113,8 +114,8 @@ int process_incoming_byte(const uint8_t inputted_byte, uint8_t *buffer, const in
     buffer[current_buffer_size] = inputted_byte;
 
     if (current_buffer_size >= 2) { // We know the size
-        if (current_buffer_size + 1 >= buffer[2]) {
-            return -buffer[2];
+        if (current_buffer_size + 1 >= buffer[2] + 5) {
+            return -buffer[2] - 5;
         }
     }
     

@@ -69,8 +69,11 @@ void testPacketEncode() {
         uint8_t *original = malloc(sizes[t]*sizeof(uint8_t));
         uint8_t *packet = malloc(270*sizeof(uint8_t));
         uint8_t *extracted = malloc((10+sizes[t])*sizeof(uint8_t));
+        uint8_t *buffer = malloc(500*sizeof(uint8_t));
 
         uint8_t emptyByte = rand();
+
+        int miracle_baby_counter = 0;
 
         for (int attempt = 0; attempt < 1000; attempt++) {
             for (int i = 0; i < sizes[t]; i++) {
@@ -94,6 +97,28 @@ void testPacketEncode() {
             for (int i = 0; i < 10; i++) TEST_ASSERT_EQUAL_UINT8(emptyByte, packet[i]); // Test for out-of-bounds
             for (int i = packetLen + 10; i < 270; i++) TEST_ASSERT_EQUAL_UINT8(emptyByte, packet[i]); // Test for out-of-bounds 
             for (int i = 11; i < packetLen + 10; i++) TEST_ASSERT_NOT_EQUAL_UINT8(0, packet[i]); // Make sure no extra 0 bits
+
+            int current_size = 0;
+            for (int i = 0; i < 134; i++) {
+                current_size = process_incoming_byte((uint8_t) rand(), buffer, current_size);
+                if (current_size < 0) {
+                    printf("Created a packet out of nothing!\n");
+                    if (verify_packet(buffer, -current_size))
+                        miracle_baby_counter++;
+                    current_size = 0;
+                }
+            }
+      
+            for (int i = 0; i < sizes[t]+5; i++) {
+                TEST_ASSERT_TRUE(current_size >= 0);
+                current_size = process_incoming_byte((packet+10)[i], buffer, current_size);
+            }
+            TEST_ASSERT_TRUE(current_size < 0);
+            TEST_ASSERT_EQUAL_UINT8(sizes[t] + 5, -current_size);
+
+            for (int i = 0 ; i < sizes[t]+5; i++) {
+                TEST_ASSERT_EQUAL_UINT8((packet+10)[i], buffer[i]);
+            }
             
             TEST_ASSERT_EQUAL_UINT8(0, packet[10]);
             TEST_ASSERT_EQUAL_UINT8(messageId, packet[11]);
@@ -109,9 +134,13 @@ void testPacketEncode() {
             }
         }
 
+
+        printf("Created %d miracle babies\n", miracle_baby_counter);
+
         free(packet);
         free(original);
         free(extracted);
+        free(buffer);
     }
 }
 
