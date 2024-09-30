@@ -1,3 +1,4 @@
 gs-gui/
 ground-station-gui/.idea/
 .direnv
+__pycache__
