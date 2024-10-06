@@ -1,2 +1,4 @@
 gs-gui/
 ground-station-gui/.idea/
+ground-station-core/build
+protocol/build
