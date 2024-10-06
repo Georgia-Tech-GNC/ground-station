@@ -29,6 +29,11 @@
         "ParachuteDeploymentPhase": {
             "deployed": "int",
             "eta_to_deployment": "float"
+        }, 
+
+        "TestPacket": {
+            "counter": "int",
+            "value1": "float"
         }
     }, 
 

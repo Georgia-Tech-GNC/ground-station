@@ -25,6 +25,8 @@
 	#define WEB_SERVER_URL "http://0.0.0.0:8080"
 #endif
 
+#define MAX_SQL_VAL_SIZE 30
+
 struct RocketKinematics {
 	float attitude_w;
 	float attitude_x;
@@ -35,6 +37,7 @@ struct RocketKinematics {
 };
 #define ROCKETKINEMATICS_MSG_ID 2
 #define ROCKETKINEMATICS_SIZE sizeof(struct RocketKinematics)
+#define ROCKETKINEMATICS_NUM_VALUES 6
 #ifdef INCLUDE_PROTOCOL_SQL_MACROS
 	#define ROCKETKINEMATICS_SQL_TABLE_GEN "CREATE TABLE RocketKinematics ( " \
 		"attitude_w real," \
@@ -70,6 +73,7 @@ struct MasterElectric {
 };
 #define MASTERELECTRIC_MSG_ID 3
 #define MASTERELECTRIC_SIZE sizeof(struct MasterElectric)
+#define MASTERELECTRIC_NUM_VALUES 4
 #ifdef INCLUDE_PROTOCOL_SQL_MACROS
 	#define MASTERELECTRIC_SQL_TABLE_GEN "CREATE TABLE MasterElectric ( " \
 		"voltage real," \
@@ -98,6 +102,7 @@ struct RocketState {
 };
 #define ROCKETSTATE_MSG_ID 4
 #define ROCKETSTATE_SIZE sizeof(struct RocketState)
+#define ROCKETSTATE_NUM_VALUES 3
 #ifdef INCLUDE_PROTOCOL_SQL_MACROS
 	#define ROCKETSTATE_SQL_TABLE_GEN "CREATE TABLE RocketState ( " \
 		"current_state int," \
@@ -125,6 +130,7 @@ struct ActuatorHealths {
 };
 #define ACTUATORHEALTHS_MSG_ID 5
 #define ACTUATORHEALTHS_SIZE sizeof(struct ActuatorHealths)
+#define ACTUATORHEALTHS_NUM_VALUES 5
 #ifdef INCLUDE_PROTOCOL_SQL_MACROS
 	#define ACTUATORHEALTHS_SQL_TABLE_GEN "CREATE TABLE ActuatorHealths ( " \
 		"current_servo_1 real," \
@@ -156,6 +162,7 @@ struct ParachuteDeploymentPhase {
 };
 #define PARACHUTEDEPLOYMENTPHASE_MSG_ID 6
 #define PARACHUTEDEPLOYMENTPHASE_SIZE sizeof(struct ParachuteDeploymentPhase)
+#define PARACHUTEDEPLOYMENTPHASE_NUM_VALUES 3
 #ifdef INCLUDE_PROTOCOL_SQL_MACROS
 	#define PARACHUTEDEPLOYMENTPHASE_SQL_TABLE_GEN "CREATE TABLE ParachuteDeploymentPhase ( " \
 		"deployed int," \
@@ -174,6 +181,32 @@ struct ParachuteDeploymentPhase {
 			MG_ESC("timestamp"), sql_row_values[2]
 #endif
 
+struct TestPacket {
+	int counter;
+	float value1;
+	time_t timestamp;
+};
+#define TESTPACKET_MSG_ID 7
+#define TESTPACKET_SIZE sizeof(struct TestPacket)
+#define TESTPACKET_NUM_VALUES 3
+#ifdef INCLUDE_PROTOCOL_SQL_MACROS
+	#define TESTPACKET_SQL_TABLE_GEN "CREATE TABLE TestPacket ( " \
+		"counter int," \
+		"value1 real," \
+		"time datetime PRIMARY KEY);"
+	#define TESTPACKET_SQL_GET_MOST_RECENT "SELECT TOP 1 counter, value1, time FROM TestPacket ORDER BY time"
+	#define TESTPACKET_SQL_ADD_ENTRY(buffer, data, timestamp) sprintf(buffer, \
+		"INSERT INTO TestPacket VALUES ('%d', '%.10E', '%s');", \
+		data->counter, \
+		data->value1, \
+		timestamp); 
+	#define TESTPACKET_API_PATH WEB_SERVER_URL "/api/data/TestPacket"
+	#define TESTPACKET_SQL_SELECT_TO_JSON(sql_row_values) "{ %m: %s, %m: %s, %m: %s }", \
+			MG_ESC("counter"), sql_row_values[0], \
+			MG_ESC("value1"), sql_row_values[1], \
+			MG_ESC("timestamp"), sql_row_values[2]
+#endif
+
 /**
  * Calculates the size of a message given its ID
  * @param id	the ID of the message
@@ -189,11 +222,11 @@ bool is_data_send_msg(int message_id);
 #ifdef INCLUDE_PROTOCOL_SQL_MACROS
 	#define MAX_SQL_WRITE_CMD_SIZE 168
 
-	#define ALL_SQL_TABLE_CREATE_COMMANDS ROCKETKINEMATICS_SQL_TABLE_GEN, MASTERELECTRIC_SQL_TABLE_GEN, ROCKETSTATE_SQL_TABLE_GEN, ACTUATORHEALTHS_SQL_TABLE_GEN, PARACHUTEDEPLOYMENTPHASE_SQL_TABLE_GEN
+	#define ALL_SQL_TABLE_CREATE_COMMANDS ROCKETKINEMATICS_SQL_TABLE_GEN, MASTERELECTRIC_SQL_TABLE_GEN, ROCKETSTATE_SQL_TABLE_GEN, ACTUATORHEALTHS_SQL_TABLE_GEN, PARACHUTEDEPLOYMENTPHASE_SQL_TABLE_GEN, TESTPACKET_SQL_TABLE_GEN
 
-	#define NUM_SQL_TABLES 5
+	#define NUM_SQL_TABLES 6
 
-	#define ALL_API_DATA_PATHS ROCKETKINEMATICS_API_PATH, MASTERELECTRIC_API_PATH, ROCKETSTATE_API_PATH, ACTUATORHEALTHS_API_PATH, PARACHUTEDEPLOYMENTPHASE_API_PATH
+	#define ALL_API_DATA_PATHS ROCKETKINEMATICS_API_PATH, MASTERELECTRIC_API_PATH, ROCKETSTATE_API_PATH, ACTUATORHEALTHS_API_PATH, PARACHUTEDEPLOYMENTPHASE_API_PATH, TESTPACKET_API_PATH
 
    /**
 	 * Takes a recieved data packet and converts it into an SQL command
@@ -207,25 +240,29 @@ bool is_data_send_msg(int message_id);
 	bool convert_data_msg_to_sql_cmd(int message_id, uint8_t *data, char *sql_cmd);
 
 	#define HANDLE_API_INPUT(db, hm) 		if (mg_match(hm->uri, mg_str(ROCKETKINEMATICS_API_PATH), NULL)) { \
-			char** data; \
+			char[ROCKETKINEMATICS_NUM_VALES][MAX_SQL_VAL_SIZE] data; \
 			query_sql_with_callback(db, &data, ROCKETKINEMATICS_SQL_GET_MOST_RECENT); \
 			mg_http_reply(c, 200, "Content-Type: application/json\r\n", ROCKETKINEMATICS_SQL_SELECT_TO_JSON(data)); \
 		} else 		if (mg_match(hm->uri, mg_str(MASTERELECTRIC_API_PATH), NULL)) { \
-			char** data; \
+			char[MASTERELECTRIC_NUM_VALES][MAX_SQL_VAL_SIZE] data; \
 			query_sql_with_callback(db, &data, MASTERELECTRIC_SQL_GET_MOST_RECENT); \
 			mg_http_reply(c, 200, "Content-Type: application/json\r\n", MASTERELECTRIC_SQL_SELECT_TO_JSON(data)); \
 		} else 		if (mg_match(hm->uri, mg_str(ROCKETSTATE_API_PATH), NULL)) { \
-			char** data; \
+			char[ROCKETSTATE_NUM_VALES][MAX_SQL_VAL_SIZE] data; \
 			query_sql_with_callback(db, &data, ROCKETSTATE_SQL_GET_MOST_RECENT); \
 			mg_http_reply(c, 200, "Content-Type: application/json\r\n", ROCKETSTATE_SQL_SELECT_TO_JSON(data)); \
 		} else 		if (mg_match(hm->uri, mg_str(ACTUATORHEALTHS_API_PATH), NULL)) { \
-			char** data; \
+			char[ACTUATORHEALTHS_NUM_VALES][MAX_SQL_VAL_SIZE] data; \
 			query_sql_with_callback(db, &data, ACTUATORHEALTHS_SQL_GET_MOST_RECENT); \
 			mg_http_reply(c, 200, "Content-Type: application/json\r\n", ACTUATORHEALTHS_SQL_SELECT_TO_JSON(data)); \
 		} else 		if (mg_match(hm->uri, mg_str(PARACHUTEDEPLOYMENTPHASE_API_PATH), NULL)) { \
-			char** data; \
+			char[PARACHUTEDEPLOYMENTPHASE_NUM_VALES][MAX_SQL_VAL_SIZE] data; \
 			query_sql_with_callback(db, &data, PARACHUTEDEPLOYMENTPHASE_SQL_GET_MOST_RECENT); \
 			mg_http_reply(c, 200, "Content-Type: application/json\r\n", PARACHUTEDEPLOYMENTPHASE_SQL_SELECT_TO_JSON(data)); \
+		} else 		if (mg_match(hm->uri, mg_str(TESTPACKET_API_PATH), NULL)) { \
+			char[TESTPACKET_NUM_VALES][MAX_SQL_VAL_SIZE] data; \
+			query_sql_with_callback(db, &data, TESTPACKET_SQL_GET_MOST_RECENT); \
+			mg_http_reply(c, 200, "Content-Type: application/json\r\n", TESTPACKET_SQL_SELECT_TO_JSON(data)); \
 		}
 
 #endif

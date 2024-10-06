@@ -1,11 +1,14 @@
 import json
 from utils import *
 from accessor_utils import *
+import shutil
 
 largest_sql_add_cmd_len = 0
 
 FILEPATH_H = "../includes/protocol.h"
+ALT_FILEPATH_H = "../../ground-station-core/lib/protocol/protocol.h"
 FILEPATH_C = "../src/protocol.c"
+ALT_FILEPATH_C = "../../ground-station-core/lib/protocol/protocol.c"
 SQL_ENABLED_MACRO = "INCLUDE_PROTOCOL_SQL_MACROS"
 WEB_SERVER_URL = "http://0.0.0.0:8080"
     
@@ -31,6 +34,9 @@ def write_data_type(file, id: int, name: str, content: dict[str, str]):
 
     # Define size
     file.write(f"#define {name.upper()}_SIZE sizeof(struct {name})\n")
+
+    # Define number of values
+    file.write(f"#define {name.upper()}_NUM_VALUES {len(content) + 1}\n")
 
     # Start SQL section
     file.write(f"#ifdef {SQL_ENABLED_MACRO}\n")
@@ -93,6 +99,9 @@ def main():
         file.write("#ifdef INCLUDE_PROTOCOL_SQL_MACROS\n" +
                    "\tvoid generate_sql_timestamp_from_long(time_t time, char* buffer);\n" +
                    f"\t#define WEB_SERVER_URL \"{WEB_SERVER_URL}\"\n#endif\n\n")
+        
+        # Write the max sql value size
+        file.write("#define MAX_SQL_VAL_SIZE 30\n\n")
 
         # Write all data types
         for name, content in d["data_types"].items():
@@ -156,6 +165,10 @@ def main():
 
         # Exit SQL Mode
         file.write("#endif\n\n")
+
+    # Copy files
+    shutil.copyfile(FILEPATH_H, ALT_FILEPATH_H)
+    shutil.copyfile(FILEPATH_C, ALT_FILEPATH_C)
 
 
 if __name__ == "__main__":

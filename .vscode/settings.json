@@ -5,6 +5,7 @@
         "transmission_manager.h": "c",
         "stdnoreturn.h": "c",
         "crc_hash.h": "c",
-        "string": "c"
+        "string": "c",
+        "database.h": "c"
     }
 }

@@ -77,7 +77,7 @@ def generate_api_if_else(names):
     return " else ".join([
         (
           f"\t\tif (mg_match(hm->uri, mg_str({name.upper()}_API_PATH), NULL))" + " { \\" +
-		   "\n\t\t\tchar** data; \\" + 
+		  f"\n\t\t\tchar[{name.upper()}_NUM_VALES][MAX_SQL_VAL_SIZE] data; \\" + 
 		  f"\n\t\t\tquery_sql_with_callback(db, &data, {name.upper()}_SQL_GET_MOST_RECENT); \\" + 
 		  f"\n\t\t\tmg_http_reply(c, 200, \"Content-Type: application/json\\r\\n\", {name.upper()}_SQL_SELECT_TO_JSON(data)); \\" + 
            "\n\t\t}"

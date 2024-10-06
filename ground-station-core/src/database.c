@@ -1,5 +1,8 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
+
+#define INCLUDE_PROTOCOL_SQL_MACROS
 
 #include "sqlite3.h"
 #include "database.h"
@@ -84,3 +87,29 @@ int execute_sql_command_no_callback(sqlite3 *db, char *sql) {
 
     return PROCESS_SUCCESSFUL_CODE;
 }
+
+int sql_column_callback(void* data_buffer_ptr, int num_cols, char** values, char** names) {
+    char** data_buffer = data_buffer_ptr;
+    for (int i = 0; i < num_cols; i++) {
+        printf("%s\n", values[i]);
+        strcpy(data_buffer[i], values[i]);
+    }
+    
+    return 0;
+}
+
+int query_sql_with_callback(sqlite3 *db, char** data_buffer_ptr, char* sql_cmd) {
+    char *zErrMsg = NULL;
+
+    int result = sqlite3_exec(db, sql_cmd, sql_column_callback, data_buffer_ptr, &zErrMsg);
+
+
+    if(result != SQLITE_OK ){
+      fprintf(stderr, "SQL error: %s\n", zErrMsg);
+      sqlite3_free(zErrMsg);
+      return PROCESS_ABORT_CODE;
+    } 
+
+    return PROCESS_SUCCESSFUL_CODE;
+}
+

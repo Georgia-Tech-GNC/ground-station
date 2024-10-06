@@ -22,4 +22,6 @@ int generate_new_database(sqlite3 **db);
 
 int parse_data_packet_into_sql(sqlite3 *db, int message_id, uint8_t *data);
 
+int query_sql_with_callback(sqlite3 *db, char** data_buffer_ptr, char* sql_cmd);
+
 #endif
