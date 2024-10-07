@@ -17,17 +17,17 @@
 
 int get_msg_size(int message_id) {
 	switch (message_id) {
-		case ROCKETKINEMATICS_MSG_ID:
+    	case ROCKETKINEMATICS_MSG_ID:
 			return ROCKETKINEMATICS_SIZE;
-		case MASTERELECTRIC_MSG_ID:
+    	case MASTERELECTRIC_MSG_ID:
 			return MASTERELECTRIC_SIZE;
-		default:
+    	default:
 			return -1;
 	}
 }
 
 bool is_data_send_msg(int message_id) {
-	return (message_id >= 2) && (message_id <= 3);
+	return (message_id >= 10) && (message_id <= 10 + 2);
 }
 
 #ifdef INCLUDE_PROTOCOL_SQL_MACROS
@@ -41,22 +41,23 @@ bool is_data_send_msg(int message_id) {
 		}
 
 		switch (message_id) {
-			case ROCKETKINEMATICS_MSG_ID: {
+    	    case ROCKETKINEMATICS_MSG_ID: {
 				struct RocketKinematics* cvt_data = (struct RocketKinematics*) data;
 				char timestamp[20];
 				generate_sql_timestamp_from_long(cvt_data->timestamp, timestamp);
 				ROCKETKINEMATICS_SQL_ADD_ENTRY(sql_cmd, cvt_data, timestamp);
 				return true;
-			} case MASTERELECTRIC_MSG_ID: {
+			} 
+    	    case MASTERELECTRIC_MSG_ID: {
 				struct MasterElectric* cvt_data = (struct MasterElectric*) data;
 				char timestamp[20];
 				generate_sql_timestamp_from_long(cvt_data->timestamp, timestamp);
 				MASTERELECTRIC_SQL_ADD_ENTRY(sql_cmd, cvt_data, timestamp);
 				return true;
-			} default:
+			} 
+    		default:
 				return false;
 		}
 	}
 
 #endif
-

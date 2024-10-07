@@ -27,13 +27,15 @@ int get_msg_size(int message_id) {
 			return ACTUATORHEALTHS_SIZE;
 		case PARACHUTEDEPLOYMENTPHASE_MSG_ID:
 			return PARACHUTEDEPLOYMENTPHASE_SIZE;
+		case TESTPACKET_MSG_ID:
+			return TESTPACKET_SIZE;
 		default:
 			return -1;
 	}
 }
 
 bool is_data_send_msg(int message_id) {
-	return (message_id >= 2) && (message_id <= 6);
+	return (message_id >= 2) && (message_id <= 7);
 }
 
 #ifdef INCLUDE_PROTOCOL_SQL_MACROS
@@ -76,6 +78,12 @@ bool is_data_send_msg(int message_id) {
 				char timestamp[20];
 				generate_sql_timestamp_from_long(cvt_data->timestamp, timestamp);
 				PARACHUTEDEPLOYMENTPHASE_SQL_ADD_ENTRY(sql_cmd, cvt_data, timestamp);
+				return true;
+			} case TESTPACKET_MSG_ID: {
+				struct TestPacket* cvt_data = (struct TestPacket*) data;
+				char timestamp[20];
+				generate_sql_timestamp_from_long(cvt_data->timestamp, timestamp);
+				TESTPACKET_SQL_ADD_ENTRY(sql_cmd, cvt_data, timestamp);
 				return true;
 			} default:
 				return false;

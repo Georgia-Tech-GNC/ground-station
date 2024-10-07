@@ -62,5 +62,14 @@ int main(void) {
   parse_data_packet_into_sql(db, 2, (uint8_t*)&rkData);
   parse_data_packet_into_sql(db, 3, (uint8_t*)&elData);
 
+  printf("%s\n", ROCKETKINEMATICS_SQL_GET_MOST_RECENT);
+  char *data[ROCKETKINEMATICS_NUM_VALUES]; 
+	query_sql_with_callback(db, data, ROCKETKINEMATICS_SQL_GET_MOST_RECENT);
+
+  for (int i = 0; i < ROCKETKINEMATICS_NUM_VALUES; i++) {
+    printf("%s\n", data[i]);
+    free(data[i]);
+  }
+
   sqlite3_close(db);
 }

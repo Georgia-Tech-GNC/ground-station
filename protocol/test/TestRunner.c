@@ -62,6 +62,9 @@ void testHashGeneration() {
 
         free(buffer);
     }
+
+
+
 }
 
 void testPacketEncode() {
@@ -102,7 +105,6 @@ void testPacketEncode() {
             for (int i = 0; i < 134; i++) {
                 current_size = process_incoming_byte((uint8_t) rand(), buffer, current_size);
                 if (current_size < 0) {
-                    printf("Created a packet out of nothing!\n");
                     if (verify_packet(buffer, -current_size))
                         miracle_baby_counter++;
                     current_size = 0;
