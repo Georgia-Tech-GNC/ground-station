@@ -44,11 +44,18 @@ def expand_attitude():
 def show_health():
     print("Show Health Status")
 
-def sleep_to_ground():
+def idle_to_ground():
     print("Sleep Mode to Ground Mode")
 
 def ground_to_armed():
     print("Ground Mode to Armed Mode")
+
+def ignite_pyro():
+    print("IGNIRE PYRO!")
+
+def flash_data():
+    print("Flash Data from Flight Chip to SD Card")
+
 
 def expand_health_status():
     print("Expand Health Status")
@@ -65,7 +72,7 @@ with dpg.window(label="Data Viewer",width=500, height=250, tag="data_viewer", po
     dvw = DataViewerWindow([("Altitude", "meters"), ("Velocity", "m/s"), ("Current", "amps"), "Attitude", "Health Status"], [DataTypes.FLOAT, DataTypes.VECTOR, DataTypes.FLOAT, DataTypes.QUATERNION, DataTypes.STRING])
     
 with dpg.window(label="Commands to Rocket",width=300, height=200, tag="rocket_commands", pos=(1000, 50)):
-    RocketCommands(["Sleep to Ground", "Gound to Armed"], [sleep_to_ground, ground_to_armed])
+    RocketCommands(["Idle to Ground", "Ground to Armed","IGNIRE PYRO", "Flash Data"], [idle_to_ground, ground_to_armed, ignite_pyro, flash_data])
 
 with dpg.window(label="Altitude Graph", width=400, height=400, tag="altitude_graph", pos=(50, 400)):
     a1g = AltitudeGraph("Altitude Graph", "Time (s)", "Altitude (m)")
