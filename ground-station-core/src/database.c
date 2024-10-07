@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
+#include <stdlib.h>
 
 #define INCLUDE_PROTOCOL_SQL_MACROS
 
@@ -92,7 +93,9 @@ int sql_column_callback(void* data_buffer_ptr, int num_cols, char** values, char
     char** data_buffer = data_buffer_ptr;
     for (int i = 0; i < num_cols; i++) {
         printf("%s\n", values[i]);
+        data_buffer[i] = malloc(strlen(values[i]) + 1);
         strcpy(data_buffer[i], values[i]);
+        printf("%s\n", data_buffer[i]);
     }
     
     return 0;

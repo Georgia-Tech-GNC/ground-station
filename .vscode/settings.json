@@ -6,6 +6,7 @@
         "stdnoreturn.h": "c",
         "crc_hash.h": "c",
         "string": "c",
-        "database.h": "c"
+        "database.h": "c",
+        "stdio.h": "c"
     }
 }

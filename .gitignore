@@ -1,4 +1,6 @@
 gs-gui/
 ground-station-gui/.idea/
+gound-station-core/build/
+protocol/build/
 .direnv
 __pycache__

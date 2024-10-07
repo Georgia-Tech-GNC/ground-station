@@ -62,6 +62,9 @@ void testHashGeneration() {
 
         free(buffer);
     }
+
+
+
 }
 
 void testPacketEncode() {
