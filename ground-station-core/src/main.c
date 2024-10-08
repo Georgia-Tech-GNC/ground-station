@@ -5,43 +5,14 @@
 #include "sqlite3.h"
 #include "database.h"
 #include "protocol.h"
-/*
-// HTTP server event handler function
-void ev_handler(struct mg_connection *c, int ev, void *ev_data) {
-  if (ev == MG_EV_HTTP_MSG) {
-    //fflush(stdout);
-    printf("hi!\n");
-    struct mg_http_message *hm = (struct mg_http_message *) ev_data;
-    if (mg_match(hm->uri, mg_str("/api/sum"), NULL)) {
-        double num1 = 5.0, num2 = 0.0;
-        printf("recv\n");
-        mg_json_get_num(hm->body, "$.vala", &num1);  // Extract first number
-        mg_json_get_num(hm->body, "$.valb", &num2);  // Extract second number
-        mg_http_reply(c, 200, "Content-Type: application/json\r\n",
-                    "{%m:%g}\n", MG_ESC("result"), num1 + num2);
-    } else {
-        printf("failed\n");
-        struct mg_http_message *hm = (struct mg_http_message *) ev_data;
-        struct mg_http_serve_opts opts = { .root_dir = "./web_root/" };
-        mg_http_serve_dir(c, hm, &opts);
-    }
-  }
-}
-*/
+#include "web_server.h"
 
 struct RocketKinematics rkData;
 struct MasterElectric elData;
 
-int main(void) {
-  /*struct mg_mgr mgr;  // Declare event manager
-  mg_mgr_init(&mgr);  // Initialise event manager
-  mg_http_listen(&mgr, "http://0.0.0.0:8080", ev_handler, NULL);  // Setup listener
-  for (;;) {          // Run an infinite event loop
-    mg_mgr_poll(&mgr, 10);
-  }
-  return 0;
-  */
+struct mg_mgr manager;
 
+void test_database() {
   struct sqlite3 *db = NULL;
 
   rkData.attitude_w = 0.1212342341334f;
@@ -59,8 +30,8 @@ int main(void) {
 
   generate_new_database(&db);
 
-  parse_data_packet_into_sql(db, 2, (uint8_t*)&rkData);
-  parse_data_packet_into_sql(db, 3, (uint8_t*)&elData);
+  parse_data_packet_into_sql(db, ROCKETKINEMATICS_MSG_ID, (uint8_t*)&rkData);
+  parse_data_packet_into_sql(db, MASTERELECTRIC_MSG_ID, (uint8_t*)&elData);
 
   printf("%s\n", ROCKETKINEMATICS_SQL_GET_MOST_RECENT);
   char *data[ROCKETKINEMATICS_NUM_VALUES]; 
@@ -69,6 +40,23 @@ int main(void) {
   for (int i = 0; i < ROCKETKINEMATICS_NUM_VALUES; i++) {
     printf("%s\n", data[i]);
     free(data[i]);
+  }
+
+  sqlite3_close(db);
+}
+
+int main(void) {
+  struct sqlite3 *db = NULL;
+  generate_new_database(&db);
+
+  test_database();
+
+  initialize_web_server(&manager, "http://0.0.0.0:8080", db);
+
+  for (int i = 0; i < 10; i++) {
+    update_server(&manager, 1000);
+
+    fprintf(stderr, "Second %d\n", i);
   }
 
   sqlite3_close(db);

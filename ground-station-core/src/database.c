@@ -92,10 +92,8 @@ int execute_sql_command_no_callback(sqlite3 *db, char *sql) {
 int sql_column_callback(void* data_buffer_ptr, int num_cols, char** values, char** names) {
     char** data_buffer = data_buffer_ptr;
     for (int i = 0; i < num_cols; i++) {
-        printf("%s\n", values[i]);
         data_buffer[i] = malloc(strlen(values[i]) + 1);
         strcpy(data_buffer[i], values[i]);
-        printf("%s\n", data_buffer[i]);
     }
     
     return 0;

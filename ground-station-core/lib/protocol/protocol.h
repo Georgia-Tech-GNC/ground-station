@@ -49,7 +49,7 @@ struct RocketKinematics {
 };
 #define ROCKETKINEMATICS_MSG_ID 10
 #define ROCKETKINEMATICS_SIZE sizeof(struct RocketKinematics)
-#define ROCKETKINEMATICS_NUM_VALUES 5
+#define ROCKETKINEMATICS_NUM_VALUES 6
 #ifdef INCLUDE_PROTOCOL_SQL_MACROS
 	#define ROCKETKINEMATICS_SQL_TABLE_GEN "CREATE TABLE RocketKinematics ( " \
 	"attitude_w real, " \
@@ -67,13 +67,13 @@ struct RocketKinematics {
 		data->attitude_z, \
 		data->velocity, \
 		timestamp); 
-	#define ROCKETKINEMATICS_API_PATH WEB_SERVER_URL "/api/data/RocketKinematics"
-	#define ROCKETKINEMATICS_SQL_SELECT_TO_JSON(sql_row_values) "{ %m: %s, %m: %s, %m: %s, %m: %s, %m: %s, %m: %s}", \
-		MG_ESC("attitude_w"), sql_row_values[1], \
-		MG_ESC("attitude_x"), sql_row_values[2], \
-		MG_ESC("attitude_y"), sql_row_values[3], \
-		MG_ESC("attitude_z"), sql_row_values[4], \
-		MG_ESC("velocity"), sql_row_values[5], \
+	#define ROCKETKINEMATICS_API_PATH "/api/data/RocketKinematics"
+	#define ROCKETKINEMATICS_SQL_SELECT_TO_JSON(sql_row_values) "{ %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\"}", \
+		MG_ESC("attitude_w"), sql_row_values[0], \
+		MG_ESC("attitude_x"), sql_row_values[1], \
+		MG_ESC("attitude_y"), sql_row_values[2], \
+		MG_ESC("attitude_z"), sql_row_values[3], \
+		MG_ESC("velocity"), sql_row_values[4], \
 		MG_ESC("timestamp"), sql_row_values[5]
 #endif
 
@@ -86,26 +86,26 @@ struct MasterElectric {
 };
 #define MASTERELECTRIC_MSG_ID 11
 #define MASTERELECTRIC_SIZE sizeof(struct MasterElectric)
-#define MASTERELECTRIC_NUM_VALUES 3
+#define MASTERELECTRIC_NUM_VALUES 4
 #ifdef INCLUDE_PROTOCOL_SQL_MACROS
 	#define MASTERELECTRIC_SQL_TABLE_GEN "CREATE TABLE MasterElectric ( " \
 	"voltage real, " \
 	"current real, " \
 	"electricity_status int, " \
 	"time datetime PRIMARY KEY);"
-	#define MASTERELECTRIC_SQL_GET_MOST_RECENT "SELECT voltage, current, electricity_status, time FROM RocketKinematics ORDER BY time LIMIT 1"
+	#define MASTERELECTRIC_SQL_GET_MOST_RECENT "SELECT voltage, current, electricity_status, time FROM MasterElectric ORDER BY time LIMIT 1"
 	#define MASTERELECTRIC_SQL_ADD_ENTRY(buffer, data, timestamp) sprintf(buffer, \
 		"INSERT INTO MASTERELECTRIC VALUES ('%.10E', '%.10E', '%d', '%s');", \
 		data->voltage, \
 		data->current, \
 		data->electricity_status, \
 		timestamp); 
-	#define MASTERELECTRIC_API_PATH WEB_SERVER_URL "/api/data/MasterElectric"
-	#define MASTERELECTRIC_SQL_SELECT_TO_JSON(sql_row_values) "{ %m: %s, %m: %s, %m: %s, %m: %s}", \
-		MG_ESC("voltage"), sql_row_values[1], \
-		MG_ESC("current"), sql_row_values[2], \
-		MG_ESC("electricity_status"), sql_row_values[3], \
-		MG_ESC("timestamp"), sql_row_values[5]
+	#define MASTERELECTRIC_API_PATH "/api/data/MasterElectric"
+	#define MASTERELECTRIC_SQL_SELECT_TO_JSON(sql_row_values) "{ %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\"}", \
+		MG_ESC("voltage"), sql_row_values[0], \
+		MG_ESC("current"), sql_row_values[1], \
+		MG_ESC("electricity_status"), sql_row_values[2], \
+		MG_ESC("timestamp"), sql_row_values[3]
 #endif
 
 /**
@@ -138,15 +138,15 @@ bool is_data_send_msg(int message_id);
 	 */
 	bool convert_data_msg_to_sql_cmd(int message_id, uint8_t *data, char *sql_cmd);
 
-	#define HANDLE_API_INPUT(db, hm) \	
+	#define HANDLE_API_INPUT(db, hm) \
 		if (mg_match(hm->uri, mg_str(ROCKETKINEMATICS_API_PATH), NULL)) { \
-			*char[ROCKETKINEMATICS_NUM_VALUES] data; \
-			query_sql_with_callback(db, &data, ROCKETKINEMATICS_SQL_GET_MOST_RECENT); \
+			char *data[ROCKETKINEMATICS_NUM_VALUES]; \
+			query_sql_with_callback(db, data, ROCKETKINEMATICS_SQL_GET_MOST_RECENT); \
 			mg_http_reply(c, 200, "Content-Type: application/json\r\n", ROCKETKINEMATICS_SQL_SELECT_TO_JSON(data)); \
 			FREE_ALL(data, ROCKETKINEMATICS_NUM_VALUES); \
 		} else if (mg_match(hm->uri, mg_str(MASTERELECTRIC_API_PATH), NULL)) { \
-			*char[MASTERELECTRIC_NUM_VALUES] data; \
-			query_sql_with_callback(db, &data, MASTERELECTRIC_SQL_GET_MOST_RECENT); \
+			char *data[MASTERELECTRIC_NUM_VALUES]; \
+			query_sql_with_callback(db, data, MASTERELECTRIC_SQL_GET_MOST_RECENT); \
 			mg_http_reply(c, 200, "Content-Type: application/json\r\n", MASTERELECTRIC_SQL_SELECT_TO_JSON(data)); \
 			FREE_ALL(data, MASTERELECTRIC_NUM_VALUES); \
 		}
