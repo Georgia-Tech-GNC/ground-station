@@ -23,6 +23,7 @@
 	void generate_sql_timestamp_from_long(time_t time, char* buffer);
 	#define WEB_SERVER_URL "http://0.0.0.0:8080"
 
+	#define SET_ALL_NULL(x, len) for (int i = 0; i < (len); i++) x[i] = NULL
 	#define FREE_ALL(x, len) for (int i = 0; i < (len); i++) free(x[i])
 #endif
 
@@ -141,11 +142,13 @@ bool is_data_send_msg(int message_id);
 	#define HANDLE_API_INPUT(db, hm) \
 		if (mg_match(hm->uri, mg_str(ROCKETKINEMATICS_API_PATH), NULL)) { \
 			char *data[ROCKETKINEMATICS_NUM_VALUES]; \
+			SET_ALL_NULL(data, ROCKETKINEMATICS_NUM_VALUES); \
 			query_sql_with_callback(db, data, ROCKETKINEMATICS_SQL_GET_MOST_RECENT); \
 			mg_http_reply(c, 200, "Content-Type: application/json\r\n", ROCKETKINEMATICS_SQL_SELECT_TO_JSON(data)); \
 			FREE_ALL(data, ROCKETKINEMATICS_NUM_VALUES); \
 		} else if (mg_match(hm->uri, mg_str(MASTERELECTRIC_API_PATH), NULL)) { \
 			char *data[MASTERELECTRIC_NUM_VALUES]; \
+			SET_ALL_NULL(data, MASTERELECTRIC_NUM_VALUES); \
 			query_sql_with_callback(db, data, MASTERELECTRIC_SQL_GET_MOST_RECENT); \
 			mg_http_reply(c, 200, "Content-Type: application/json\r\n", MASTERELECTRIC_SQL_SELECT_TO_JSON(data)); \
 			FREE_ALL(data, MASTERELECTRIC_NUM_VALUES); \

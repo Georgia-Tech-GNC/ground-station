@@ -10,8 +10,10 @@
  * @param manager       pointer to the mongoose server
  * @param server_url    the http url that the server should use
  * @param db            the sqlite database that this server should reference
+ * 
+ * @return true if this operation was successful, and false otherwise
  */
-void initialize_web_server(struct mg_mgr *manager, char *server_url, sqlite3* db);
+bool initialize_web_server(struct mg_mgr *manager, char *server_url, sqlite3* db);
 
 /**
  * Updates the web server by responsding to all API calls

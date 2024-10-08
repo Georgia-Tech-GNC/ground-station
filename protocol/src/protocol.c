@@ -17,25 +17,17 @@
 
 int get_msg_size(int message_id) {
 	switch (message_id) {
-		case ROCKETKINEMATICS_MSG_ID:
+    	case ROCKETKINEMATICS_MSG_ID:
 			return ROCKETKINEMATICS_SIZE;
-		case MASTERELECTRIC_MSG_ID:
+    	case MASTERELECTRIC_MSG_ID:
 			return MASTERELECTRIC_SIZE;
-		case ROCKETSTATE_MSG_ID:
-			return ROCKETSTATE_SIZE;
-		case ACTUATORHEALTHS_MSG_ID:
-			return ACTUATORHEALTHS_SIZE;
-		case PARACHUTEDEPLOYMENTPHASE_MSG_ID:
-			return PARACHUTEDEPLOYMENTPHASE_SIZE;
-		case TESTPACKET_MSG_ID:
-			return TESTPACKET_SIZE;
-		default:
+    	default:
 			return -1;
 	}
 }
 
 bool is_data_send_msg(int message_id) {
-	return (message_id >= 2) && (message_id <= 7);
+	return (message_id >= 10) && (message_id <= 10 + 2);
 }
 
 #ifdef INCLUDE_PROTOCOL_SQL_MACROS
@@ -49,46 +41,23 @@ bool is_data_send_msg(int message_id) {
 		}
 
 		switch (message_id) {
-			case ROCKETKINEMATICS_MSG_ID: {
+    	    case ROCKETKINEMATICS_MSG_ID: {
 				struct RocketKinematics* cvt_data = (struct RocketKinematics*) data;
 				char timestamp[20];
 				generate_sql_timestamp_from_long(cvt_data->timestamp, timestamp);
 				ROCKETKINEMATICS_SQL_ADD_ENTRY(sql_cmd, cvt_data, timestamp);
 				return true;
-			} case MASTERELECTRIC_MSG_ID: {
+			} 
+    	    case MASTERELECTRIC_MSG_ID: {
 				struct MasterElectric* cvt_data = (struct MasterElectric*) data;
 				char timestamp[20];
 				generate_sql_timestamp_from_long(cvt_data->timestamp, timestamp);
 				MASTERELECTRIC_SQL_ADD_ENTRY(sql_cmd, cvt_data, timestamp);
 				return true;
-			} case ROCKETSTATE_MSG_ID: {
-				struct RocketState* cvt_data = (struct RocketState*) data;
-				char timestamp[20];
-				generate_sql_timestamp_from_long(cvt_data->timestamp, timestamp);
-				ROCKETSTATE_SQL_ADD_ENTRY(sql_cmd, cvt_data, timestamp);
-				return true;
-			} case ACTUATORHEALTHS_MSG_ID: {
-				struct ActuatorHealths* cvt_data = (struct ActuatorHealths*) data;
-				char timestamp[20];
-				generate_sql_timestamp_from_long(cvt_data->timestamp, timestamp);
-				ACTUATORHEALTHS_SQL_ADD_ENTRY(sql_cmd, cvt_data, timestamp);
-				return true;
-			} case PARACHUTEDEPLOYMENTPHASE_MSG_ID: {
-				struct ParachuteDeploymentPhase* cvt_data = (struct ParachuteDeploymentPhase*) data;
-				char timestamp[20];
-				generate_sql_timestamp_from_long(cvt_data->timestamp, timestamp);
-				PARACHUTEDEPLOYMENTPHASE_SQL_ADD_ENTRY(sql_cmd, cvt_data, timestamp);
-				return true;
-			} case TESTPACKET_MSG_ID: {
-				struct TestPacket* cvt_data = (struct TestPacket*) data;
-				char timestamp[20];
-				generate_sql_timestamp_from_long(cvt_data->timestamp, timestamp);
-				TESTPACKET_SQL_ADD_ENTRY(sql_cmd, cvt_data, timestamp);
-				return true;
-			} default:
+			} 
+    		default:
 				return false;
 		}
 	}
 
 #endif
-

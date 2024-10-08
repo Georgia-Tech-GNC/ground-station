@@ -15,15 +15,21 @@ void event_handler(struct mg_connection *c, int ev, void *ev_data) {
     struct mg_http_message *hm = (struct mg_http_message *) ev_data;
     HANDLE_API_INPUT(c->fn_data, hm) 
     else {
-      fprintf(stderr, "INVALID API REQUEST RECIEVED: %s", hm->uri.buf);
+      fprintf(stderr, "INVALID API REQUEST RECIEVED: %s\n", hm->uri.buf);
     }
   }
 }
 
 void initialize_web_server(struct mg_mgr *manager, char *server_url, sqlite3* db) {
     mg_mgr_init(manager);  // Initialise event manager
-    mg_http_listen(manager, server_url, event_handler, db);  // Setup listener
+    if (mg_http_listen(manager, server_url, event_handler, db) == NULL) {  // Setup listener
+        fprintf(stderr, "Error initializing web server");
+        return false;
+    }
+    
+    return true;
 }
+
 
 void update_server(struct mg_mgr *manager, int timeout_ms) {
     mg_mgr_poll(manager, timeout_ms);

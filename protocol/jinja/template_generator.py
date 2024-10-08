@@ -33,7 +33,7 @@ htemplate = environment.get_template("protocol_header_template.j2")
 ctemplate = environment.get_template("protocol_c_template.j2")
 
 H_FILE_LOCATIONS = ["../includes/protocol.h", "../../ground-station-core/lib/protocol/protocol.h"]
-C_FILE_LOCATIONS = ["../includes/protocol.c", "../../ground-station-core/lib/protocol/protocol.c"]
+C_FILE_LOCATIONS = ["../src/protocol.c", "../../ground-station-core/lib/protocol/protocol.c"]
 
 DATA = {
     'WEB_SERVER_URL': 'http://0.0.0.0:8080',
