@@ -48,26 +48,26 @@ time_t timestamp;
 };
 #define {{data_message_name.upper()}}_MSG_ID {{9 + loop.index}}
 #define {{data_message_name.upper()}}_SIZE sizeof(struct {{data_message_name}})
-#define {{data_message_name.upper()}}_NUM_VALUES {{data_message | length}}
+#define {{data_message_name.upper()}}_NUM_VALUES {{ 1 + (data_message | length)}}
 #ifdef INCLUDE_PROTOCOL_SQL_MACROS
 	#define {{data_message_name.upper()}}_SQL_TABLE_GEN "CREATE TABLE {{data_message_name}} ( " \
 	{% for variable_name, variable_type in data_message.items() -%}
 		"{{variable_name}} {{get_sql_type(variable_type)}}, " \
 	{% endfor -%}
 		"time datetime PRIMARY KEY);"
-	#define {{data_message_name.upper()}}_SQL_GET_MOST_RECENT "SELECT {{data_message.keys() | join(', ')}}, time FROM RocketKinematics ORDER BY time LIMIT 1"
+	#define {{data_message_name.upper()}}_SQL_GET_MOST_RECENT "SELECT {{data_message.keys() | join(', ')}}, time FROM {{data_message_name}} ORDER BY time LIMIT 1"
 	#define {{data_message_name.upper()}}_SQL_ADD_ENTRY(buffer, data, timestamp) sprintf(buffer, \
 		"INSERT INTO {{data_message_name.upper()}} VALUES ({{printf_sql_type(data_message.values()) | join(', ')}}, '%s');", \
 		{% for variable_name in data_message.keys() -%}
 			data->{{variable_name}}, \
 		{% endfor -%}
 			timestamp); 
-	#define {{data_message_name.upper()}}_API_PATH WEB_SERVER_URL "/api/data/{{data_message_name}}"
-	#define {{data_message_name.upper()}}_SQL_SELECT_TO_JSON(sql_row_values) "{ {{duplicate("%m: %s", data_message) | join(', ')}}, %m: %s}", \
+	#define {{data_message_name.upper()}}_API_PATH "/api/data/{{data_message_name}}"
+	#define {{data_message_name.upper()}}_SQL_SELECT_TO_JSON(sql_row_values) "{ {{duplicate("%m: \\\"%s\\\"", data_message) | join(', ')}}, %m: \"%s\"}", \
 		{% for variable_name in data_message.keys() -%}
-			MG_ESC("{{variable_name}}"), sql_row_values[{{loop.index}}], \
+			MG_ESC("{{variable_name}}"), sql_row_values[{{loop.index - 1}}], \
 		{% endfor -%}
-			MG_ESC("timestamp"), sql_row_values[5]
+			MG_ESC("timestamp"), sql_row_values[{{data_message | length}}]
 #endif
 
 {% endfor %}
@@ -101,11 +101,11 @@ bool is_data_send_msg(int message_id);
 	 */
 	bool convert_data_msg_to_sql_cmd(int message_id, uint8_t *data, char *sql_cmd);
 
-	#define HANDLE_API_INPUT(db, hm) \	
+	#define HANDLE_API_INPUT(db, hm) \
 		{% for data_message_name in DATA_MESSAGES.keys() -%}	
 			{%- if loop.index != 1 -%} } else {% endif -%} if (mg_match(hm->uri, mg_str({{data_message_name.upper()}}_API_PATH), NULL)) { \
-			*char[{{data_message_name.upper()}}_NUM_VALUES] data; \
-			query_sql_with_callback(db, &data, {{data_message_name.upper()}}_SQL_GET_MOST_RECENT); \
+			char *data[{{data_message_name.upper()}}_NUM_VALUES]; \
+			query_sql_with_callback(db, data, {{data_message_name.upper()}}_SQL_GET_MOST_RECENT); \
 			mg_http_reply(c, 200, "Content-Type: application/json\r\n", {{data_message_name.upper()}}_SQL_SELECT_TO_JSON(data)); \
 			FREE_ALL(data, {{data_message_name.upper()}}_NUM_VALUES); \
 		{% endfor -%}
