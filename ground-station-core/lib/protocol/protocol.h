@@ -39,6 +39,11 @@ struct CommandStruct {
 #define COMMAND_MSG_ID 1
 #define COMMAND_ACK_MSG_ID 2
 
+#define INITIALIZE_ROCKET_COMMAND_ID 1
+#define ARM_ROCKET_COMMAND_ID 2
+
+#define NUM_COMMAND_TYPES 2
+
 
 struct RocketKinematics {
 	float attitude_w;

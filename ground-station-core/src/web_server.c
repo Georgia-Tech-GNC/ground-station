@@ -2,6 +2,7 @@
 #include "protocol.h"
 #include "database.h"
 #include "sqlite3.h"
+#include "logger.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -15,15 +16,16 @@ void event_handler(struct mg_connection *c, int ev, void *ev_data) {
     struct mg_http_message *hm = (struct mg_http_message *) ev_data;
     HANDLE_API_INPUT(c->fn_data, hm) 
     else {
-      fprintf(stderr, "INVALID API REQUEST RECIEVED: %s\n", hm->uri.buf);
+      log_warning("INVALID API REQUEST RECIEVED: %s\n", hm->uri.buf);
+      mg_http_reply(c, 401, NULL, "{}");
     }
   }
 }
 
-void initialize_web_server(struct mg_mgr *manager, char *server_url, sqlite3* db) {
+bool initialize_web_server(struct mg_mgr *manager, char *server_url, sqlite3* db) {
     mg_mgr_init(manager);  // Initialise event manager
     if (mg_http_listen(manager, server_url, event_handler, db) == NULL) {  // Setup listener
-        fprintf(stderr, "Error initializing web server");
+        log_error("Error initializing web server\n");
         return false;
     }
     

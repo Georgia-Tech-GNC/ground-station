@@ -8,6 +8,7 @@
 #include "sqlite3.h"
 #include "database.h"
 #include "protocol.h"
+#include "logger.h"
 
 int initialize_empty_database(sqlite3 *db) {
     char* create_cmds[] = {ALL_SQL_TABLE_CREATE_COMMANDS};
@@ -24,23 +25,23 @@ int generate_new_database(sqlite3 **db) {
     // Define the filename
     char filename[32];
     generate_database_name(filename);
-    fprintf(stderr, "Creating database with name: %s\n", filename);
+    log_debug("Creating database with name: %s\n", filename);
 
     // Create the database
     int result = sqlite3_open(filename, db);
     if (db == NULL || result != SQLITE_OK) {
-        fprintf(stderr, "[ERROR] Database creation failed!\n\tError message: %s\n", sqlite3_errmsg(*db));
+        log_error("Database creation failed!\n\tError message: %s\n", sqlite3_errmsg(*db));
         return PROCESS_ABORT_CODE;
     } else {
-        fprintf(stderr, "Successfully created database!\n");
+        log_debug("Successfully created database!\n");
     }
 
     result = initialize_empty_database(*db);
     if (result != PROCESS_SUCCESSFUL_CODE) {
-        fprintf(stderr, "[ERROR] Failed to correctly initialize database tables!\n");
+        log_error("Failed to correctly initialize database tables!\n");
         return PROCESS_ABORT_CODE;
     } else {
-        fprintf(stderr, "Successfully initialized database!\n");
+        log_debug("Successfully initialized database!\n");
     }
 
     return PROCESS_SUCCESSFUL_CODE;
@@ -58,19 +59,19 @@ int parse_data_packet_into_sql(sqlite3 *db, int message_id, uint8_t *data) {
     bool successful = convert_data_msg_to_sql_cmd(message_id, data, command_buffer);
 
     if (!successful) {
-        fprintf(stderr, "[WARNING] Attempt to read data contents of message code %d failed\n", message_id);
+        log_warning("Attempt to read data contents of message code %d failed\n", message_id);
         return PROCESS_ABORT_CODE;
     }
 
-    fprintf(stderr, "SQL Command: %s\n", command_buffer);
+    log_debug("Running SQL Command: %s\n", command_buffer);
 
 
     int result = execute_sql_command_no_callback(db, command_buffer);
     if (result != PROCESS_SUCCESSFUL_CODE) {
-        fprintf(stderr, "[WARNING] Attempt to copy data contents of message code %d to SQL database failed\n", message_id);
+        log_warning( "Attempt to copy data contents of message code %d to SQL database failed\n", message_id);
         return PROCESS_ABORT_CODE;
     } else {
-        fprintf(stderr, "Copied contents of message code %d to SQL database\n", message_id);
+        log_debug("Copied contents of message code %d to SQL database\n", message_id);
         return PROCESS_SUCCESSFUL_CODE;
     }
 }
@@ -81,7 +82,7 @@ int execute_sql_command_no_callback(sqlite3 *db, char *sql) {
     int result = sqlite3_exec(db, sql, NULL, 0, &zErrMsg);
 
     if(result != SQLITE_OK ){
-      fprintf(stderr, "SQL error: %s\n", zErrMsg);
+      log_warning("SQL error: %s\n", zErrMsg);
       sqlite3_free(zErrMsg);
       return PROCESS_ABORT_CODE;
     } 
@@ -102,11 +103,13 @@ int sql_column_callback(void* data_buffer_ptr, int num_cols, char** values, char
 int query_sql_with_callback(sqlite3 *db, char** data_buffer_ptr, char* sql_cmd) {
     char *zErrMsg = NULL;
 
+    log_debug("Running SQL Command: %s\n", sql_cmd);
+
     int result = sqlite3_exec(db, sql_cmd, sql_column_callback, data_buffer_ptr, &zErrMsg);
 
 
     if(result != SQLITE_OK ){
-      fprintf(stderr, "SQL error: %s\n", zErrMsg);
+      log_warning("SQL error: %s\n", zErrMsg);
       sqlite3_free(zErrMsg);
       return PROCESS_ABORT_CODE;
     } 
