@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdint.h>
+#include<signal.h>
 
 #include "mongoose.h"  
 #include "sqlite3.h"
@@ -8,12 +9,13 @@
 #include "protocol.h"
 #include "web_server.h"
 #include "packet_encode.h"
+#include "command_scheduler.h"
 #include "logger.h"
 
 
 #define SERIAL_BUFFER_SIZE 256
 #define MESSAGE_BUFFER_SIZE 270
-#define LOOP_TIMEOUT_MS 1000
+#define LOOP_TIMEOUT_MS 10
 
 uint8_t buffer[SERIAL_BUFFER_SIZE];
 uint8_t message[MESSAGE_BUFFER_SIZE];
@@ -21,19 +23,34 @@ uint8_t message[MESSAGE_BUFFER_SIZE];
 struct mg_mgr manager;
 struct sqlite3 *db = NULL;
 
+struct sigaction old_action;
+
+void finalize() {
+  sqlite3_close(db);
+  mg_mgr_free(&manager);
+}
+
+void sigint_handler(int sig_no)
+{
+    log_header("\n\nCTRL-C pressed, terminating ground station...\n");
+    sigaction(SIGINT, &old_action, NULL);
+    kill(0, SIGINT);
+
+    finalize();
+    log_header("Ground station terminated.");
+}
+
 bool initialize() {
   if (generate_new_database(&db) != PROCESS_SUCCESSFUL_CODE) return false;
   if (!initialize_web_server(&manager, "http://0.0.0.0:8080", db)) return false;
+  initialize_command_stack();
 
   // TODO: Open Serial Port
 
   return true;
 }
 
-void finalize() {
-  sqlite3_close(db);
-  mg_mgr_free(&manager);
-}
+uint8_t command_send_buffer[COMMAND_SEND_BUFFER_SIZE];
 
 void process_xbee_message(int message_size_bytes) {
   if (!verify_packet(buffer, message_size_bytes)) {
@@ -46,20 +63,25 @@ void process_xbee_message(int message_size_bytes) {
   if (message_id == 0) {
     log_warning("Recieved corrupted message! (message id was 0)\n");
     return;
-  } 
-
-  if (get_msg_size(message_id) > message_size_bytes - 5) {
-    log_warning("Recieved incomplete message! Expected %d bytes from message id %d but only recieved %d\n", get_msg_size(message_id) + 5, message_id, message_size_bytes);
-    return;
   }
 
   if (message_id == COMMAND_MSG_ID) {
     // TODO: should the rocket ever send commands?
+    log_warning("Rocket tried to send a command");
   } else if (message_id == COMMAND_ACK_MSG_ID) {
-    // TODO: handle command acknowledgement
+    if (message_size_bytes >= sizeof(struct CommandStruct) + 5) {
+      struct CommandStruct* a = (struct CommandStruct*) message;
+      acknowledge_command(a->command_id, a->command_counter);
+    } else {
+      log_warning("Rocket tried to acknowledge a command, but packet size was only %d instead of expected %d", message_size_bytes, sizeof(struct CommandStruct) + 5);
+    }
   } else if (is_data_send_msg(message_id)) {
-    // Handle incoming data
-    parse_data_packet_into_sql(db, message_id, message);
+    if (get_msg_size(message_id) > message_size_bytes - 5) {
+      log_warning("Recieved incomplete message! Expected %d bytes from message id %d but only recieved %d\n", get_msg_size(message_id) + 5, message_id, message_size_bytes);
+    } else {
+      // Handle incoming data
+      parse_data_packet_into_sql(db, message_id, message);
+    }
   } else {
     log_warning("Recieved unexpected message id: %d\n", message_id);
   }
@@ -67,8 +89,14 @@ void process_xbee_message(int message_size_bytes) {
 }
 
 int main(void) {
+  // Set up exit code
+  struct sigaction action;
+  memset(&action, 0, sizeof(action));
+  action.sa_handler = &sigint_handler;
+  sigaction(SIGINT, &action, &old_action);
 
   log_header("GNC Ground Station v1.0\n");
+  log_standard("Press ctrl-c to terminate\n");
   log_standard("Initializing...\n\n");
 
   if (!initialize()) {
@@ -77,17 +105,19 @@ int main(void) {
   }
 
   log_standard("\nInitialization Complete...\n\n");
-
   
-  for (int i = 0; i < 10; i++) {
+  while (true) {
     // Update web server
     update_server(&manager, LOOP_TIMEOUT_MS);
 
+
     // TODO read bytes from serial, parse them using process_incoming_byte, and 
     // call process_xbee_message when the entire message is in the buffer (the positive buffer size should be the parameter)
+
+    // Update command stack
+    update_command_stack(command_send_buffer);
   }
 
-  finalize();
 
   return 0;
 }

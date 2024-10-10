@@ -31,10 +31,7 @@ bool is_data_send_msg(int message_id) {
 }
 
 #ifdef INCLUDE_PROTOCOL_SQL_MACROS
-	void generate_sql_timestamp_from_long(time_t time, char* buffer) {
-		strftime(buffer, 20, "%Y-%M-%d %H:%M:%S", localtime(&time));
-	}
-
+	
     bool convert_data_msg_to_sql_cmd(int message_id, uint8_t *data, char *sql_cmd) {
 		if (!is_data_send_msg(message_id)) {
 			return false;
@@ -43,16 +40,12 @@ bool is_data_send_msg(int message_id) {
 		switch (message_id) {
     	    case ROCKETKINEMATICS_MSG_ID: {
 				struct RocketKinematics* cvt_data = (struct RocketKinematics*) data;
-				char timestamp[20];
-				generate_sql_timestamp_from_long(cvt_data->timestamp, timestamp);
-				ROCKETKINEMATICS_SQL_ADD_ENTRY(sql_cmd, cvt_data, timestamp);
+				ROCKETKINEMATICS_SQL_ADD_ENTRY(sql_cmd, cvt_data);
 				return true;
 			} 
     	    case MASTERELECTRIC_MSG_ID: {
 				struct MasterElectric* cvt_data = (struct MasterElectric*) data;
-				char timestamp[20];
-				generate_sql_timestamp_from_long(cvt_data->timestamp, timestamp);
-				MASTERELECTRIC_SQL_ADD_ENTRY(sql_cmd, cvt_data, timestamp);
+				MASTERELECTRIC_SQL_ADD_ENTRY(sql_cmd, cvt_data);
 				return true;
 			} 
     		default:
