@@ -1,4 +1,5 @@
 from jinja2 import Environment, FileSystemLoader
+import json
 
 FLOAT_TYPES = ['float']
 INT_TYPES = [f'{h}int{x}_t' for h in ('u', '') for x in (8, 16, 32)]
@@ -35,24 +36,9 @@ ctemplate = environment.get_template("protocol_c_template.j2")
 H_FILE_LOCATIONS = ["../includes/protocol.h", "../../ground-station-core/lib/protocol/protocol.h"]
 C_FILE_LOCATIONS = ["../src/protocol.c", "../../ground-station-core/lib/protocol/protocol.c"]
 
-DATA = {
-    'WEB_SERVER_URL': 'http://0.0.0.0:8080',
-    'DATA_MESSAGES': {
-            "RocketKinematics": {
-                "attitude_w": "float",
-                "attitude_x": "float",
-                "attitude_y": "float",
-                "attitude_z": "float",
-                "velocity": "int32_t"
-            },
-
-            "MasterElectric": {
-                "voltage": "float",
-                "current": "float",
-                "electricity_status": "uint8_t"
-            }
-        }
-}
+DATA = {}
+with open("data.json") as f:
+    DATA = json.load(f)
 
 def cvt_type_to_max_len_str(i):
     if i in FLOAT_TYPES: return "1.1234567890E-38"

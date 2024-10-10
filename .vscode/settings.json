@@ -8,6 +8,9 @@
         "string": "c",
         "database.h": "c",
         "stdio.h": "c",
-        "sqlite3.h": "c"
+        "sqlite3.h": "c",
+        "__locale": "c",
+        "signal.h": "c",
+        "web_server.h": "c"
     }
 }
