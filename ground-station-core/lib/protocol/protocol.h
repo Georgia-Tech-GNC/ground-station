@@ -24,6 +24,8 @@
 
 	#define SET_ALL_NULL(x, len) for (int i = 0; i < (len); i++) x[i] = NULL
 	#define FREE_ALL(x, len) for (int i = 0; i < (len); i++) free(x[i])
+
+	#define COMMAND_API_PATH "/api/command/send"
 #endif
 
 /*
