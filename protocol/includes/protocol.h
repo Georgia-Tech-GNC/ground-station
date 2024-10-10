@@ -20,7 +20,6 @@
 //****************************************************************************************************
 
 #ifdef INCLUDE_PROTOCOL_SQL_MACROS
-	void generate_sql_timestamp_from_long(time_t time, char* buffer);
 	#define WEB_SERVER_URL "http://0.0.0.0:8080"
 
 	#define SET_ALL_NULL(x, len) for (int i = 0; i < (len); i++) x[i] = NULL
@@ -39,6 +38,11 @@ struct CommandStruct {
 #define COMMAND_MSG_ID 1
 #define COMMAND_ACK_MSG_ID 2
 
+#define INITIALIZE_ROCKET_COMMAND_ID 1
+#define ARM_ROCKET_COMMAND_ID 2
+
+#define NUM_COMMAND_TYPES 2
+
 
 struct RocketKinematics {
 	float attitude_w;
@@ -46,7 +50,7 @@ struct RocketKinematics {
 	float attitude_y;
 	float attitude_z;
 	int32_t velocity;
-	time_t timestamp;
+	int64_t timestamp;
 };
 #define ROCKETKINEMATICS_MSG_ID 10
 #define ROCKETKINEMATICS_SIZE sizeof(struct RocketKinematics)
@@ -58,16 +62,16 @@ struct RocketKinematics {
 	"attitude_y real, " \
 	"attitude_z real, " \
 	"velocity int, " \
-	"time datetime PRIMARY KEY);"
+	"time bigint PRIMARY KEY);"
 	#define ROCKETKINEMATICS_SQL_GET_MOST_RECENT "SELECT attitude_w, attitude_x, attitude_y, attitude_z, velocity, time FROM RocketKinematics ORDER BY time LIMIT 1"
-	#define ROCKETKINEMATICS_SQL_ADD_ENTRY(buffer, data, timestamp) sprintf(buffer, \
-		"INSERT INTO ROCKETKINEMATICS VALUES ('%.10E', '%.10E', '%.10E', '%.10E', '%d', '%s');", \
+	#define ROCKETKINEMATICS_SQL_ADD_ENTRY(buffer, data) sprintf(buffer, \
+		"INSERT INTO ROCKETKINEMATICS VALUES ('%.10E', '%.10E', '%.10E', '%.10E', '%d', '%lld');", \
 		data->attitude_w, \
 		data->attitude_x, \
 		data->attitude_y, \
 		data->attitude_z, \
 		data->velocity, \
-		timestamp); 
+		data->timestamp); 
 	#define ROCKETKINEMATICS_API_PATH "/api/data/RocketKinematics"
 	#define ROCKETKINEMATICS_SQL_SELECT_TO_JSON(sql_row_values) "{ %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\"}", \
 		MG_ESC("attitude_w"), sql_row_values[0], \
@@ -83,7 +87,7 @@ struct MasterElectric {
 	float voltage;
 	float current;
 	uint8_t electricity_status;
-	time_t timestamp;
+	int64_t timestamp;
 };
 #define MASTERELECTRIC_MSG_ID 11
 #define MASTERELECTRIC_SIZE sizeof(struct MasterElectric)
@@ -93,14 +97,14 @@ struct MasterElectric {
 	"voltage real, " \
 	"current real, " \
 	"electricity_status int, " \
-	"time datetime PRIMARY KEY);"
+	"time bigint PRIMARY KEY);"
 	#define MASTERELECTRIC_SQL_GET_MOST_RECENT "SELECT voltage, current, electricity_status, time FROM MasterElectric ORDER BY time LIMIT 1"
-	#define MASTERELECTRIC_SQL_ADD_ENTRY(buffer, data, timestamp) sprintf(buffer, \
-		"INSERT INTO MASTERELECTRIC VALUES ('%.10E', '%.10E', '%d', '%s');", \
+	#define MASTERELECTRIC_SQL_ADD_ENTRY(buffer, data) sprintf(buffer, \
+		"INSERT INTO MASTERELECTRIC VALUES ('%.10E', '%.10E', '%d', '%lld');", \
 		data->voltage, \
 		data->current, \
 		data->electricity_status, \
-		timestamp); 
+		data->timestamp); 
 	#define MASTERELECTRIC_API_PATH "/api/data/MasterElectric"
 	#define MASTERELECTRIC_SQL_SELECT_TO_JSON(sql_row_values) "{ %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\"}", \
 		MG_ESC("voltage"), sql_row_values[0], \

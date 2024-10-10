@@ -1,0 +1,23 @@
+{
+    "WEB_SERVER_URL": "http://0.0.0.0:8080",
+
+    "COMMANDS": [
+        "INITIALIZE_ROCKET", "ARM_ROCKET"
+    ],
+
+    "DATA_MESSAGES": {
+            "RocketKinematics": {
+                "attitude_w": "float",
+                "attitude_x": "float",
+                "attitude_y": "float",
+                "attitude_z": "float",
+                "velocity": "int32_t"
+            },
+
+            "MasterElectric": {
+                "voltage": "float",
+                "current": "float",
+                "electricity_status": "uint8_t"
+            }
+        }
+}
