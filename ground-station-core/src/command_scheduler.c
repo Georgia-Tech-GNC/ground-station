@@ -30,9 +30,9 @@ void initialize_command_stack() {
     }
 }
 
-bool send_command(int command_id) {
-    if (command_id < 1 || command_id > NUM_COMMAND_TYPES) return false; // Invalid command id
-    else if (currentCommandStack[command_id].is_active) return false; // Command is already being sent 
+void send_command(int command_id) {
+    if (command_id < 1 || command_id > NUM_COMMAND_TYPES) log_warning("Tried to send a command of invalid type %d\n", command_id); // Invalid command id
+    else if (currentCommandStack[command_id].is_active) log_warning("Tried to send command of type %d, which is already being sent\n", command_id); // Command is already being sent 
     else {
 
         log_debug("Added a command of type %d and uuid %d to the command stack\n", command_id, command_uuid_counter);
@@ -40,7 +40,6 @@ bool send_command(int command_id) {
         currentCommandStack[command_id].last_send_time = get_time_ms() - COMMAND_RESEND_TIMEOUT_MS*3;
         currentCommandStack[command_id].numberSendAttempts = 0;
         currentCommandStack[command_id].command_uuid = command_uuid_counter++;
-        return true; // Command added to stack
     }
 }
 

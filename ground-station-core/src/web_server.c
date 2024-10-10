@@ -3,6 +3,7 @@
 #include "database.h"
 #include "sqlite3.h"
 #include "logger.h"
+#include "command_scheduler.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -15,7 +16,12 @@ void event_handler(struct mg_connection *c, int ev, void *ev_data) {
     //fflush(stdout);
     struct mg_http_message *hm = (struct mg_http_message *) ev_data;
     HANDLE_API_INPUT(c->fn_data, hm) 
-    else {
+    else if (mg_match(hm->uri, mg_str(COMMAND_API_PATH), NULL)) {
+      double cmd_id_double = 0.0;
+      mg_json_get_num(hm->body, "$.id", &cmd_id_double);  // Extract first number
+      mg_http_reply(c, 200, "", "{%m:%d}\n", MG_ESC("status"), 1);
+      send_command(cmd_id_double + 1e-9);
+    } else {
       log_warning("INVALID API REQUEST RECIEVED: %s\n", hm->uri.buf);
       mg_http_reply(c, 401, NULL, "{}");
     }
