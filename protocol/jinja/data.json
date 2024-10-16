@@ -2,22 +2,71 @@
     "WEB_SERVER_URL": "http://0.0.0.0:8080",
 
     "COMMANDS": [
-        "INITIALIZE_ROCKET", "ARM_ROCKET"
+        "ROCKET_IDLE_TO_GROUND", "ROCKET_GROUND_TO_ARM", "ROCKET_FIRE_PYRO", "ROCKET_FLASH_SD_CARD", "ROCKET_RUN_VANE_ACTIVATION_TEST"
     ],
 
     "DATA_MESSAGES": {
-            "RocketKinematics": {
+            "RocketStateVector": {
+                "velocity_x": "float",
+                "velocity_y": "float",
+                "velocity_z": "float",
+                "angular_velocity_x": "float",
+                "angular_velocity_y": "float",
+                "angular_velocity_z": "float",
                 "attitude_w": "float",
                 "attitude_x": "float",
                 "attitude_y": "float",
                 "attitude_z": "float",
-                "velocity": "int32_t"
+                "position_x": "float",
+                "position_y": "float",
+                "position_z": "float"
             },
 
-            "MasterElectric": {
-                "voltage": "float",
-                "current": "float",
-                "electricity_status": "uint8_t"
+            "RocketServoDeflection": {
+                "servo_deflection_1": "float",
+                "servo_deflection_2": "float",
+                "servo_deflection_3": "float",
+                "servo_deflection_4": "float"
+            },
+
+            "RocketState": {
+                "rocket_state": "uint8_t",
+                "firing_channel_1": "uint8_t",
+                "firing_channel_2": "uint8_t",
+                "firing_channel_3": "uint8_t",
+                "firing_channel_4": "uint8_t"
+            },
+
+            "RocketGroundEKF": {
+                "pn_matrix_d1": "float",
+                "pn_matrix_d2": "float",
+                "pn_matrix_d3": "float",
+                "pn_matrix_d4": "float",
+                "pn_matrix_d5": "float",
+                "pn_matrix_d6": "float"
+            },
+
+            "RocketSensorData": {
+                "accelerometer_x": "float",
+                "accelerometer_y": "float",
+                "accelerometer_z": "float",
+                "gyro_x": "float",
+                "gyro_y": "float",
+                "gyro_z": "float",
+                "gps_x": "float",
+                "gps_y": "float",
+                "gps_z": "float",
+                "barometer": "float",
+                "accel_bias_x": "float",
+                "accel_bias_y": "float",
+                "accel_bias_z": "float",
+                "gyro_bias_x": "float",
+                "gyro_bias_y": "float",
+                "gyro_bias_z": "float",
+                "gps_offset_x": "float",
+                "gps_offset_y": "float",
+                "gps_offset_z": "float",
+                "barometer_offset": "float"
             }
         }
 }

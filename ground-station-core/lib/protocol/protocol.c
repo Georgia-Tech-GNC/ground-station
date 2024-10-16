@@ -17,17 +17,23 @@
 
 int get_msg_size(int message_id) {
 	switch (message_id) {
-    	case ROCKETKINEMATICS_MSG_ID:
-			return ROCKETKINEMATICS_SIZE;
-    	case MASTERELECTRIC_MSG_ID:
-			return MASTERELECTRIC_SIZE;
+    	case ROCKETSTATEVECTOR_MSG_ID:
+			return ROCKETSTATEVECTOR_SIZE;
+    	case ROCKETSERVODEFLECTION_MSG_ID:
+			return ROCKETSERVODEFLECTION_SIZE;
+    	case ROCKETSTATE_MSG_ID:
+			return ROCKETSTATE_SIZE;
+    	case ROCKETGROUNDEKF_MSG_ID:
+			return ROCKETGROUNDEKF_SIZE;
+    	case ROCKETSENSORDATA_MSG_ID:
+			return ROCKETSENSORDATA_SIZE;
     	default:
 			return -1;
 	}
 }
 
 bool is_data_send_msg(int message_id) {
-	return (message_id >= 10) && (message_id <= 10 + 2);
+	return (message_id >= 10) && (message_id <= 10 + 5);
 }
 
 #ifdef INCLUDE_PROTOCOL_SQL_MACROS
@@ -38,14 +44,29 @@ bool is_data_send_msg(int message_id) {
 		}
 
 		switch (message_id) {
-    	    case ROCKETKINEMATICS_MSG_ID: {
-				struct RocketKinematics* cvt_data = (struct RocketKinematics*) data;
-				ROCKETKINEMATICS_SQL_ADD_ENTRY(sql_cmd, cvt_data);
+    	    case ROCKETSTATEVECTOR_MSG_ID: {
+				struct RocketStateVector* cvt_data = (struct RocketStateVector*) data;
+				ROCKETSTATEVECTOR_SQL_ADD_ENTRY(sql_cmd, cvt_data);
 				return true;
 			} 
-    	    case MASTERELECTRIC_MSG_ID: {
-				struct MasterElectric* cvt_data = (struct MasterElectric*) data;
-				MASTERELECTRIC_SQL_ADD_ENTRY(sql_cmd, cvt_data);
+    	    case ROCKETSERVODEFLECTION_MSG_ID: {
+				struct RocketServoDeflection* cvt_data = (struct RocketServoDeflection*) data;
+				ROCKETSERVODEFLECTION_SQL_ADD_ENTRY(sql_cmd, cvt_data);
+				return true;
+			} 
+    	    case ROCKETSTATE_MSG_ID: {
+				struct RocketState* cvt_data = (struct RocketState*) data;
+				ROCKETSTATE_SQL_ADD_ENTRY(sql_cmd, cvt_data);
+				return true;
+			} 
+    	    case ROCKETGROUNDEKF_MSG_ID: {
+				struct RocketGroundEKF* cvt_data = (struct RocketGroundEKF*) data;
+				ROCKETGROUNDEKF_SQL_ADD_ENTRY(sql_cmd, cvt_data);
+				return true;
+			} 
+    	    case ROCKETSENSORDATA_MSG_ID: {
+				struct RocketSensorData* cvt_data = (struct RocketSensorData*) data;
+				ROCKETSENSORDATA_SQL_ADD_ENTRY(sql_cmd, cvt_data);
 				return true;
 			} 
     		default:
