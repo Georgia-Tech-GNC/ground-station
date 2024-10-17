@@ -10,13 +10,38 @@
 #include "protocol.h"
 #include "logger.h"
 
-int initialize_empty_database(sqlite3 *db) {
-    char* create_cmds[] = {ALL_SQL_TABLE_CREATE_COMMANDS};
+struct SLLNode {
+    struct SLLNode* next;
+    char* data;
+};
 
-    for (int i = 0; i < NUM_SQL_TABLES; i++) {
+struct SLL {
+    struct SLLNode* head;
+    size_t total_size_bytes;
+    int length;
+};
+
+void free_sll(struct SLL* sll) {
+    if (sll == NULL) return;
+
+    while (sll->head) {
+        struct SLLNode *current_node = sll->head;
+        if (current_node->data) free(current_node->data);
+        sll->head = current_node->next;
+        free(current_node);
+    }
+}
+
+int initialize_empty_database(sqlite3 *db) {
+    char* create_cmds[] = {CREATE_LOGGER_SQL_DB_COMMAND, ALL_SQL_TABLE_CREATE_COMMANDS};
+
+    for (int i = 0; i < NUM_SQL_TABLES + 1; i++) {
         int r = execute_sql_command_no_callback(db, create_cmds[i]);
         if (r == PROCESS_ABORT_CODE) return PROCESS_ABORT_CODE;
     }
+
+    // Now generate the logger database
+    
 
     return PROCESS_SUCCESSFUL_CODE;
 }
@@ -63,7 +88,7 @@ int parse_data_packet_into_sql(sqlite3 *db, int message_id, uint8_t *data) {
         return PROCESS_ABORT_CODE;
     }
 
-    log_debug("Running SQL Command: %s\n", command_buffer);
+    log_sql_debug("Running SQL Command: %s\n", command_buffer);
 
 
     int result = execute_sql_command_no_callback(db, command_buffer);
@@ -71,7 +96,7 @@ int parse_data_packet_into_sql(sqlite3 *db, int message_id, uint8_t *data) {
         log_warning( "Attempt to copy data contents of message code %d to SQL database failed\n", message_id);
         return PROCESS_ABORT_CODE;
     } else {
-        log_debug("Copied contents of message code %d to SQL database\n", message_id);
+        log_sql_debug("Copied contents of message code %d to SQL database\n", message_id);
         return PROCESS_SUCCESSFUL_CODE;
     }
 }
@@ -100,10 +125,87 @@ int sql_column_callback(void* data_buffer_ptr, int num_cols, char** values, char
     return 0;
 }
 
+int sql_log_message_callback(void* sll_void_pointer, int num_cols, char** values, char** names) {
+    // values[0] -> msg_id, values[1] -> message
+    struct SLL *sll = sll_void_pointer;
+
+    size_t msg_len = strlen(values[2]) + strlen(values[1]) + strlen(values[0]) + sizeof("\"\": {\"priority\":\"\",\"value\":\"\"}"); // "msg_id": {"priority":A,"value":B}
+
+    struct SLLNode *nodeToAdd = malloc(sizeof(struct SLLNode));
+    nodeToAdd->data = malloc(msg_len + 1);
+
+    strcpy(nodeToAdd->data, "\"");       // First "
+    strcat(nodeToAdd->data, values[0]);  // Copy the message id
+    strcat(nodeToAdd->data, "\": {\"priority\":\"");   // Add ": {"priority":"
+    strcat(nodeToAdd->data, values[1]);  // Add the priority
+    strcat(nodeToAdd->data, "\",\"value\":\"");  // Add ","value":"
+    strcat(nodeToAdd->data, values[2]);  // Copy the message
+    strcat(nodeToAdd->data, "\"}");       // Terminating "}
+
+    nodeToAdd->next = sll->head;         // Add to linked list
+    sll->head = nodeToAdd;
+
+    sll->total_size_bytes += msg_len;   // Add to total message length (COUNTING NULL TERMINATOR)
+    sll->length++;                      // Increment length\
+
+    return 0;
+}
+
+int query_sql_get_logs(sqlite3 *db, int min_index, char** return_json_str) {
+    char *zErrMsg = NULL;
+
+    char sql_command[65];
+    sprintf(sql_command, "Select id, priority, message FROM LogData WHERE id > %d", min_index);
+
+    struct SLL result = {
+        .head = NULL, 
+        .total_size_bytes = 0,
+        .length = 0
+    };
+
+    int op_code = sqlite3_exec(db, sql_command, sql_log_message_callback, &result, &zErrMsg);
+
+    if(op_code != SQLITE_OK ){
+        log_warning("SQL error: %s\n", zErrMsg);
+        sqlite3_free(zErrMsg);
+        free_sll(&result);
+
+        *return_json_str = malloc(sizeof("{\"empty\": \"True\"}"));
+        strcpy(*return_json_str, "{\"empty\": \"True\"}");
+
+        return PROCESS_ABORT_CODE;
+    } 
+
+    if (!result.head) {
+        *return_json_str = malloc(sizeof("{\"empty\": \"True\"}"));
+        strcpy(*return_json_str, "{\"empty\": \"True\"}");
+        return PROCESS_SUCCESSFUL_CODE;
+    }
+
+    *return_json_str = malloc(result.total_size_bytes + sizeof("{}") + (result.length*sizeof(", ")));
+
+    strcpy(*return_json_str, "{");
+
+    struct SLLNode *currentNode = result.head;
+    for (int i = 0; i < result.length; i++) {
+        if (!currentNode) break;
+        if (i != 0) strcat(*return_json_str, ", ");
+
+        strcat(*return_json_str, currentNode->data);
+        currentNode = currentNode->next;
+    }
+
+    strcat(*return_json_str, "}");
+
+    free_sll(&result);
+
+    return PROCESS_SUCCESSFUL_CODE;
+}
+
 int query_sql_with_callback(sqlite3 *db, char** data_buffer_ptr, char* sql_cmd) {
     char *zErrMsg = NULL;
 
-    log_debug("Running SQL Command: %s\n", sql_cmd);
+    log_sql_debug("Running SQL Command: %s\n", sql_cmd);
 
     int result = sqlite3_exec(db, sql_cmd, sql_column_callback, data_buffer_ptr, &zErrMsg);
 
