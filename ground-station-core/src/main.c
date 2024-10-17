@@ -42,6 +42,7 @@ void sigint_handler(int sig_no)
 
 bool initialize() {
   if (generate_new_database(&db) != PROCESS_SUCCESSFUL_CODE) return false;
+  set_sql_database(db);
   if (!initialize_web_server(&manager, "http://0.0.0.0:8080", db)) return false;
   initialize_command_stack();
 

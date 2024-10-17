@@ -59,4 +59,6 @@ int parse_data_packet_into_sql(sqlite3 *db, int message_id, uint8_t *data);
  */
 int query_sql_with_callback(sqlite3 *db, char** data_buffer_ptr, char* sql_cmd);
 
+int query_sql_get_logs(sqlite3 *db, int min_index, char** return_json_str);
+
 #endif

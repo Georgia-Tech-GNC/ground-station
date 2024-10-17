@@ -21,6 +21,11 @@ void event_handler(struct mg_connection *c, int ev, void *ev_data) {
       mg_json_get_num(hm->body, "$.id", &cmd_id_double);  // Extract first number
       mg_http_reply(c, 200, "", "{%m:%d}\n", MG_ESC("status"), 1);
       send_command(cmd_id_double + 1e-9);
+    } else if (mg_match(hm->uri, mg_str("/api/logs/get"), NULL)) {
+      char* f;
+      query_sql_get_logs(c->fn_data, 2, &f);
+      mg_http_reply(c, 200, "", f);
+      free(f);
     } else {
       log_warning("INVALID API REQUEST RECIEVED: %s\n", hm->uri.buf);
       mg_http_reply(c, 401, NULL, "{}");
