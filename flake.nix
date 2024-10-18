@@ -80,6 +80,9 @@
               go
               gdb
               nixfmt-rfc-style
+              (python3.withPackages (p: with p; [
+                jinja2
+              ]))
             ];
             buildInputs = with pkgs; [ ];
             nativeBuildInputs = with pkgs; [ pkg-config ];

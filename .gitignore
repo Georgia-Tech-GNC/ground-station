@@ -4,4 +4,8 @@ gound-station-core/build/
 protocol/build/
 .direnv
 __pycache__
+<<<<<<< HEAD
 venv/
+=======
+*.db
+>>>>>>> origin/main

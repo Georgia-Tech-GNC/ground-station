@@ -3,6 +3,15 @@ import json
 
 FLOAT_TYPES = ['float']
 INT_TYPES = [f'{h}int{x}_t' for h in ('u', '') for x in (8, 16, 32)]
+SIZES = {
+    'float': 32/8,
+    'uint8_t': 1,
+    'uint16_t': 2,
+    'uint32_t': 4,
+    'int8_t': 1,
+    'int16_t': 2,
+    'int32_t': 4,
+}
 
 def PRINTF_SQL_TYPE(l):
     r = []
@@ -23,6 +32,9 @@ def upper_plus_suffix(l, s):
 
 def duplicate(s, i):
     return [s for _ in range(len(i))]
+
+def size_of_datatype(datatype: str) -> int:
+    return SIZES[datatype]
 
 environment = Environment(loader=FileSystemLoader("./templates/"), trim_blocks=True)
 environment.globals['duplicate'] = duplicate
@@ -48,12 +60,17 @@ def cvt_type_to_max_len_str(i):
 for filepath in H_FILE_LOCATIONS:
     with open(filepath, "w") as f:
         # Calculate max sql write size (THIS IS A STRING CHARACTER SIZE! not bits!)
+        data_message_sizes = {}
         max_sql_write_size = 5
         for name, message in DATA["DATA_MESSAGES"].items():
-            size = length = len(f"\"INSERT INTO {name} VALUES ({", ".join(["'" + cvt_type_to_max_len_str(i) + "'" for i in message.values()])}, 'YYYY-MM-DD HH-MI-SS');\"")
+            values = ", ".join(["'" + cvt_type_to_max_len_str(i) + "'" for i in message.values()])
+            size = length = len(f"\"INSERT INTO {name} VALUES ({values}, 'YYYY-MM-DD HH-MI-SS');\"")
             max_sql_write_size = max(max_sql_write_size, size)
+            data_message_sizes[name] = sum(map(size_of_datatype, message.values()))
 
         DATA['MAX_SQL_WRITE_SIZE'] = max_sql_write_size + 10 # Extra 10 just in case
+        DATA['DATA_MESSAGE_SIZES'] = data_message_sizes
+        DATA['SIZES'] = SIZES
 
         f.write(htemplate.render(DATA))
 
