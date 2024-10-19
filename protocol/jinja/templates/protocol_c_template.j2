@@ -41,7 +41,8 @@ bool is_data_send_msg(int message_id) {
 		switch (message_id) {
     {% for name in DATA_MESSAGES.keys() %}
 	    case {{name.upper()}}_MSG_ID: {
-				struct {{name}}* cvt_data = (struct {{name}}*) data;
+				struct {{name}}* cvt_data;
+				{{name}}_decode(data, cvt_data);
 				{{name.upper()}}_SQL_ADD_ENTRY(sql_cmd, cvt_data);
 				return true;
 			} 

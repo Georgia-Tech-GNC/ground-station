@@ -46,27 +46,32 @@ bool is_data_send_msg(int message_id) {
 
 		switch (message_id) {
     	    case ROCKETSTATEVECTOR_MSG_ID: {
-				struct RocketStateVector* cvt_data = (struct RocketStateVector*) data;
+				struct RocketStateVector* cvt_data;
+				RocketStateVector_decode(data, cvt_data);
 				ROCKETSTATEVECTOR_SQL_ADD_ENTRY(sql_cmd, cvt_data);
 				return true;
 			} 
     	    case ROCKETSERVODEFLECTION_MSG_ID: {
-				struct RocketServoDeflection* cvt_data = (struct RocketServoDeflection*) data;
+				struct RocketServoDeflection* cvt_data;
+				RocketServoDeflection_decode(data, cvt_data);
 				ROCKETSERVODEFLECTION_SQL_ADD_ENTRY(sql_cmd, cvt_data);
 				return true;
 			} 
     	    case ROCKETSTATE_MSG_ID: {
-				struct RocketState* cvt_data = (struct RocketState*) data;
+				struct RocketState* cvt_data;
+				RocketState_decode(data, cvt_data);
 				ROCKETSTATE_SQL_ADD_ENTRY(sql_cmd, cvt_data);
 				return true;
 			} 
     	    case ROCKETGROUNDEKF_MSG_ID: {
-				struct RocketGroundEKF* cvt_data = (struct RocketGroundEKF*) data;
+				struct RocketGroundEKF* cvt_data;
+				RocketGroundEKF_decode(data, cvt_data);
 				ROCKETGROUNDEKF_SQL_ADD_ENTRY(sql_cmd, cvt_data);
 				return true;
 			} 
     	    case ROCKETSENSORDATA_MSG_ID: {
-				struct RocketSensorData* cvt_data = (struct RocketSensorData*) data;
+				struct RocketSensorData* cvt_data;
+				RocketSensorData_decode(data, cvt_data);
 				ROCKETSENSORDATA_SQL_ADD_ENTRY(sql_cmd, cvt_data);
 				return true;
 			} 
