@@ -72,17 +72,6 @@ with dpg.window(label="Velocity Graph", width=400, height=400, tag="velocity_gra
 with dpg.window(label="Attitude Graph", width=400, height=400, tag="attitude_graph", pos=(950, 400)):   
     a2g = AttitudeGraph("Attitude Graph", "Time (s)", "Attitude")
 
-<<<<<<< HEAD
-=======
-           
-
-# with dpg.window(label="Debugger Window", width=300, height=300, tag="debugger_window", pos=(600, 50)):
-#     pass
-
-# with dpg.window(label="Graph Docking Space", width=700, height=400, tag="graph_docking_window", pos=(50, 400)):
-#     pass
-
->>>>>>> origin/main
 a1g.update_graph_data(x_scale, y1)
 vg.update_graph_data(x_scale, y2)
 a2g.update_graph_data(x_scale, y3)
