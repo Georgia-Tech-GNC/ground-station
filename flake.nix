@@ -51,6 +51,7 @@
           nix.settings.auto-optimise-store = true;
           services.openssh.enable = true;
           services.fail2ban.enable = true;
+          programs.fish.enable = true;
 
           users.users.gnc = {
             isNormalUser = true;
