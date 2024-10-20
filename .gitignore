@@ -5,3 +5,4 @@ protocol/build/
 .direnv
 __pycache__
 *.db
+result
