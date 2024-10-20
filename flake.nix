@@ -111,7 +111,7 @@
             })
           ];
         };
-        images.trixie = nixosConfigurations.trixie.config.systems.build.sdImage;
+        images.trixie = nixosConfigurations.trixie.config.system.build.sdImage;
       }
     );
 }
