@@ -114,12 +114,13 @@ bool is_data_send_msg(int message_id);
 	 * Takes a recieved data packet and converts it into an SQL command
 	 * 
 	 * @param message_id	The id associated with this message
-	 * @param data			The data recieved (as an array of bytes)
-	 * @param sql_cmd		A char* buffer where the SQL command will be saved (must be at least as big as MAX_SQL_WRITE_CMD_SIZE)
+	 * @param data			  The data recieved (as an array of bytes)
+   * @param data_size   Length of the data received
+	 * @param sql_cmd		  A char* buffer where the SQL command will be saved (must be at least as big as MAX_SQL_WRITE_CMD_SIZE)
 	 * 
 	 * @return				true if the operation was successful, and false otherwise.
 	 */
-	bool convert_data_msg_to_sql_cmd(int message_id, uint8_t *data, char *sql_cmd);
+	bool convert_data_msg_to_sql_cmd(int message_id, uint8_t *data, size_t data_size, char *sql_cmd);
 
 	#define HANDLE_API_INPUT(db, hm) \
 		{% for data_message_name in DATA_MESSAGES.keys() -%}	

@@ -39,37 +39,52 @@ bool is_data_send_msg(int message_id) {
 
 #ifdef INCLUDE_PROTOCOL_SQL_MACROS
 	
-    bool convert_data_msg_to_sql_cmd(int message_id, uint8_t *data, char *sql_cmd) {
+    bool convert_data_msg_to_sql_cmd(int message_id, uint8_t *data, size_t data_size, char *sql_cmd) {
 		if (!is_data_send_msg(message_id)) {
 			return false;
 		}
 
 		switch (message_id) {
     	    case ROCKETSTATEVECTOR_MSG_ID: {
+        if (data_size != ROCKETSTATEVECTOR_SIZE) {
+          printf("warning: wrong data size!\n");
+        }
 				struct RocketStateVector* cvt_data;
 				RocketStateVector_decode(data, cvt_data);
 				ROCKETSTATEVECTOR_SQL_ADD_ENTRY(sql_cmd, cvt_data);
 				return true;
 			} 
     	    case ROCKETSERVODEFLECTION_MSG_ID: {
+        if (data_size != ROCKETSERVODEFLECTION_SIZE) {
+          printf("warning: wrong data size!\n");
+        }
 				struct RocketServoDeflection* cvt_data;
 				RocketServoDeflection_decode(data, cvt_data);
 				ROCKETSERVODEFLECTION_SQL_ADD_ENTRY(sql_cmd, cvt_data);
 				return true;
 			} 
     	    case ROCKETSTATE_MSG_ID: {
+        if (data_size != ROCKETSTATE_SIZE) {
+          printf("warning: wrong data size!\n");
+        }
 				struct RocketState* cvt_data;
 				RocketState_decode(data, cvt_data);
 				ROCKETSTATE_SQL_ADD_ENTRY(sql_cmd, cvt_data);
 				return true;
 			} 
     	    case ROCKETGROUNDEKF_MSG_ID: {
+        if (data_size != ROCKETGROUNDEKF_SIZE) {
+          printf("warning: wrong data size!\n");
+        }
 				struct RocketGroundEKF* cvt_data;
 				RocketGroundEKF_decode(data, cvt_data);
 				ROCKETGROUNDEKF_SQL_ADD_ENTRY(sql_cmd, cvt_data);
 				return true;
 			} 
     	    case ROCKETSENSORDATA_MSG_ID: {
+        if (data_size != ROCKETSENSORDATA_SIZE) {
+          printf("warning: wrong data size!\n");
+        }
 				struct RocketSensorData* cvt_data;
 				RocketSensorData_decode(data, cvt_data);
 				ROCKETSENSORDATA_SQL_ADD_ENTRY(sql_cmd, cvt_data);

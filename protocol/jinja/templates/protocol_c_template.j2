@@ -33,17 +33,20 @@ bool is_data_send_msg(int message_id) {
 
 #ifdef INCLUDE_PROTOCOL_SQL_MACROS
 	
-    bool convert_data_msg_to_sql_cmd(int message_id, uint8_t *data, char *sql_cmd) {
+    bool convert_data_msg_to_sql_cmd(int message_id, uint8_t *data, size_t data_size, char *sql_cmd) {
 		if (!is_data_send_msg(message_id)) {
 			return false;
 		}
 
 		switch (message_id) {
-    {% for name in DATA_MESSAGES.keys() %}
-	    case {{name.upper()}}_MSG_ID: {
-				struct {{name}}* cvt_data;
-				{{name}}_decode(data, cvt_data);
-				{{name.upper()}}_SQL_ADD_ENTRY(sql_cmd, cvt_data);
+    {% for data_message_name in DATA_MESSAGES.keys() %}
+	    case {{data_message_name.upper()}}_MSG_ID: {
+        if (data_size != {{data_message_name.upper()}}_SIZE) {
+          printf("warning: wrong data size!\n");
+        }
+				struct {{data_message_name}}* cvt_data;
+				{{data_message_name}}_decode(data, cvt_data);
+				{{data_message_name.upper()}}_SQL_ADD_ENTRY(sql_cmd, cvt_data);
 				return true;
 			} 
     {% endfor %}

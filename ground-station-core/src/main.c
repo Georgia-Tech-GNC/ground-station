@@ -25,6 +25,8 @@ struct sqlite3 *db = NULL;
 
 struct sigaction old_action;
 
+char *serialPath;
+
 void finalize() {
   sqlite3_close(db);
   mg_mgr_free(&manager);
@@ -89,7 +91,14 @@ void process_xbee_message(int message_size_bytes) {
 
 }
 
-int main(void) {
+int main(int argc, char *argv[]) {
+  if (argc != 2) {
+    printf("must have one argument for serial path\n");
+    return 1;
+  }
+
+  serialPath = argv[1];
+
   // Set up exit code
   struct sigaction action;
   memset(&action, 0, sizeof(action));
@@ -106,12 +115,19 @@ int main(void) {
   }
 
   log_standard("\nInitialization Complete...\n\n");
+
+  FILE *serial = fopen(serialPath, O_RDONLY);
+  int current_buffer_size = 0;
   
   while (true) {
     // Update web server
     update_server(&manager, LOOP_TIMEOUT_MS);
 
-
+    unsigned char byte_read = (unsigned char) getc(serial);
+    current_buffer_size = process_incoming_byte(byte_read, buffer, current_buffer_size);
+    if (current_buffer_size < 0) {
+      process_xbee_message(-current_buffer_size);
+    }
     // TODO read bytes from serial, parse them using process_incoming_byte, and 
     // call process_xbee_message when the entire message is in the buffer (the positive buffer size should be the parameter)
 
