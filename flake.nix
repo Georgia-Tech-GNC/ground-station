@@ -82,6 +82,7 @@
               nixfmt-rfc-style
               (python3.withPackages (p: with p; [
                 jinja2
+                requests
               ]))
             ];
             buildInputs = with pkgs; [ ];
