@@ -88,7 +88,6 @@ void process_xbee_message(int message_size_bytes) {
   } else {
     log_warning("Recieved unexpected message id: %d\n", message_id);
   }
-
 }
 
 int main(int argc, char *argv[]) {
@@ -126,10 +125,9 @@ int main(int argc, char *argv[]) {
     unsigned char byte_read = (unsigned char) getc(serial);
     current_buffer_size = process_incoming_byte(byte_read, buffer, current_buffer_size);
     if (current_buffer_size < 0) {
+      log_standard("Attempting to process message of size %d\n", -current_buffer_size);
       process_xbee_message(-current_buffer_size);
     }
-    // TODO read bytes from serial, parse them using process_incoming_byte, and 
-    // call process_xbee_message when the entire message is in the buffer (the positive buffer size should be the parameter)
 
     // Update command stack
     update_command_stack(command_send_buffer);
