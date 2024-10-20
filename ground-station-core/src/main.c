@@ -2,6 +2,7 @@
 #include <time.h>
 #include <stdint.h>
 #include <signal.h>
+#include <errno.h>
 
 #include "mongoose.h"  
 #include "sqlite3.h"
@@ -118,6 +119,10 @@ int main(int argc, char *argv[]) {
   log_standard("\nInitialization Complete...\n\n");
 
   FILE *serial = fopen(serialPath, O_RDONLY);
+  if (errno != 0) {
+    perror("open serial file");
+    return 1;
+  }
   int current_buffer_size = 0;
   
   while (true) {
