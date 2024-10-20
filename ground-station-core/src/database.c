@@ -78,10 +78,10 @@ void generate_database_name(char *buffer) {
     strftime(buffer, 32, "database-%Y-%M-%d-%H-%M-%S.db", localtime(&rawtime));
 }
 
-int parse_data_packet_into_sql(sqlite3 *db, int message_id, uint8_t *data) {
+int parse_data_packet_into_sql(sqlite3 *db, int message_id, uint8_t *data, size_t data_size) {
     char command_buffer[MAX_SQL_WRITE_CMD_SIZE] = {0};
 
-    bool successful = convert_data_msg_to_sql_cmd(message_id, data, command_buffer);
+    bool successful = convert_data_msg_to_sql_cmd(message_id, data, data_size, command_buffer);
 
     if (!successful) {
         log_warning("Attempt to read data contents of message code %d failed\n", message_id);

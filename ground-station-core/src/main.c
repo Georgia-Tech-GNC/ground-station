@@ -62,6 +62,7 @@ void process_xbee_message(int message_size_bytes) {
   }
 
   int message_id = extract_packet(buffer, message_size_bytes, message);
+  int payload_size = message_size_bytes - 5;
   
   if (message_id == 0) {
     log_warning("Recieved corrupted message! (message id was 0)\n");
@@ -72,9 +73,10 @@ void process_xbee_message(int message_size_bytes) {
     // TODO: should the rocket ever send commands?
     log_warning("Rocket tried to send a command");
   } else if (message_id == COMMAND_ACK_MSG_ID) {
-    if (message_size_bytes >= sizeof(struct CommandStruct) + 5) {
-      struct CommandStruct* a = (struct CommandStruct*) message;
-      acknowledge_command(a->command_id, a->command_counter);
+    if (message_size_bytes >= 2 + 5) {
+      uint8_t command_id = message[0];
+      uint8_t command_counter = message[1];
+      acknowledge_command(command_id, command_counter);
     } else {
       log_warning("Rocket tried to acknowledge a command, but packet size was only %d instead of expected %d", message_size_bytes, sizeof(struct CommandStruct) + 5);
     }
@@ -83,7 +85,7 @@ void process_xbee_message(int message_size_bytes) {
       log_warning("Recieved incomplete message! Expected %d bytes from message id %d but only recieved %d\n", get_msg_size(message_id) + 5, message_id, message_size_bytes);
     } else {
       // Handle incoming data
-      parse_data_packet_into_sql(db, message_id, message);
+      parse_data_packet_into_sql(db, message_id, message, payload_size);
     }
   } else {
     log_warning("Recieved unexpected message id: %d\n", message_id);

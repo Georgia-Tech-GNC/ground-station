@@ -42,10 +42,11 @@ int generate_new_database(sqlite3 **db);
  * @param db            the SQL database
  * @param message_id    the id of the recieved message
  * @param data          the payload of the recieved message
+ * @param data_size     the payload size
  * 
  * @return PROCESS_SUCCESSFUL_CODE if the operation was successful, and PROCESS_ABORT_CODE otherwise
  */
-int parse_data_packet_into_sql(sqlite3 *db, int message_id, uint8_t *data);
+int parse_data_packet_into_sql(sqlite3 *db, int message_id, uint8_t *data, size_t data_size);
 
 /**
  * Calls an SQL command, and stores the last row returned to the inputted string array
