@@ -94,7 +94,7 @@
           src = ./ground-station-core;
           inherit system;
         };
-        nixosConfigurations.trixie = pkgs.lib.nixosSystem {
+        nixosConfigurations.trixie = nixpkgs.lib.nixosSystem {
           system = "aarch64-linux";
           modules = [
             baseModule
