@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
 #include <stdint.h>
 #include <signal.h>
@@ -118,8 +119,9 @@ int main(int argc, char *argv[]) {
 
   log_standard("\nInitialization Complete...\n\n");
 
-  FILE *serial = fopen(serialPath, O_RDONLY);
-  if (errno != 0) {
+  log_standard("opening %s...\n", serialPath);
+  FILE *serial = fopen(serialPath, "r");
+  if (serial == NULL) {
     perror("open serial file");
     return 1;
   }
