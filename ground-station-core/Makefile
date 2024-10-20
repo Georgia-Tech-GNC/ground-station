@@ -30,6 +30,9 @@ $(BUILD_DIR)/%.cpp.o: %.cpp
 	$(MKDIR_P) $(dir $@)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
 
+install: $(BUILD_DIR)/$(TARGET_EXEC)
+	mkdir $(out)/bin
+	cp $< $(out)/bin/ground-station-core
 
 .PHONY: clean
 

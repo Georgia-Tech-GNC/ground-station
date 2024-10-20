@@ -88,14 +88,25 @@
             nativeBuildInputs = with pkgs; [ pkg-config ];
           };
         };
+        packages.ground-station-core = pkgs.stdenv.mkDerivation {
+          name = "ground-station-core";
+          src = ./ground-station-core;
+          inherit system;
+        };
         nixosConfigurations.trixie = {
           system = "aarch64-linux";
           modules = [
             baseModule
             ({ ... }: {
               environment.systemPackages = [
-                
+                packages.ground-station-core
               ];
+              systemd.services.ground-station-core = {
+                description = "XBee-Pi comms server for GNC";
+                serviceConfig.ExecStart = "${packages.ground-station-core}/bin/ground-station-core";
+                wantedBy = [ "multi-user.target" ];
+                enable = true;
+              };
             })
           ];
         };
