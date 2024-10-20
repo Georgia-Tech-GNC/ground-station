@@ -94,7 +94,7 @@
           src = ./ground-station-core;
           inherit system;
         };
-        nixosConfigurations.trixie = {
+        nixosConfigurations.trixie = pkgs.lib.nixosSystem {
           system = "aarch64-linux";
           modules = [
             baseModule
@@ -111,7 +111,7 @@
             })
           ];
         };
-        images.trixie = nixosConfigurations.trixie.config.systemd.build.sdImage;
+        images.trixie = nixosConfigurations.trixie.config.systems.build.sdImage;
       }
     );
 }
