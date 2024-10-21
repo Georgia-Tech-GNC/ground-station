@@ -167,6 +167,36 @@ class DataUpdater:
         self.callbacks = {}
 
 
+    def remove_callback(self, id: int | str):
+
+        if not isinstance(id, (int, str)):
+            print(f"ERROR: id [{id}] is not an int or a str.")
+            return
+
+        removed_callback = self.callbacks.pop(id, None)
+
+        if removed_callback is None:
+            print(f"WARNING: callback with id [{id}] is not in (self.callbacks).")
+        else:
+            print(f"Callback [{removed_callback[0]}] with id [{id}] successfully removed from (self.callbacks).")
+
+
+    def remove_callbacks(self, ids: list[int | str]):
+
+        if not isinstance(ids, list):
+            print(f"ERROR: ids argument is not a list.")
+            return
+        
+        if not ids:
+            print("WARNING: no callbacks to remove.")
+            return
+
+        for i, callback_id in enumerate(ids):
+            print(f"[{i + 1}]: ", end="")
+            self.remove_callback(callback_id)
+
+
+
 
 
 updaterRSV = DataUpdater("/api/data/RocketStateVector", {
