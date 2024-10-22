@@ -49,6 +49,19 @@ class DataViewerWindow:
         for i, name in enumerate(data_labels):
             self.data_containers[i] = DataViewerWindow._create_container(name, types[i])
 
+    def set_all_values(self, values: list[Any]):
+        """
+        Sets the value of all items in the data viewer window, in the order that they were initialized
+
+        :param values: a list of all data values to set
+        """
+        if len(values) != len(self.data_containers):
+            print(f"Warning! set_all_values with list of {len(values)} items instead of {len(self.data_containers)}")
+            return
+    
+        for i, value in enumerate(values):
+            self.data_containers[i].set_data(value)
+
     def set_value(self, value_index: int, value: Any):
         """
         Set the value of any item in the data viewer window
@@ -156,7 +169,6 @@ class QuaternionViewport(Viewport):
         self.most_recent_data = data
 
         rotated_data = multiply_quaternion(self.offset, data)
-        print(rotated_data)
         a, b, c = quaternion_to_euler(rotated_data)
         dpg.set_value(self.tags[0], a)
         dpg.set_value(self.tags[1], b)

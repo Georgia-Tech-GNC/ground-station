@@ -4,22 +4,19 @@ from gui_templates import GraphViewerWindow
 
 class GraphManager:
 
-    def __init__(self, values: list[str]):
-        self.data: dict[str, float] = {value: [] for value in values}
-        self.active_windows = []
+    def __init__(self, values: dict[str, Callable[..., tuple[list[float], list[float]]]]):
+        self.data: dict[str, Callable[..., tuple[list[float], list[float]]]] = values
+        self.active_windows: dict[GraphWindow, list[str]] = {}
 
-    def add_new_data(self, data_categery: str, data: float):
-        if data_categery not in self.data:
-            #TODO: ADD WARNING
-            return
-        
-        self.data[data_categery].append(data)
+    def get_names(self):
+        return self.data.keys()
 
-    def register_new_graph_window(self, w):
-        self.active_windows.append(w)
+    def register_new_graph_window(self, w, categories: list[str]):
+        self.active_windows[w] = categories
     
     def deregister_graph_window(self, w):
-        self.active_windows.remove(w)
+        if w in self.active_windows:
+            del self.active_windows[w]
 
     def create_graph_window(self, categories: list[str]):
         if any(i not in self.data.keys() for i in categories): 
@@ -27,6 +24,13 @@ class GraphManager:
             return
         
         GraphWindow(categories, self)
+
+    def update(self):
+        new_data = {k: v() for k, v in self.data.items()}
+
+        for gw, c in self.active_windows.items():
+            for i, cat in enumerate(c):
+                gw.update_graph_data(i, new_data[cat][0], new_data[cat][1])
         
             
 
@@ -34,7 +38,7 @@ class GraphWindow:
 
     def __init__(self, names: str, parent: GraphManager):
         self.parent = parent
-        parent.register_new_graph_window(self)
+        parent.register_new_graph_window(self, names)
 
         self.x_axis_tag = dpg.generate_uuid()
         self.y_axis_tags = [dpg.generate_uuid() for _ in range(len(names))]
@@ -51,3 +55,8 @@ class GraphWindow:
                     dpg.add_plot_axis(dpg.mvYAxis, label=name, tag=self.y_axis_tags[i])
 
                     dpg.add_line_series(x=[], y=[], label=name, parent=self.y_axis_tags[i], tag=self.line_series_tag[i])
+
+    def update_graph_data(self, graph_index: int, x_data, y_data):
+        dpg.set_value(self.line_series_tag[graph_index], [list(x_data), list(y_data)])          
+        dpg.fit_axis_data(self.x_axis_tag)
+        dpg.fit_axis_data(self.y_axis_tags[graph_index])

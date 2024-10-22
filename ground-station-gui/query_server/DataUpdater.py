@@ -1,5 +1,4 @@
 import requests
-import update
 
 WEB_SERVER_URL = "http://0.0.0.0:8080/"
 
@@ -148,6 +147,35 @@ class DataUpdater:
             print("OTHER ERROR")
 
 
+    def test(self, data):
+        for callback, datanames in self.callbacks:
+                args = []
+
+                for dataname in datanames:
+
+                    # dataname is guaranteed to be in self.values based on error check in
+                    # add_callback() method
+                    datatype = self.values.get(dataname)
+                    
+                    datum = data.get(dataname)
+
+                    if datum is None:
+                        print(f"ERROR: dataname [{dataname}] not in returned JSON")
+                        return
+                    
+                    try:
+                        casted_datum = datatype(datum)
+                    except (TypeError, ValueError) as e:
+                        print(f"ERROR: invalid casting of datum [{datum}] to [{datatype}]: {e}")
+                        return
+
+                    args.append(casted_datum)
+            
+                try:
+                    callback(*args)
+                except Exception as e:
+                    print(f"Exception raised during callback [{callback}]: [{e}]")
+                    return
 
     def clear_callbacks(self):
         print(f"{len(self.callbacks)} callbacks cleared")
