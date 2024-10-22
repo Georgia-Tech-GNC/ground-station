@@ -24,30 +24,42 @@ class DataUpdater:
         """
         self.callbacks is to be structured as follows:
 
-        - **self.callbacks**: A list of tuples, where each tuple consists of:
+        - **self.callbacks**: A dictionary of key-value pairs. The key is
+          either an int or a str representing the callback's id. The value is
+        – a two-element tuple that consists of:
         - **callable**: The callback function to be executed.
-        - **List[tuple[str]]**: A list of key-value pairs (stored in tuples) that represent
-            the key-value pairs from the API return JSON, arranged in the order expected
-            by the callback
+        - **list[str]**: A list of strs that represent the keys required from the
+                         return JSON of the API call, in the order expected by
+                         the callable.
 
         The structure can be represented as:
-            list[tuple[callable, list[tuple[str]]]]
+            dict[int | str, tuple[callable, list[str]]]
         """
-        self.callbacks = []
+        self.callbacks = {}
 
     
     """
-    Adds a callback function, along with the requisite arguments, to self.callbacks.
+    Adds a callback function, along with the id and requisite arguments, to self.callbacks.
 
     :param func: The callback function to be added.
     :type func: callable
+    :param id: The unique id of this callback.
+    :type id: int | str
     :param datanames: A list of strings that represent the specific keys needed
                        from the JSON returned by the API call
     :type datanames: list[str]
     """
-    def add_callback(self, func: callable, datanames: list[str]):
+    def add_callback(self, func: callable, id: int | str, datanames: list[str]):
         if not callable(func):
             print(f"ERROR: func [{func}] is not callable.")
+            return
+        
+        if not isinstance(id, (int, str)):
+            print(f"ERROR: id [{id}] is not an int or a str.")
+            return
+        
+        if id in self.callbacks:
+            print(f"ERROR: id [{id}] already exists in (self.callbacks).")
             return
         
         if not isinstance(datanames, list):
@@ -60,34 +72,31 @@ class DataUpdater:
                 return
 
             if dataname not in self.values:
-                print(f"ERROR: dataname [{dataname}] not in self.values")
+                print(f"ERROR: dataname [{dataname}] not in (self.values).")
                 return
-        
-        if not all(isinstance(dataname, str) for dataname in datanames):
-            print(f"ERROR: not all items in datanames are strings.")
-            return
 
 
         # potentially add check regarding the length of datanames compared to
         # the number of expected arguments for func? (use inspect module)
         
-        self.callbacks.append((func, datanames))
+
+        self.callbacks[id] = (func, datanames)
         print("SUCCESS: callback added.")
 
 
     """
-    Updates data by making a GET request to self.URL and processes the
+    Updates data by making a GET request to self.url and processes the
     returned JSON data. Calls callback functions from self.callbacks with the 
     relevant data extracted from the JSON response.
 
     The method performs the following steps:
     1. Makes a GET request to the URL.
     2. Handles errors related to invalid URLs and other exceptions.
-    3. Parses the JSON response and extracts required data based on registered 
+    3. Parses the JSON response and extracts required data based on 
        callback functions.
     4. Calls each callback with the corresponding data arguments.
         
-    Note:
+    Notes:
         - The method assumes that all data names in the callbacks are
           present in "self.values" based on prior checks in the "add_callback" 
           method.
@@ -107,17 +116,21 @@ class DataUpdater:
             try:
                 data = r.json()
             except Exception as e:
-                print(f"ERROR: response is not in JSON format [{e}]")
+                print(f"ERROR: response is not in JSON format -> [{e}]")
                 return
 
-            for callback, datanames in self.callbacks:
+            for callback, datanames in self.callbacks.values():
                 args = []
 
                 for dataname in datanames:
 
                     # dataname is guaranteed to be in self.values based on error check in
-                    # add_callback() method
+                    # add_callback() method; however, I included an error-handler anyway
                     datatype = self.values.get(dataname)
+
+                    if not callable(datatype):
+                        print(f"ERROR: datatype [{datatype}] for dataname [{dataname}] is not callable.")
+                        return
                     
                     datum = data.get(dataname)
 
@@ -127,8 +140,8 @@ class DataUpdater:
                     
                     try:
                         casted_datum = datatype(datum)
-                    except (TypeError, ValueError) as e:
-                        print(f"ERROR: invalid casting of datum [{datum}] to [{datatype}]: {e}")
+                    except Exception as e:
+                        print(f"ERROR: invalid casting of datum [{datum}] to [{datatype}] -> {e}")
                         return
 
                     args.append(casted_datum)
@@ -136,10 +149,10 @@ class DataUpdater:
                 try:
                     callback(*args)
                 except Exception as e:
-                    print(f"Exception raised during callback [{callback}]: [{e}]")
+                    print(f"ERROR: exception raised during callback [{callback}] -> [{e}]")
                     return
-                    
-
+        
+        # error messages for bad status codes should be more specific
         elif r.status_code == 401:
             print("ERROR IN THE API CALL")
         
@@ -179,7 +192,37 @@ class DataUpdater:
 
     def clear_callbacks(self):
         print(f"{len(self.callbacks)} callbacks cleared")
-        self.callbacks = []
+        self.callbacks = {}
+
+
+    def remove_callback(self, id: int | str):
+
+        if not isinstance(id, (int, str)):
+            print(f"ERROR: id [{id}] is not an int or a str.")
+            return
+
+        removed_callback = self.callbacks.pop(id, None)
+
+        if removed_callback is None:
+            print(f"WARNING: callback with id [{id}] is not in (self.callbacks).")
+        else:
+            print(f"Callback [{removed_callback[0]}] with id [{id}] successfully removed from (self.callbacks).")
+
+
+    def remove_callbacks(self, ids: list[int | str]):
+
+        if not isinstance(ids, list):
+            print(f"ERROR: ids argument is not a list.")
+            return
+        
+        if not ids:
+            print("WARNING: no callbacks to remove.")
+            return
+
+        for i, callback_id in enumerate(ids):
+            print(f"[{i + 1}]: ", end="")
+            self.remove_callback(callback_id)
+
 
 
 
