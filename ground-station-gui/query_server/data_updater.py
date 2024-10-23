@@ -1,5 +1,6 @@
+from collections.abc import Callable
+
 import requests
-import update
 
 WEB_SERVER_URL = "http://0.0.0.0:8080/"
 
@@ -36,9 +37,11 @@ class DataUpdater:
         The structure can be represented as:
             dict[int | str, tuple[callable, list[str]]]
         """
-        self.callbacks = {}
+        self.callbacks: dict[id | str, tuple[Callable, list[str]]] = {}
 
-    
+    def is_valid_data_name(self, data_name: str):
+        return data_name in self.values
+
     """
     Adds a callback function, along with the id and requisite arguments, to self.callbacks.
 
@@ -46,44 +49,42 @@ class DataUpdater:
     :type func: callable
     :param id: The unique id of this callback.
     :type id: int | str
-    :param datanames: A list of strings that represent the specific keys needed
+    :param data_names: A list of strings that represent the specific keys needed
                        from the JSON returned by the API call
-    :type datanames: list[str]
+    :type data_names: list[str]
     """
-    def add_callback(self, func: callable, id: int | str, datanames: list[str]):
+
+    def add_callback(self, func: callable, dpg_id: int | str, data_names: list[str]):
         if not callable(func):
             print(f"ERROR: func [{func}] is not callable.")
             return
-        
-        if not isinstance(id, (int, str)):
-            print(f"ERROR: id [{id}] is not an int or a str.")
+
+        if not isinstance(dpg_id, (int, str)):
+            print(f"ERROR: id [{dpg_id}] is not an int or a str.")
             return
-        
-        if id in self.callbacks:
-            print(f"ERROR: id [{id}] already exists in (self.callbacks).")
+
+        if dpg_id in self.callbacks:
+            print(f"ERROR: id [{dpg_id}] already exists in (self.callbacks).")
             return
-        
-        if not isinstance(datanames, list):
-            print(f"ERROR: datanames argument is not a list.")
+
+        if not isinstance(data_names, list):
+            print(f"ERROR: data names argument is not a list.")
             return
-        
-        for dataname in datanames:
-            if not isinstance(dataname, str):
-                print(f"ERROR: dataname [{dataname}] is not a string.")
+
+        for data_name in data_names:
+            if not isinstance(data_name, str):
+                print(f"ERROR: data name [{data_name}] is not a string.")
                 return
 
-            if dataname not in self.values:
-                print(f"ERROR: dataname [{dataname}] not in (self.values).")
+            if data_name not in self.values:
+                print(f"ERROR: data name [{data_name}] not in (self.values).")
                 return
 
-
-        # potentially add check regarding the length of datanames compared to
+        # potentially add check regarding the length of data names compared to
         # the number of expected arguments for func? (use inspect module)
-        
 
-        self.callbacks[id] = (func, datanames)
+        self.callbacks[dpg_id] = (func, data_names)
         print("SUCCESS: callback added.")
-
 
     """
     Updates data by making a GET request to self.url and processes the
@@ -103,6 +104,7 @@ class DataUpdater:
           method.
 
     """
+
     def update(self):
         try:
             r = requests.get(WEB_SERVER_URL + self.url)
@@ -120,25 +122,25 @@ class DataUpdater:
                 print(f"ERROR: response is not in JSON format -> [{e}]")
                 return
 
-            for callback, datanames in self.callbacks.values():
+            for callback, data_names in self.callbacks.values():
                 args = []
 
-                for dataname in datanames:
+                for data_name in data_names:
 
-                    # dataname is guaranteed to be in self.values based on error check in
+                    # data name is guaranteed to be in self.values based on error check in
                     # add_callback() method; however, I included an error-handler anyway
-                    datatype = self.values.get(dataname)
+                    datatype = self.values.get(data_name)
 
                     if not callable(datatype):
-                        print(f"ERROR: datatype [{datatype}] for dataname [{dataname}] is not callable.")
+                        print(f"ERROR: datatype [{datatype}] for data name [{data_name}] is not callable.")
                         return
-                    
-                    datum = data.get(dataname)
+
+                    datum = data.get(data_name)
 
                     if datum is None:
-                        print(f"ERROR: dataname [{dataname}] not in returned JSON")
+                        print(f"ERROR: data name [{data_name}] not in returned JSON")
                         return
-                    
+
                     try:
                         casted_datum = datatype(datum)
                     except Exception as e:
@@ -146,47 +148,74 @@ class DataUpdater:
                         return
 
                     args.append(casted_datum)
-            
+
                 try:
                     callback(*args)
                 except Exception as e:
                     print(f"ERROR: exception raised during callback [{callback}] -> [{e}]")
                     return
-        
+
         # error messages for bad status codes should be more specific
         elif r.status_code == 401:
             print("ERROR IN THE API CALL")
-        
+
         else:
             print("OTHER ERROR")
 
+    def test(self, data):
+        values = list(self.callbacks.values())
+        for callback, data_names in values:
+            args = []
 
+            for data_name in data_names:
+
+                # data name is guaranteed to be in self.values based on error check in
+                # add_callback() method
+                datatype = self.values.get(data_name)
+
+                datum = data.get(data_name)
+
+                if datum is None:
+                    print(f"ERROR: data name [{data_name}] not in returned JSON")
+                    return
+
+                try:
+                    casted_datum = datatype(datum)
+                except (TypeError, ValueError) as e:
+                    print(f"ERROR: invalid casting of datum [{datum}] to [{datatype}]: {e}")
+                    return
+
+                args.append(casted_datum)
+
+            try:
+                callback(*args)
+            except Exception as e:
+                print(f"Exception raised during callback [{callback}]: [{e}]")
+                return
 
     def clear_callbacks(self):
         print(f"{len(self.callbacks)} callbacks cleared")
         self.callbacks = {}
 
+    def remove_callback(self, dpg_id: int | str):
 
-    def remove_callback(self, id: int | str):
-
-        if not isinstance(id, (int, str)):
-            print(f"ERROR: id [{id}] is not an int or a str.")
+        if not isinstance(dpg_id, (int, str)):
+            print(f"ERROR: id [{dpg_id}] is not an int or a str.")
             return
 
-        removed_callback = self.callbacks.pop(id, None)
+        removed_callback = self.callbacks.pop(dpg_id, None)
 
         if removed_callback is None:
-            print(f"WARNING: callback with id [{id}] is not in (self.callbacks).")
+            print(f"WARNING: callback with id [{dpg_id}] is not in (self.callbacks).")
         else:
-            print(f"Callback [{removed_callback[0]}] with id [{id}] successfully removed from (self.callbacks).")
-
+            print(f"Callback [{removed_callback[0]}] with id [{dpg_id}] successfully removed from (self.callbacks).")
 
     def remove_callbacks(self, ids: list[int | str]):
 
         if not isinstance(ids, list):
             print(f"ERROR: ids argument is not a list.")
             return
-        
+
         if not ids:
             print("WARNING: no callbacks to remove.")
             return
@@ -196,83 +225,78 @@ class DataUpdater:
             self.remove_callback(callback_id)
 
 
-
-
-
 updaterRSV = DataUpdater("/api/data/RocketStateVector", {
-    "velocity_x": (float),
-    "velocity_y": (float),
-    "velocity_z": (float),
-    "angular_velocity_x": (float),
-    "angular_velocity_y": (float),
-    "angular_velocity_z": (float),
-    "attitude_w": (float),
-    "attitude_x": (float),
-    "attitude_y": (float),
-    "attitude_z": (float),
-    "position_x": (float),
-    "position_y": (float),
-    "position_z": (float),
-    "timestamp": (int)
+    "velocity_x": float,
+    "velocity_y": float,
+    "velocity_z": float,
+    "angular_velocity_x": float,
+    "angular_velocity_y": float,
+    "angular_velocity_z": float,
+    "attitude_w": float,
+    "attitude_x": float,
+    "attitude_y": float,
+    "attitude_z": float,
+    "position_x": float,
+    "position_y": float,
+    "position_z": float,
+    "timestamp": int
 })
 
 updaterRSDef = DataUpdater("/api/data/RocketServoDeflection", {
-    "servo_deflection_1": (float),
-    "servo_deflection_2": (float),
-    "servo_deflection_3": (float),
-    "servo_deflection_4": (float),
-    "timestamp": (int)
+    "servo_deflection_1": float,
+    "servo_deflection_2": float,
+    "servo_deflection_3": float,
+    "servo_deflection_4": float,
+    "timestamp": int
 })
 
-
 updaterRS = DataUpdater("/api/data/RocketState", {
-    "rocket_state": (int),
-    "firing_channel_1": (int),
-    "firing_channel_2": (int),
-    "firing_channel_3": (int),
-    "firing_channel_4": (int),
-    "timestamp": (int)
+    "rocket_state": int,
+    "firing_channel_1": int,
+    "firing_channel_2": int,
+    "firing_channel_3": int,
+    "firing_channel_4": int,
+    "timestamp": int
 })
 
 updaterRGEKF = DataUpdater("/api/data/RocketGroundEKF", {
-    "pn_matrix_d1": (float),
-    "pn_matrix_d2": (float),
-    "pn_matrix_d3": (float),
-    "pn_matrix_d4": (float),
-    "pn_matrix_d5": (float),
-    "pn_matrix_d6": (float),
-    "timestamp": (int)
+    "pn_matrix_d1": float,
+    "pn_matrix_d2": float,
+    "pn_matrix_d3": float,
+    "pn_matrix_d4": float,
+    "pn_matrix_d5": float,
+    "pn_matrix_d6": float,
+    "timestamp": int
 })
 
 updaterRSData = DataUpdater("/api/data/RocketSensorData", {
-    "accelerometer_x": (float),
-    "accelerometer_y": (float),
-    "accelerometer_z": (float),
-    "gyro_x": (float),
-    "gyro_y": (float),
-    "gyro_z": (float),
-    "gps_x": (float),
-    "gps_y": (float),
-    "gps_z": (float),
-    "barometer": (float),
-    "accel_bias_x": (float),
-    "accel_bias_y": (float),
-    "accel_bias_z": (float),
-    "gyro_bias_x": (float),
-    "gyro_bias_y": (float),
-    "gyro_bias_z": (float),
-    "gps_offset_x": (float),
-    "gps_offset_y": (float),
-    "gps_offset_z": (float),
-    "barometer_offset": (float),
-    "timestamp": (int)
+    "accelerometer_x": float,
+    "accelerometer_y": float,
+    "accelerometer_z": float,
+    "gyro_x": float,
+    "gyro_y": float,
+    "gyro_z": float,
+    "gps_x": float,
+    "gps_y": float,
+    "gps_z": float,
+    "barometer": float,
+    "accel_bias_x": float,
+    "accel_bias_y": float,
+    "accel_bias_z": float,
+    "gyro_bias_x": float,
+    "gyro_bias_y": float,
+    "gyro_bias_z": float,
+    "gps_offset_x": float,
+    "gps_offset_y": float,
+    "gps_offset_z": float,
+    "barometer_offset": float,
+    "timestamp": int
 })
 
-
-allDataUpdaters = []
-
-allDataUpdaters.append(updaterRSV)
-allDataUpdaters.append(updaterRSDef)
-allDataUpdaters.append(updaterRS)
-allDataUpdaters.append(updaterRGEKF)
-allDataUpdaters.append(updaterRSData)
+allDataUpdaters = {
+    'updaterRSV': updaterRSV,
+    'updaterRSDef': updaterRSDef,
+    'updaterRS': updaterRS,
+    'updaterRGEKF': updaterRGEKF,
+    'updaterRSData': updaterRSData
+}

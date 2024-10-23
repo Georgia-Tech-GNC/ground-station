@@ -26,7 +26,9 @@ class DataTypes(Enum):
     VECTOR = 3
     STRING = 4
 
+
 DATATYPE_TO_CONTAINER_CLASS = {}
+
 
 class DataViewerWindow:
      
@@ -48,6 +50,19 @@ class DataViewerWindow:
 
         for i, name in enumerate(data_labels):
             self.data_containers[i] = DataViewerWindow._create_container(name, types[i])
+
+    def set_all_values(self, values: list[Any]):
+        """
+        Sets the value of all items in the data viewer window, in the order that they were initialized
+
+        :param values: a list of all data values to set
+        """
+        if len(values) != len(self.data_containers):
+            print(f"Warning! set_all_values with list of {len(values)} items instead of {len(self.data_containers)}")
+            return
+    
+        for i, value in enumerate(values):
+            self.data_containers[i].set_data(value)
 
     def set_value(self, value_index: int, value: Any):
         """
@@ -76,7 +91,6 @@ class DataViewerWindow:
             return container_type(label)
 
 
-
 class FloatViewport(Viewport):
 
     def __init__(self, name: str, units: str = ""):
@@ -90,7 +104,7 @@ class FloatViewport(Viewport):
 
         with dpg.group(horizontal=True):
             dpg.add_text(name + ":")
-            dpg.add_input_double(label="", tag=self.tag, readonly=True, width = 100, step=0)
+            dpg.add_input_double(label="", tag=self.tag, readonly=True, width=100, step=0)
             if units != "":
                 dpg.add_text(units)
 
@@ -156,7 +170,6 @@ class QuaternionViewport(Viewport):
         self.most_recent_data = data
 
         rotated_data = multiply_quaternion(self.offset, data)
-        print(rotated_data)
         a, b, c = quaternion_to_euler(rotated_data)
         dpg.set_value(self.tags[0], a)
         dpg.set_value(self.tags[1], b)
@@ -167,6 +180,7 @@ class QuaternionViewport(Viewport):
         self.offset = self.most_recent_data * np.array([1, -1, -1, -1])
         self.set_data(self.most_recent_data)
 
+
 class StringViewport(Viewport):
     
     def __init__(self, name: str, units: str = ""):
@@ -174,7 +188,7 @@ class StringViewport(Viewport):
 
         with dpg.group(horizontal=True):
             dpg.add_text(name + ":")
-            dpg.add_input_text(label="", tag=self.tag, readonly=True, width = 200)
+            dpg.add_input_text(label="", tag=self.tag, readonly=True, width=200)
             if units != "":
                 dpg.add_text(units)
 
