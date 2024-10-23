@@ -26,7 +26,9 @@ class DataTypes(Enum):
     VECTOR = 3
     STRING = 4
 
+
 DATATYPE_TO_CONTAINER_CLASS = {}
+
 
 class DataViewerWindow:
      
@@ -89,7 +91,6 @@ class DataViewerWindow:
             return container_type(label)
 
 
-
 class FloatViewport(Viewport):
 
     def __init__(self, name: str, units: str = ""):
@@ -103,7 +104,7 @@ class FloatViewport(Viewport):
 
         with dpg.group(horizontal=True):
             dpg.add_text(name + ":")
-            dpg.add_input_double(label="", tag=self.tag, readonly=True, width = 100, step=0)
+            dpg.add_input_double(label="", tag=self.tag, readonly=True, width=100, step=0)
             if units != "":
                 dpg.add_text(units)
 
@@ -179,6 +180,7 @@ class QuaternionViewport(Viewport):
         self.offset = self.most_recent_data * np.array([1, -1, -1, -1])
         self.set_data(self.most_recent_data)
 
+
 class StringViewport(Viewport):
     
     def __init__(self, name: str, units: str = ""):
@@ -186,7 +188,7 @@ class StringViewport(Viewport):
 
         with dpg.group(horizontal=True):
             dpg.add_text(name + ":")
-            dpg.add_input_text(label="", tag=self.tag, readonly=True, width = 200)
+            dpg.add_input_text(label="", tag=self.tag, readonly=True, width=200)
             if units != "":
                 dpg.add_text(units)
 

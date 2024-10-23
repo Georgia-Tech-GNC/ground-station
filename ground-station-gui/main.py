@@ -1,12 +1,15 @@
 import dearpygui.dearpygui as dpg
-from window_manager import WindowManager, WINDOWS
-from query_server.DataUpdater import updaterRSV
+from window_manager import WindowManager, DATA_WINDOWS, GRAPHABLE_VALUES
+from query_server.data_updater import updaterRSV
 import threading
 import time
+import random
+
 
 def init_gui():
     dpg.create_context()
-    dpg.configure_app(docking=True, docking_space=True)
+    dpg.configure_app(docking=True, docking_space=True, init_file='./layout_save_files/gui_layout_save.ini')
+
 
 def start_gui():
     dpg.create_viewport(title='GNC Ground Station', width=1400, height=900)
@@ -14,47 +17,87 @@ def start_gui():
     dpg.show_viewport()
     dpg.start_dearpygui()
 
+
 def terminate_gui():
     dpg.destroy_context()
 
-manager = WindowManager()
+
+manager: WindowManager = None
+
 
 def update(event):
-
     st = time.time()
     while True:
+        time.sleep(0.01)
         if event.is_set():
             print("exiting thread!")
             break
 
         t = time.time() - st
         updaterRSV.test({
-            "velocity_x": t*5,
+            "velocity_x": t * 5.0,
             "velocity_y": 5,
-            "velocity_z": t,
+            "velocity_z": t + random.randint(1, 1000) / 1000,
             "angular_velocity_x": t - 3,
-            "angular_velocity_y": t*4,
-            "angular_velocity_z": t*t,
+            "angular_velocity_y": t * 4,
+            "angular_velocity_z": t * t,
             "attitude_w": 1,
             "attitude_x": 0,
             "attitude_y": 0,
             "attitude_z": 0,
-            "position_x": t/2,
-            "position_y": t*2 - 50,
+            "position_x": t / 2,
+            "position_y": t * 2 - 50,
             "position_z": t,
-            "timestamp": 5
+            "timestamp": t * 1000
         })
-        
+
+
+def save_current_state():
+    manager.pickle_state("./layout_save_files/window_manager_save.pickle")
+    dpg.save_init_file('./layout_save_files/gui_layout_save.ini')
+    print("save complete!")
+
 
 if __name__ == "__main__":
     init_gui()
 
+    manager = WindowManager("./layout_save_files/window_manager_save.pickle")
+
     with dpg.viewport_menu_bar():
-        with dpg.menu(label="Windows"):
-            for name in WINDOWS['Data Windows'].keys():
-                dpg.add_menu_item(label=name, callback=lambda _1, _2, n: manager.create_data_viewer_window(n), user_data=name)
-        
-    
+        dpg.add_menu_item(label="Save Layout", callback=save_current_state)
+
+        with dpg.menu(label="Data Windows"):
+            for name in DATA_WINDOWS.keys():
+                dpg.add_menu_item(label=name, callback=lambda _1, _2, n: manager.create_data_viewer_window(n),
+                                  user_data=name)
+
+        with dpg.menu(label="Graphs"):
+            graph_menu_checkbox_tags = {}
+
+            def generate_graph():
+                global graph_menu_checkbox_tags
+                params = []
+                for tag, value in graph_menu_checkbox_tags.items():
+                    if dpg.get_value(tag):
+                        params.append(value)
+                        dpg.set_value(tag, False)
+
+                if len(params) == 0:
+                    print("Must select at least one item to graph")
+                    return
+                elif len(params) > 3:
+                    print("Cannot graph more then three items at once")
+                    return
+
+                manager.create_graph_viewer_window(params)
+
+            for i, (name, (updater, updater_param)) in enumerate(GRAPHABLE_VALUES.items()):
+                dpg_id = dpg.generate_uuid()
+                dpg.add_checkbox(label=name, tag=dpg_id)
+                graph_menu_checkbox_tags[dpg_id] = (name, updater, updater_param)
+
+            dpg.add_menu_item(label="Create graph", callback=generate_graph)
+
     close_event = threading.Event()
     update_thread = threading.Thread(target=update, args=(close_event,))
     update_thread.start()
@@ -62,5 +105,5 @@ if __name__ == "__main__":
     start_gui()
 
     close_event.set()
-    update_thread.join
+    update_thread.join()
     terminate_gui()
