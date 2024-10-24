@@ -157,16 +157,17 @@ class WindowManager:
 
         self.regen_commands[dpg_id] = (WindowType.GRAPH, (graph_entries,))
 
+
         with dpg.window(tag=dpg_id, label=f"Graph of {", ".join([i[0] for i in graph_entries])}",
                         on_close=lambda *args, dpg_id=dpg_id, graph_entries=graph_entries: run_all(
                             lambda: self._remove_window(dpg_id),
-                            lambda: [allDataUpdaters[upd].remove_callback(dpg_id+f"num_{i}") for i, (_, upd, __) in enumerate(graph_entries)]
+                            lambda: [allDataUpdaters[upd].remove_callback(str(dpg_id)+f"num_{i}") for i, (_, upd, __) in enumerate(graph_entries)]
                         )
         ) as w:
             print(w)
             x = GraphViewerWindow("", [i[0] for i in graph_entries], "timestamp")
             for i, (_, upd, name) in enumerate(graph_entries):
-                allDataUpdaters[upd].add_callback(lambda ts, value, i=i: x.update_graph_data(i, ts, value), dpg_id +
+                allDataUpdaters[upd].add_callback(lambda ts, value, i=i: x.update_graph_data(i, ts, value), str(dpg_id) +
                                                   f"num_{i}", ["timestamp", name])
 
         self._add_window(dpg_id)
