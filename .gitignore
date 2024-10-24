@@ -1,9 +1,9 @@
 gs-gui/
 ground-station-gui/.idea/
+ground-station-gui/layout_save_files/
 gound-station-core/build/
 protocol/build/
 .direnv
 __pycache__
 *.db
 result
-ground-station-gui/layout_save_files/
