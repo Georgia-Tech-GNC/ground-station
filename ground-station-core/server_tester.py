@@ -24,7 +24,7 @@ r = requests.get(f'http://{server}:8080/api/command/send', json={"id": 1}, timeo
 print(r.status_code)
 print(r.json())
 
-r = requests.get(f'http://{server}:8080/api/logs/get', timeout=.1)
+r = requests.get(f'http://{server}:8080/api/logs/get', json={"msg_cnt": 3}, timeout=.1)
 print(r.status_code)
 logs = r.json(strict=False)
 for id, value in logs.items():

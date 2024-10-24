@@ -11,6 +11,7 @@ SAVE_FOLDER_PATH = os.path.join(os.path.curdir, 'layout_save_files')
 PICKLE_PATH = os.path.join(SAVE_FOLDER_PATH, 'window_manager_save.pickle')
 INIT_FILE_PATH = os.path.join(SAVE_FOLDER_PATH, 'gui_layout_save.ini')
 
+
 def init_gui():
     dpg.create_context()
     dpg.configure_app(docking=True, docking_space=True, init_file=INIT_FILE_PATH)
@@ -56,6 +57,7 @@ def update(event):
             "timestamp": t * 1000
         })
 
+
 def save_current_state():
     manager.pickle_state(PICKLE_PATH)
     dpg.save_init_file(INIT_FILE_PATH)
@@ -63,11 +65,9 @@ def save_current_state():
 
 
 if __name__ == "__main__":
-    Path(SAVE_FOLDER_PATH).mkdir(parents=True, exist_ok=True) # Create the layout save folder if it does not exist
+    Path(SAVE_FOLDER_PATH).mkdir(parents=True, exist_ok=True)  # Create the layout save folder if it does not exist
 
     init_gui()
-
-    manager = WindowManager(PICKLE_PATH)
 
     with dpg.viewport_menu_bar():
         dpg.add_menu_item(label="Save Layout", callback=save_current_state)
@@ -84,6 +84,7 @@ if __name__ == "__main__":
                 global graph_menu_checkbox_tags
                 params = []
                 for tag, value in graph_menu_checkbox_tags.items():
+                    print(tag, value, dpg.get_value(tag))
                     if dpg.get_value(tag):
                         params.append(value)
                         dpg.set_value(tag, False)
@@ -98,11 +99,12 @@ if __name__ == "__main__":
                 manager.create_graph_viewer_window(params)
 
             for i, (name, (updater, updater_param)) in enumerate(GRAPHABLE_VALUES.items()):
-                dpg_id = dpg.generate_uuid()
-                dpg.add_checkbox(label=name, tag=dpg_id)
+                dpg_id = dpg.add_checkbox(label=name)
                 graph_menu_checkbox_tags[dpg_id] = (name, updater, updater_param)
 
             dpg.add_menu_item(label="Create graph", callback=generate_graph)
+
+    manager = WindowManager(PICKLE_PATH)
 
     close_event = threading.Event()
     update_thread = threading.Thread(target=update, args=(close_event,))
