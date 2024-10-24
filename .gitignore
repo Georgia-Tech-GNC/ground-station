@@ -6,3 +6,4 @@ protocol/build/
 __pycache__
 *.db
 result
+ground-station-gui/layout_save_files/

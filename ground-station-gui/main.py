@@ -4,11 +4,16 @@ from query_server.data_updater import updaterRSV
 import threading
 import time
 import random
+from pathlib import Path
+import os
 
+SAVE_FOLDER_PATH = os.path.join(os.path.curdir, 'layout_save_files')
+PICKLE_PATH = os.path.join(SAVE_FOLDER_PATH, 'window_manager_save.pickle')
+INIT_FILE_PATH = os.path.join(SAVE_FOLDER_PATH, 'gui_layout_save.ini')
 
 def init_gui():
     dpg.create_context()
-    dpg.configure_app(docking=True, docking_space=True, init_file='./layout_save_files/gui_layout_save.ini')
+    dpg.configure_app(docking=True, docking_space=True, init_file=INIT_FILE_PATH)
 
 
 def start_gui():
@@ -51,17 +56,18 @@ def update(event):
             "timestamp": t * 1000
         })
 
-
 def save_current_state():
-    manager.pickle_state("./layout_save_files/window_manager_save.pickle")
-    dpg.save_init_file('./layout_save_files/gui_layout_save.ini')
+    manager.pickle_state(PICKLE_PATH)
+    dpg.save_init_file(INIT_FILE_PATH)
     print("save complete!")
 
 
 if __name__ == "__main__":
+    Path(SAVE_FOLDER_PATH).mkdir(parents=True, exist_ok=True) # Create the layout save folder if it does not exist
+
     init_gui()
 
-    manager = WindowManager("./layout_save_files/window_manager_save.pickle")
+    manager = WindowManager(PICKLE_PATH)
 
     with dpg.viewport_menu_bar():
         dpg.add_menu_item(label="Save Layout", callback=save_current_state)

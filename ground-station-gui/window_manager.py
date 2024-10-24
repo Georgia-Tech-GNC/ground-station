@@ -83,13 +83,17 @@ class WindowManager:
 
     def __init__(self, pickle_file: str = None):
         if pickle_file is not None:
-            with open(pickle_file, 'rb') as f:
-                data = dict(pickle.load(f))
+            try:
+                with open(pickle_file, 'rb') as f:
+                    data = dict(pickle.load(f))
+                
+                self.regen_commands = dict(data['regen_commands'])
 
-            self.regen_commands = dict(data['regen_commands'])
-
-            for dpg_id, (regen_command, params) in self.regen_commands.items():
-                self._process_command(dpg_id, regen_command, params)
+                for dpg_id, (regen_command, params) in self.regen_commands.items():
+                    self._process_command(dpg_id, regen_command, params)
+                    
+            except Exception:
+                self.regen_commands: dict[int | str, tuple[WindowType, tuple]] = {}
 
         else:
             self.regen_commands: dict[int | str, tuple[WindowType, tuple]] = {}
