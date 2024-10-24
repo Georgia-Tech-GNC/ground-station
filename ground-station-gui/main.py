@@ -37,7 +37,7 @@ def update(event):
         updaterRSV.test({
             "velocity_x": t * 5.0,
             "velocity_y": 5,
-            "velocity_z": t + random.randint(1, 1000) / 1000,
+            "velocity_z": t + (random.randint(1, 1000)/1000),
             "angular_velocity_x": t - 3,
             "angular_velocity_y": t * 4,
             "angular_velocity_z": t * t,
