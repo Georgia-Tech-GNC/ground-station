@@ -61,8 +61,8 @@ DATA_WINDOWS: dict[str, tuple[
 
 GRAPHABLE_VALUES: dict[str, tuple[str, str]] = {
     "X Velocity": ('updaterRSV', "velocity_x"),
-    "Y Velocity": ('updaterRSV', "velocity_x"),
-    "Z Velocity": ('updaterRSV', "velocity_x"),
+    "Y Velocity": ('updaterRSV', "velocity_y"),
+    "Z Velocity": ('updaterRSV', "velocity_z"),
     "Angular X Velocity": ('updaterRSV', "angular_velocity_x"),
     "Angular Y Velocity": ('updaterRSV', "angular_velocity_y"),
     "Angular Z Velocity": ('updaterRSV', "angular_velocity_z"),
@@ -86,8 +86,6 @@ class WindowManager:
             with open(pickle_file, 'rb') as f:
                 data = dict(pickle.load(f))
 
-            self.data_window_counter = int(data['data_window_counter'])
-            self.graph_window_counter = int(data['graph_window_counter'])
             self.regen_commands = dict(data['regen_commands'])
 
             for dpg_id, (regen_command, params) in self.regen_commands.items():
@@ -96,8 +94,7 @@ class WindowManager:
         else:
             self.regen_commands: dict[int | str, tuple[WindowType, tuple]] = {}
 
-            self.data_window_counter = 0
-            self.graph_window_counter = 0
+        self.window_counter = 0
 
     def _process_command(self, dpg_id, regen_command, params):
         if regen_command == WindowType.GRAPH:
@@ -108,9 +105,8 @@ class WindowManager:
     def pickle_state(self, filename: str = None):
         save_dict = {
             'regen_commands': self.regen_commands,
-            'data_window_counter': self.data_window_counter,
-            'graph_window_counter': self.graph_window_counter
         }
+        print(save_dict)
 
         with open(filename if filename is not None else "window_manager_save.pickle", 'wb+') as f:
             pickle.dump(save_dict, f)
@@ -132,18 +128,18 @@ class WindowManager:
         constructor, updater, updater_callback, update_query_params = DATA_WINDOWS[window_name]
         updater = allDataUpdaters[updater]
         if preset_id is None:
-            dpg_id = f"DATA_WINDOW_CONTAINER_NUM_{self.data_window_counter}"
+            dpg_id = dpg.generate_uuid()
         else:
             dpg_id = preset_id
 
-        self.data_window_counter += 1
         self.regen_commands[dpg_id] = (WindowType.DATA, (window_name,))
 
-        with dpg.window(label=window_name,
+        with dpg.window(label=window_name, tag=dpg_id,
                         on_close=lambda *args, dpg_id=dpg_id, updater=updater: run_all(
                             lambda: self._remove_window(dpg_id),
                             lambda: updater.remove_callback(dpg_id))
-                        ):
+                        ) as f:
+            print(f)
             x = constructor()
             updater.add_callback(updater_callback(x), dpg_id, update_query_params)
 
@@ -155,17 +151,44 @@ class WindowManager:
             print(f"Invalid list options: {graph_entries}")
 
         if preset_id is None:
-            dpg_id = f"GRAPH_WINDOW_CONTAINER_NUM_{self.graph_window_counter}"
+            dpg_id = dpg.generate_uuid()
         else:
             dpg_id = preset_id
 
-        self.graph_window_counter += 1
         self.regen_commands[dpg_id] = (WindowType.GRAPH, (graph_entries,))
 
-        with dpg.window(tag=dpg_id, label=f"Graph of {", ".join([i[0] for i in graph_entries])}"):
+        with dpg.window(tag=dpg_id, label=f"Graph of {", ".join([i[0] for i in graph_entries])}",
+                        on_close=lambda *args, dpg_id=dpg_id, graph_entries=graph_entries: run_all(
+                            lambda: self._remove_window(dpg_id),
+                            lambda: [allDataUpdaters[upd].remove_callback(dpg_id+f"num_{i}") for i, (_, upd, __) in enumerate(graph_entries)]
+                        )
+        ) as w:
+            print(w)
             x = GraphViewerWindow("", [i[0] for i in graph_entries], "timestamp")
             for i, (_, upd, name) in enumerate(graph_entries):
                 allDataUpdaters[upd].add_callback(lambda ts, value, i=i: x.update_graph_data(i, ts, value), dpg_id +
                                                   f"num_{i}", ["timestamp", name])
 
         self._add_window(dpg_id)
+
+o = {
+        'regen_commands': {
+            'DATA_WINDOW_CONTAINER_NUM_0': (1, ('Rocket Kinematics',)), 
+            'DATA_WINDOW_CONTAINER_NUM_51': (1, ('Rocket State',)), 
+            'DATA_WINDOW_CONTAINER_NUM_86': (1, ('Rocket State',)), 
+            'DATA_WINDOW_CONTAINER_NUM_117': (1, ('Rocket Kinematics',))
+        }, 
+        'data_window_counter': 122, 
+        'graph_window_counter': 62
+    }
+
+f = {
+        'regen_commands': {
+            'DATA_WINDOW_CONTAINER_NUM_0': (WindowType.DATA, ('Rocket Kinematics',)), 
+            'DATA_WINDOW_CONTAINER_NUM_51': (WindowType.DATA, ('Rocket State',)), 
+            'DATA_WINDOW_CONTAINER_NUM_86': (WindowType.DATA, ('Rocket State',)), 
+            'DATA_WINDOW_CONTAINER_NUM_117': (WindowType.DATA, ('Rocket Kinematics',))}, 
+
+        'data_window_counter': 118, 
+        'graph_window_counter': 62
+    }
