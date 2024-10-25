@@ -3,7 +3,7 @@ TARGET_EXEC ?= a.out
 BUILD_DIR ?= ./build
 SRC_DIRS ?= ./src ./includes ./lib
 
-SRCS := $(shell find $(SRC_DIRS) -name *.cpp -or -name *.c -or -name *.s)
+SRCS := $(shell find $(SRC_DIRS) -name *.cpp -or -name *.c -or -name *.s | grep -v fake_rocket_main.c)
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 DEPS := $(OBJS:.o=.d)
 
