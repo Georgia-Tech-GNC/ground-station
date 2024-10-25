@@ -133,6 +133,8 @@ int main(int argc, char *argv[]) {
     update_server(&manager, LOOP_TIMEOUT_MS);
 
     int num_read = fread(fread_buffer, sizeof(uint8_t), 250, serial);
+    printf("n_read=%d\n", num_read);
+
     for (int i = 0; i < num_read; i++) {
       uint8_t byte_read = (uint8_t) fread_buffer[i];
 
@@ -151,8 +153,6 @@ int main(int argc, char *argv[]) {
         process_xbee_message(-current_buffer_size);
         current_buffer_size = 0;
       }
-    } else {
-      feof(serial);
     }
 
     // Update command stack
