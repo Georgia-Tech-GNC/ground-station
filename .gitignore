@@ -10,3 +10,4 @@ result
 passwords.txt
 .nixos-test-history
 fakeserial
+venv/
