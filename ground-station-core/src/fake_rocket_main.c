@@ -62,7 +62,8 @@ void loop(const FILE *serial) {
   for (int i = 0; i < packetizedLength; i ++) {
     fprintf(serial, "%c", packetizedData[i]);
   }
-  fprintf(serial, "\r\n");
+  fflush(serial);
+  // fprintf(serial, "\r\n");
   // size_t written = fwrite(packetizedData, sizeof(uint8_t), packetizedLength, serial);
   // // size_t written = fwrite(packetizedData, sizeof(uint8_t), packetizedLength, stderr);
   // if (errno != 0) {

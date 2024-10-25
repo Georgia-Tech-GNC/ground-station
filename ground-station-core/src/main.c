@@ -154,6 +154,9 @@ int main(int argc, char *argv[]) {
         process_xbee_message(-current_buffer_size);
         current_buffer_size = 0;
       }
+    } else {
+      int yes = feof(serial);
+      printf("feof=%d\n",yes);
     }
     if (errno != 0) {
       perror("read byte");
