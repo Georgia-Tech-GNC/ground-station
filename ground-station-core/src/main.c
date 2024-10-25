@@ -132,7 +132,9 @@ int main(int argc, char *argv[]) {
     update_server(&manager, LOOP_TIMEOUT_MS);
 
     unsigned char byte_read = (unsigned char) getc(serial);
+    log_standard("read byte %02x\n", byte_read);
     current_buffer_size = process_incoming_byte(byte_read, buffer, current_buffer_size);
+    log_standard("now, current_buffer_size=%d\n", current_buffer_size);
     if (current_buffer_size < 0) {
       log_standard("Attempting to process message of size %d\n", -current_buffer_size);
       process_xbee_message(-current_buffer_size);
