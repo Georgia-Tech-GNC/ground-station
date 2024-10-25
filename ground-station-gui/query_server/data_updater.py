@@ -13,6 +13,8 @@ def send_cmd_with_id(cmd_id: int):
     except Exception:
         print(f"Command web api call with command id {cmd_id} failed! (exception)")
 
+
+
 class DataUpdater:
 
     def __init__(self, url: str, values: dict[str, type]):
@@ -278,16 +280,16 @@ updaterRGEKF = DataUpdater("/api/data/RocketGroundEKF", {
 })
 
 updaterRSData = DataUpdater("/api/data/RocketSensorData", {
-    "accelerometer_x": float,
-    "accelerometer_y": float,
-    "accelerometer_z": float,
-    "gyro_x": float,
-    "gyro_y": float,
-    "gyro_z": float,
-    "gps_x": float,
-    "gps_y": float,
-    "gps_z": float,
-    "barometer": float,
+        "accelerometer_x": float,
+        "accelerometer_y": float,
+        "accelerometer_z": float,
+        "gyro_x": float,
+        "gyro_y": float,
+        "gyro_z": float,
+        "gps_x": float,
+        "gps_y": float,
+        "gps_z": float,
+        "barometer": float,
     "accel_bias_x": float,
     "accel_bias_y": float,
     "accel_bias_z": float,

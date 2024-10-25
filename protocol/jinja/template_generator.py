@@ -11,6 +11,7 @@ SIZES = {
     'int8_t': 1,
     'int16_t': 2,
     'int32_t': 4,
+    'int64_t': 8
 }
 
 def PRINTF_SQL_TYPE(l):

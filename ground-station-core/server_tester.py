@@ -29,7 +29,7 @@ print(r.status_code)
 logs = r.json(strict=False)
 for id, value in logs.items():
     print(f"MSG {id} P {value['priority']}: {value['value'].rstrip()}")
-print(f"Last msg recv: {max(logs.keys())}")
+print(f"Last msg recv: {max(map(int, logs.keys()))}")
 
 
 

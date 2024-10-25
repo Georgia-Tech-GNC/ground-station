@@ -63,18 +63,11 @@ void {{data_message_name}}_encode(struct {{data_message_name}} *input, uint8_t *
 	{% set ns = namespace(i=0) %}
 	{% for variable_name, variable_type in data_message.items() -%}
 	memcpy(output + {{ns.i|int}}, &input->{{variable_name}}, {{SIZES[variable_type]|int}});
-	{#
-	{% if variable_type == 'float' or variable_type == 'uint32_t' %}
-	output[{{ns.i|int}}  ] = ((uint32_t) input->{{variable_name}});
-	output[{{ns.i|int}}+1] = ((uint32_t) input->{{variable_name}}) >> 4;
-	output[{{ns.i|int}}+2] = ((uint32_t) input->{{variable_name}}) >> 8;
-	output[{{ns.i|int}}+3] = ((uint32_t) input->{{variable_name}}) >> 12;
-	{% elif variable_type == 'uint8_t' or variable_type == 'int8_t' %}
-	output[{{ns.i|int}}  ] = input->{{variable_name}};
-	{% endif %}
-	#}
 	{% set ns.i = ns.i + SIZES[variable_type] %}
 	{% endfor -%}
+
+	memcpy(output + {{ns.i|int}}, &input->timestamp, 8);
+
 }
 
 void {{data_message_name}}_decode(uint8_t *input, struct {{data_message_name}} *output) {
@@ -83,6 +76,9 @@ void {{data_message_name}}_decode(uint8_t *input, struct {{data_message_name}} *
 	memcpy(&output->{{variable_name}}, input + {{ns.i|int}}, {{SIZES[variable_type]|int}});
 	{% set ns.i = ns.i + SIZES[variable_type] %}
 	{% endfor -%}
+		
+	memcpy(&output->timestamp, input + {{ns.i|int}}, 8);
+
 }
 
 {% endfor %}

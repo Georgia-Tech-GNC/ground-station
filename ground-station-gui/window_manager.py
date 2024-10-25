@@ -59,6 +59,32 @@ DATA_WINDOWS: dict[str, tuple[
             [ROCKET_INT_TO_STATE(s), ROCKET_INT_TO_ACTIVE_STATUS(fc1), ROCKET_INT_TO_ACTIVE_STATUS(fc2),
              ROCKET_INT_TO_ACTIVE_STATUS(fc3), ROCKET_INT_TO_ACTIVE_STATUS(fc4)])),
         ["rocket_state", "firing_channel_1", "firing_channel_2", "firing_channel_3", "firing_channel_4"]
+    ),
+
+    'Rocket Grouund EKF': (
+        lambda: DataViewerWindow(
+            [f'PN Matrix D{i+1}' for i in range(6)],
+            [DataTypes.FLOAT for _ in range(6)]
+        ),
+        'updaterRGEKF',
+        lambda window_ref:
+            (lambda d1, d2, d3, d4, d5, d6: window_ref.set_all_values(
+                [d1, d2, d3, d4, d5, d6]
+            )),
+        [f"pn_matrix_d{i+1}" for i in range(6)]
+    ), 
+
+    'Rocket Sensor Data': (
+        lambda: DataViewerWindow(
+            ['Accelerometer', 'Gyro', 'GPS', 'Barometer'],
+            [DataTypes.VECTOR, DataTypes.VECTOR, DataTypes.VECTOR, DataTypes.FLOAT]
+        ),
+        'updaterRSData',
+        lambda window_ref:
+            (lambda ax, ay, az, gx, gy, gz, gpx, gpy, gpz, b: window_ref.set_all_values(
+                [to_nparr(ax, ay, az), to_nparr(gx, gy, gz), to_nparr(gpx, gpy, gpz), b]
+            )),
+        ["accelerometer_x", "accelerometer_y", "accelerometer_z", "gyro_x", "gyro_y", "gyro_z", "gps_x", "gps_y", "gps_z", "barometer"]
     )
 }
 
