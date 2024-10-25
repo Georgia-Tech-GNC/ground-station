@@ -120,7 +120,7 @@ int main(int argc, char *argv[]) {
   log_standard("\nInitialization Complete...\n\n");
 
   log_standard("opening %s...\n", serialPath);
-  FILE *serial = fopen(serialPath, "r");
+  FILE *serial = fopen(serialPath, "rb");
   if (serial == NULL) {
     perror("open serial file");
     return 1;
@@ -135,7 +135,14 @@ int main(int argc, char *argv[]) {
     log_standard("read byte %02x\n", byte_read);
     current_buffer_size = process_incoming_byte(byte_read, buffer, current_buffer_size);
     log_standard("now, current_buffer_size=%d\n", current_buffer_size);
+    if (current_buffer_size > 255) {
+      log_standard("resetting buffer, too big (>255)\n");
+      current_buffer_size = 0;
+    }
     if (current_buffer_size < 0) {
+      if (-current_buffer_size == 260) {
+        log_error("something went wrong ): 260-5=255 so overfloe QED\n");
+      }
       log_standard("Attempting to process message of size %d\n", -current_buffer_size);
       process_xbee_message(-current_buffer_size);
       current_buffer_size = 0;
