@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
 
 #include "protocol.h"
 #include "packet_encode.h"
@@ -16,7 +17,7 @@ int main(int argc, char *argv[]) {
   srand(atoi(argv[1]));
 
   printf("opening %s...\n", serialPath);
-  FILE *serial = fopen(serialPath, "r");
+  FILE *serial = fopen(serialPath, "wb+");
   if (serial == NULL) {
     perror("open serial file");
     return 1;
@@ -36,10 +37,14 @@ void loop(const FILE *serial) {
   uint8_t *packetizedData = malloc(sizeof(uint8_t) * (ROCKETSTATEVECTOR_SIZE+5));
   RocketStateVector_encode(&native, msg);
   int packetizedLength = generate_packet(msg, ROCKETSTATEVECTOR_SIZE, packetizedData, ROCKETSTATEVECTOR_MSG_ID);
-  if (packetizedLength != ROCKETSTATEVECTOR_SIZE) {
-    printf("fail\n");
+  if (packetizedLength != ROCKETSTATEVECTOR_SIZE+5) {
+    printf("packetizedLength != ROCKETSTATEVECTOR_SIZE+5: %d != %d\n", packetizedLength, ROCKETSTATEVECTOR_SIZE+5);
     exit(1);
   }
+  printf("packetizedLength=%d\n",packetizedLength);
   size_t written = fwrite(packetizedData, sizeof(uint8_t), packetizedLength, serial);
+  if (errno != 0) {
+    perror("fwrite to radio");
+  }
   printf("written: %d\n", written);
 }
