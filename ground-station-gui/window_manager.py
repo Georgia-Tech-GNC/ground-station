@@ -1,11 +1,13 @@
 from typing import Callable, Iterable
 from gui_templates.data_viewer_window import DataViewerWindow, DataTypes
+from gui_templates.RocketCommandsWindow import RocketCommands
 from gui_templates.graph_viewer_window import GraphViewerWindow
-from query_server.data_updater import allDataUpdaters
+from query_server.data_updater import allDataUpdaters, send_cmd_with_id
 import dearpygui.dearpygui as dpg
 import numpy as np
 import enum
 import pickle
+import requests
 
 
 def to_nparr(*args):
@@ -69,6 +71,14 @@ GRAPHABLE_VALUES: dict[str, tuple[str, str]] = {
     "Angular Z Velocity": ('updaterRSV', "angular_velocity_z"),
 }
 
+BUTTON_VALUES: dict[str | tuple[str, bool], Callable] = {
+    "IDLE TO GROUND": lambda: send_cmd_with_id(1),
+    "GROUND TO ARM": lambda: send_cmd_with_id(2),
+    ("FIRE_PYRO", True): lambda: send_cmd_with_id(3),
+    "FLASH SD CARD": lambda: send_cmd_with_id(4),
+    "RUN VANE ACTIVATION TEST": lambda: send_cmd_with_id(5)
+}
+
 
 def run_all(*args: Callable):
     for func in args:
@@ -78,6 +88,7 @@ def run_all(*args: Callable):
 class WindowType(enum.Enum):
     GRAPH = 0
     DATA = 1
+    COMMAND = 2
 
 
 class WindowManager:
@@ -102,14 +113,22 @@ class WindowManager:
                 
                 self.regen_commands = dict(data['regen_commands'])
 
+                max_set_uuid = max(self.regen_commands.keys())
+                while dpg.generate_uuid() < max_set_uuid + 10:
+                    pass
+
                 for dpg_id, (regen_command, params) in self.regen_commands.items():
+                    print(f"Running {regen_command}")
                     self._process_command(dpg_id, regen_command, params)
 
                 max_uuid = dpg.last_item()
                 while dpg.generate_uuid() < max_uuid + 10:
                     pass
+
+                
                     
-            except Exception:
+            except Exception as e:
+                print(e)
                 self.regen_commands: dict[int | str, tuple[WindowType, tuple]] = {}
 
         else:
@@ -129,6 +148,8 @@ class WindowManager:
             self.create_graph_viewer_window(*params, preset_id=dpg_id)
         elif regen_command == WindowType.DATA:
             self.create_data_viewer_window(*params, preset_id=dpg_id)
+        elif regen_command == WindowType.COMMAND:
+            self.create_rocket_commands_window(*params, preset_id=dpg_id)
 
     def pickle_state(self, filename: str = None) -> None:
         """
@@ -166,6 +187,23 @@ class WindowManager:
         if dpg_id in self.regen_commands:
             del self.regen_commands[dpg_id]
 
+    def create_rocket_commands_window(self, window_name: str, preset_id: int = None) -> None:
+        if preset_id is None:
+            dpg_id = dpg.generate_uuid()
+        else:
+            dpg_id = preset_id
+
+        self.regen_commands[dpg_id] = (WindowType.COMMAND, (window_name,))
+
+        with dpg.window(
+            label=window_name, tag=dpg_id,
+            on_close=lambda *args, dpg_id=dpg_id: self._remove_window(dpg_id)
+        ) as f:
+            RocketCommands(*zip(*BUTTON_VALUES.items()))
+        
+        self._add_window(dpg_id)
+        
+
     # noinspection PyUnresolvedReferences,PyUnboundLocalVariable,PyShadowingNames
     def create_data_viewer_window(self, window_name: str, preset_id: int = None) -> None:
         """
@@ -193,7 +231,6 @@ class WindowManager:
                             lambda: self._remove_window(dpg_id),
                             lambda: updater.remove_callback(dpg_id))
                         ) as f:
-            print(f)
             x = constructor()
             updater.add_callback(updater_callback(x), dpg_id, update_query_params)
 
@@ -231,7 +268,6 @@ class WindowManager:
                             lambda: [allDataUpdaters[upd].remove_callback(str(dpg_id)+f"num_{i}") for i, (_, upd, __) in enumerate(graph_entries)]
                         )
         ) as w:
-            print(w)
             x = GraphViewerWindow("", [i[0] for i in graph_entries], "timestamp")
             for i, (_, upd, name) in enumerate(graph_entries):
                 allDataUpdaters[upd].add_callback(lambda ts, value, i=i: x.update_graph_data(i, ts, value), str(dpg_id) +

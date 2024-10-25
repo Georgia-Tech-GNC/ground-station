@@ -1,6 +1,7 @@
 import dearpygui.dearpygui as dpg
 from window_manager import WindowManager, DATA_WINDOWS, GRAPHABLE_VALUES
 from query_server.data_updater import updaterRSV
+from gui_templates.RocketCommandsWindow import RocketCommands
 import threading
 import time
 import random
@@ -103,6 +104,9 @@ if __name__ == "__main__":
                 graph_menu_checkbox_tags[dpg_id] = (name, updater, updater_param)
 
             dpg.add_menu_item(label="Create graph", callback=generate_graph)
+        
+        with dpg.menu(label="Other Windows"):
+            dpg.add_menu_item(label='Rocket Commands', callback=lambda: manager.create_rocket_commands_window("Rocket Commands"))
 
     manager = WindowManager(PICKLE_PATH)
 

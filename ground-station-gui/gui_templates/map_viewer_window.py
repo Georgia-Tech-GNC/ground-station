@@ -1,7 +1,10 @@
 import dearpygui.dearpygui as dpg
 from dearpygui.dearpygui import generate_uuid
+from math import sqrt
 
 MAP_TILES: list[tuple[int | str, tuple[float, float], tuple[float, float]]] = []
+
+R3O6 = sqrt(3)/6
 
 class MapViewerWindow:
 
@@ -9,13 +12,36 @@ class MapViewerWindow:
         if len(MAP_TILES) == 0:
             MapViewerWindow.setup_all_map_tiles()
 
+        self.rocket_pos_theme = generate_uuid()
+        self.station_pos_theme = generate_uuid()
+
+        with dpg.theme(tag=self.rocket_pos_theme):
+            with dpg.theme_component(dpg.mvScatterSeries):
+                dpg.add_theme_style(dpg.mvPlotStyleVar_Marker, dpg.mvPlotMarker_Circle, category=dpg.mvThemeCat_Plots)
+                dpg.add_theme_style(dpg.mvPlotStyleVar_MarkerSize, 8, category=dpg.mvThemeCat_Plots)
+                dpg.add_theme_style(dpg.mvPlotCol_MarkerFill, 0, category=dpg.mvThemeCat_Plots)
+
+        with dpg.theme(tag=self.station_pos_theme):
+            with dpg.theme_component(dpg.mvScatterSeries):
+                dpg.add_theme_style(dpg.mvPlotStyleVar_Marker, dpg.mvPlotMarker_Square, category=dpg.mvThemeCat_Plots)
+                dpg.add_theme_style(dpg.mvPlotStyleVar_MarkerSize, 8, category=dpg.mvThemeCat_Plots)
+                dpg.add_theme_style(dpg.mvPlotCol_MarkerFill, 0, category=dpg.mvThemeCat_Plots)
+
         with dpg.plot(no_title=True, height=-1, width=-1, anti_aliased=False):
+            dpg.add_plot_legend()
+
             dpg.add_plot_axis(dpg.mvXAxis)
             with dpg.plot_axis(dpg.mvYAxis):
+
                 for tag, min_bound, max_bound in MAP_TILES:
                     dpg.add_image_series(tag, min_bound, max_bound)
 
-                dpg.add_line_series([-84.398, -84.402, -84.4, -84.398], [33.774, 33.774, 33.776, 33.774])
+                self.rocket_series_tag = dpg.add_scatter_series([-84.4], [33.776], label="Rocket")
+                dpg.bind_item_theme(self.rocket_series_tag, self.rocket_pos_theme)
+
+                self.ground_series_tag = dpg.add_scatter_series([-84.395], [33.776], label="Ground")
+                dpg.bind_item_theme(self.ground_series_tag, self.station_pos_theme)
+
 
     @staticmethod
     def setup_all_map_tiles():
@@ -28,15 +54,19 @@ class MapViewerWindow:
                 (-84.405, 33.771),
                 (-84.39, 33.78)
             ))
+    
+    @staticmethod
+    def get_triangle_coordinates(center: tuple[float, float], side_length: float = 0.0001):
+        th = side_length*R3O6
+        return [center[0], center[0] - side_length/2, center[0] + side_length/2, center[0]], [center[1]+th*2, center[1]-th, center[1]-th, center[1]+th*2]
+    
+
 
 
 dpg.create_context()
 
 with dpg.window(label="Outer Map"):
     MapViewerWindow()
-
-for i in range(100):
-    print(generate_uuid())
 
 dpg.create_viewport(title='Custom Title', width=1400, height=1400)
 dpg.setup_dearpygui()
