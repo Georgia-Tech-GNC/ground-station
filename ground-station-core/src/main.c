@@ -134,7 +134,7 @@ int main(int argc, char *argv[]) {
     update_server(&manager, LOOP_TIMEOUT_MS);
 
     errno = 0;
-    int n_read = fread(fread_buffer, sizeof(uint8_t), 1, serial);
+    int n_read = fread(fread_buffer, 1, sizeof(uint8_t), serial);
     printf("n_read=%d\n", n_read);
     if (n_read > 0) {
       unsigned char byte_read = (unsigned char) fread_buffer[0];
