@@ -245,6 +245,5 @@ void RocketSensorData_decode(uint8_t *input, struct RocketSensorData *output) {
 		memcpy(&output->gps_offset_z, input + 72, 4);
 		memcpy(&output->barometer_offset, input + 76, 4);
 		memcpy(&output->timestamp, input + 80, 8);
-
 }
 

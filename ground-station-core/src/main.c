@@ -136,6 +136,7 @@ int main(int argc, char *argv[]) {
     if (current_buffer_size < 0) {
       log_standard("Attempting to process message of size %d\n", -current_buffer_size);
       process_xbee_message(-current_buffer_size);
+      current_buffer_size = 0;
     }
 
     // Update command stack
