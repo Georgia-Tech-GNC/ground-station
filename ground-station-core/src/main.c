@@ -164,7 +164,9 @@ int main(int argc, char *argv[]) {
     update_server(&manager, LOOP_TIMEOUT_MS);
 
     // int num_read = fread(fread_buffer, sizeof(uint8_t), 250, serial);
+    log_standard("read...\n");
     int num_read = read(fileno(serial), &fread_buffer, 1);
+    log_standard("read.\n");
     printf("n_read=%d\n", num_read);
 
     for (int i = 0; i < num_read; i++) {
