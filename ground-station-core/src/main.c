@@ -59,7 +59,7 @@ uint8_t command_send_buffer[COMMAND_SEND_BUFFER_SIZE];
 
 void process_xbee_message(int message_size_bytes) {
   if (!verify_packet(buffer, message_size_bytes)) {
-    log_warning("Recieved corrupted message (unable to verify)!\n");
+    log_warning("Received corrupted message (unable to verify)!\n");
     return;
   }
 
@@ -67,7 +67,7 @@ void process_xbee_message(int message_size_bytes) {
   int payload_size = message_size_bytes - 5;
   
   if (message_id == 0) {
-    log_warning("Recieved corrupted message! (message id was 0)\n");
+    log_warning("Received corrupted message! (message id was 0)\n");
     return;
   }
 
