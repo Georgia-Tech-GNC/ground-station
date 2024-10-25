@@ -168,16 +168,14 @@ int main(int argc, char *argv[]) {
     update_server(&manager, LOOP_TIMEOUT_MS);
 
     // int num_read = fread(fread_buffer, sizeof(uint8_t), 250, serial);
-    log_standard("read...\n");
     int num_read = read(fileno(serial), &fread_buffer, 1);
-    log_standard("read.\n");
     printf("n_read=%d\n", num_read);
 
     for (int i = 0; i < num_read; i++) {
       uint8_t byte_read = (uint8_t) fread_buffer[i];
 
-      log_standard("read byte %02x\n", byte_read);
       current_buffer_size = process_incoming_byte(byte_read, buffer, current_buffer_size);
+      log_standard("read byte %02x ", byte_read);
       log_standard("now, current_buffer_size=%d\n", current_buffer_size);
       if (current_buffer_size > 255) {
         log_standard("resetting buffer, too big (>255)\n");
