@@ -85,6 +85,19 @@ DATA_WINDOWS: dict[str, tuple[
                 [to_nparr(ax, ay, az), to_nparr(gx, gy, gz), to_nparr(gpx, gpy, gpz), b]
             )),
         ["accelerometer_x", "accelerometer_y", "accelerometer_z", "gyro_x", "gyro_y", "gyro_z", "gps_x", "gps_y", "gps_z", "barometer"]
+    ),
+
+    'Rocket Servo Deflection': (
+        lambda: DataViewerWindow(
+            [f'Servo {i+1} deflection' for i in range(4)],
+            [DataTypes.FLOAT for _ in range(4)]
+        ),
+        'updaterRSDef',
+        lambda window_ref:
+            (lambda d1, d2, d3, d4: window_ref.set_all_values(
+                [d1, d2, d3, d4]
+            )),
+        [f"servo_deflection_{i+1}" for i in range(4)]
     )
 }
 

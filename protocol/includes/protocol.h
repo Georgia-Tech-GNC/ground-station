@@ -66,7 +66,7 @@ struct RocketStateVector {
 	int64_t timestamp;
 };
 #define ROCKETSTATEVECTOR_MSG_ID 10
-#define ROCKETSTATEVECTOR_SIZE 52
+#define ROCKETSTATEVECTOR_SIZE 60
 #define ROCKETSTATEVECTOR_NUM_VALUES 14
 #ifdef INCLUDE_PROTOCOL_SQL_MACROS
 	#define ROCKETSTATEVECTOR_SQL_TABLE_GEN "CREATE TABLE RocketStateVector ( " \
@@ -121,13 +121,13 @@ struct RocketStateVector {
 
 /**
  * Serializes the data.
- * Output must have a length of at least 52 bytes.
+ * Output must have a length of at least 60 bytes.
  */
 void RocketStateVector_encode(struct RocketStateVector *input, uint8_t *output);
 
 /**
  * Deserializes the data.
- * Input must have a length of at least 52 bytes.
+ * Input must have a length of at least 60 bytes.
  */
 void RocketStateVector_decode(uint8_t *input, struct RocketStateVector *output);
 
@@ -140,7 +140,7 @@ struct RocketServoDeflection {
 	int64_t timestamp;
 };
 #define ROCKETSERVODEFLECTION_MSG_ID 11
-#define ROCKETSERVODEFLECTION_SIZE 16
+#define ROCKETSERVODEFLECTION_SIZE 24
 #define ROCKETSERVODEFLECTION_NUM_VALUES 5
 #ifdef INCLUDE_PROTOCOL_SQL_MACROS
 	#define ROCKETSERVODEFLECTION_SQL_TABLE_GEN "CREATE TABLE RocketServoDeflection ( " \
@@ -168,13 +168,13 @@ struct RocketServoDeflection {
 
 /**
  * Serializes the data.
- * Output must have a length of at least 16 bytes.
+ * Output must have a length of at least 24 bytes.
  */
 void RocketServoDeflection_encode(struct RocketServoDeflection *input, uint8_t *output);
 
 /**
  * Deserializes the data.
- * Input must have a length of at least 16 bytes.
+ * Input must have a length of at least 24 bytes.
  */
 void RocketServoDeflection_decode(uint8_t *input, struct RocketServoDeflection *output);
 
@@ -188,7 +188,7 @@ struct RocketState {
 	int64_t timestamp;
 };
 #define ROCKETSTATE_MSG_ID 12
-#define ROCKETSTATE_SIZE 5
+#define ROCKETSTATE_SIZE 13
 #define ROCKETSTATE_NUM_VALUES 6
 #ifdef INCLUDE_PROTOCOL_SQL_MACROS
 	#define ROCKETSTATE_SQL_TABLE_GEN "CREATE TABLE RocketState ( " \
@@ -219,13 +219,13 @@ struct RocketState {
 
 /**
  * Serializes the data.
- * Output must have a length of at least 5 bytes.
+ * Output must have a length of at least 13 bytes.
  */
 void RocketState_encode(struct RocketState *input, uint8_t *output);
 
 /**
  * Deserializes the data.
- * Input must have a length of at least 5 bytes.
+ * Input must have a length of at least 13 bytes.
  */
 void RocketState_decode(uint8_t *input, struct RocketState *output);
 
@@ -240,7 +240,7 @@ struct RocketGroundEKF {
 	int64_t timestamp;
 };
 #define ROCKETGROUNDEKF_MSG_ID 13
-#define ROCKETGROUNDEKF_SIZE 24
+#define ROCKETGROUNDEKF_SIZE 32
 #define ROCKETGROUNDEKF_NUM_VALUES 7
 #ifdef INCLUDE_PROTOCOL_SQL_MACROS
 	#define ROCKETGROUNDEKF_SQL_TABLE_GEN "CREATE TABLE RocketGroundEKF ( " \
@@ -274,13 +274,13 @@ struct RocketGroundEKF {
 
 /**
  * Serializes the data.
- * Output must have a length of at least 24 bytes.
+ * Output must have a length of at least 32 bytes.
  */
 void RocketGroundEKF_encode(struct RocketGroundEKF *input, uint8_t *output);
 
 /**
  * Deserializes the data.
- * Input must have a length of at least 24 bytes.
+ * Input must have a length of at least 32 bytes.
  */
 void RocketGroundEKF_decode(uint8_t *input, struct RocketGroundEKF *output);
 
@@ -309,7 +309,7 @@ struct RocketSensorData {
 	int64_t timestamp;
 };
 #define ROCKETSENSORDATA_MSG_ID 14
-#define ROCKETSENSORDATA_SIZE 80
+#define ROCKETSENSORDATA_SIZE 88
 #define ROCKETSENSORDATA_NUM_VALUES 21
 #ifdef INCLUDE_PROTOCOL_SQL_MACROS
 	#define ROCKETSENSORDATA_SQL_TABLE_GEN "CREATE TABLE RocketSensorData ( " \
@@ -385,13 +385,13 @@ struct RocketSensorData {
 
 /**
  * Serializes the data.
- * Output must have a length of at least 80 bytes.
+ * Output must have a length of at least 88 bytes.
  */
 void RocketSensorData_encode(struct RocketSensorData *input, uint8_t *output);
 
 /**
  * Deserializes the data.
- * Input must have a length of at least 80 bytes.
+ * Input must have a length of at least 88 bytes.
  */
 void RocketSensorData_decode(uint8_t *input, struct RocketSensorData *output);
 

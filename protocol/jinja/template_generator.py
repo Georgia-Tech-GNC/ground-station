@@ -67,7 +67,7 @@ for filepath in H_FILE_LOCATIONS:
             values = ", ".join(["'" + cvt_type_to_max_len_str(i) + "'" for i in message.values()])
             size = length = len(f"\"INSERT INTO {name} VALUES ({values}, 'YYYY-MM-DD HH-MI-SS');\"")
             max_sql_write_size = max(max_sql_write_size, size)
-            data_message_sizes[name] = sum(map(size_of_datatype, message.values()))
+            data_message_sizes[name] = sum(map(size_of_datatype, message.values())) + 8
 
         DATA['MAX_SQL_WRITE_SIZE'] = max_sql_write_size + 10 # Extra 10 just in case
         DATA['DATA_MESSAGE_SIZES'] = data_message_sizes
