@@ -121,8 +121,9 @@ int main(int argc, char *argv[]) {
   log_standard("\nInitialization Complete...\n\n");
 
   log_standard("opening %s...\n", serialPath);
+  errno = 0;
   FILE *serial = fopen(serialPath, "rb");
-  if (serial == NULL) {
+  if (serial == NULL || errno != 0) {
     perror("open serial file");
     return 1;
   }
@@ -132,7 +133,9 @@ int main(int argc, char *argv[]) {
     // Update web server
     update_server(&manager, LOOP_TIMEOUT_MS);
 
-    if (fread(fread_buffer, sizeof(uint8_t), 1, serial) > 0) {
+    errno = 0;
+    int n_read = fread(fread_buffer, sizeof(uint8_t), 1, serial);
+    if (n_read > 0) {
       unsigned char byte_read = (unsigned char) fread_buffer[0];
 
       log_standard("read byte %02x\n", byte_read);
@@ -154,7 +157,6 @@ int main(int argc, char *argv[]) {
     if (errno != 0) {
       perror("read byte");
     }
-    errno = 0;
 
     // Update command stack
     update_command_stack(command_send_buffer);
