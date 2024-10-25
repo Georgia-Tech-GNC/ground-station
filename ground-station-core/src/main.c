@@ -131,7 +131,7 @@ int main(int argc, char *argv[]) {
     // Update web server
     update_server(&manager, LOOP_TIMEOUT_MS);
 
-    unsigned char byte_read = (unsigned char) getc(serial);
+    unsigned char byte_read = (unsigned char) fgetc(serial);
     log_standard("read byte %02x\n", byte_read);
     current_buffer_size = process_incoming_byte(byte_read, buffer, current_buffer_size);
     log_standard("now, current_buffer_size=%d\n", current_buffer_size);
