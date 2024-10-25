@@ -132,8 +132,9 @@ int main(int argc, char *argv[]) {
     // Update web server
     update_server(&manager, LOOP_TIMEOUT_MS);
 
-    if (fread(fread_buffer, sizeof(uint8_t), 1, serial) > 0) {
-      unsigned char byte_read = (unsigned char) fread_buffer[0];
+    int num_read = fread(fread_buffer, sizeof(uint8_t), 250, serial);
+    for (int i = 0; i < num_read; i++) {
+      uint8_t byte_read = (uint8_t) fread_buffer[i];
 
       log_standard("read byte %02x\n", byte_read);
       current_buffer_size = process_incoming_byte(byte_read, buffer, current_buffer_size);
@@ -150,6 +151,8 @@ int main(int argc, char *argv[]) {
         process_xbee_message(-current_buffer_size);
         current_buffer_size = 0;
       }
+    } else {
+      feof(serial);
     }
 
     // Update command stack
