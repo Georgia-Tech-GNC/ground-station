@@ -127,6 +127,10 @@ int main(int argc, char *argv[]) {
     perror("open serial file");
     return 1;
   }
+
+  if (flock(fileno(serial), LOCK_EX | LOCK_NB) != 0) {
+    perror("flock");
+  }
   
   // serial port setup
   struct termios sp;
