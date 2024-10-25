@@ -135,6 +135,7 @@ int main(int argc, char *argv[]) {
 
     errno = 0;
     int n_read = fread(fread_buffer, sizeof(uint8_t), 1, serial);
+    printf("n_read=%d\n", n_read);
     if (n_read > 0) {
       unsigned char byte_read = (unsigned char) fread_buffer[0];
 
@@ -153,8 +154,6 @@ int main(int argc, char *argv[]) {
         process_xbee_message(-current_buffer_size);
         current_buffer_size = 0;
       }
-    } else {
-      printf("n_read=%d\n", n_read);
     }
     if (errno != 0) {
       perror("read byte");
