@@ -151,6 +151,9 @@ int main(int argc, char *argv[]) {
         current_buffer_size = 0;
       }
     }
+    if (errno != 0) {
+      perror("read byte");
+    }
 
     // Update command stack
     update_command_stack(command_send_buffer);
