@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <signal.h>
 #include <errno.h>
+#include <termios.h>
 
 #include "mongoose.h"  
 #include "sqlite3.h"
@@ -126,6 +127,31 @@ int main(int argc, char *argv[]) {
     perror("open serial file");
     return 1;
   }
+  
+  // serial port setup
+  struct termios sp;
+  if(tcgetattr(fileno(serial), &sp) != 0) {
+    perror("tcgetattr");
+  }
+  sp.c_cflag &= ~PARENB;
+  sp.c_cflag &= ~CSTOPB;
+  sp.c_cflag &= ~CSIZE;
+  sp.c_cflag |= CS8;
+  sp.c_cflag &= ~CRTSCTS;
+  sp.c_cflag |= CREAD | CLOCAL;
+  sp.c_lflag &= ~ICANON; // non-canonical req'd to NOT read line-by-line
+  sp.c_lflag &= ~ECHO;
+  sp.c_lflag &= ~ISIG;
+  sp.c_iflag &= ~(IXON | IXOFF | IXANY); // software control flow
+  sp.c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL); // Disable any special handling of received bytes
+  sp.c_oflag &= ~OPOST; // Prevent special interpretation of output bytes (e.g. newline chars)
+  sp.c_oflag &= ~ONLCR; // Prevent conversion of newline to carriage return/line feed
+  sp.c_cc[VTIME] = 0;
+  sp.c_cc[VMIN] = 1;
+  cfsetispeed(&sp, B9600);
+  cfsetospeed(&sp, B9600);
+  tcsetattr(fileno(serial), TCSANOW, &sp);
+
   int current_buffer_size = 0;
   
   while (true) {
