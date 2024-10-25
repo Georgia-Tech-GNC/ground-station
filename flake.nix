@@ -49,6 +49,7 @@
             "flakes"
           ];
           nix.settings.auto-optimise-store = true;
+          nix.settings.trusted-users = [ "gnc" ];
           services.openssh.enable = true;
           services.fail2ban.enable = true;
           programs.fish.enable = true;
@@ -102,7 +103,9 @@
             ({ ... }: {
               environment.systemPackages = [
                 packages.ground-station-core
-              ];
+              ] + (with pkgs; [
+                picocom
+              ]);
               systemd.services.ground-station-core = {
                 description = "XBee-Pi comms server for GNC";
                 serviceConfig.ExecStart = "${packages.ground-station-core}/bin/ground-station-core";
