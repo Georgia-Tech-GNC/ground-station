@@ -130,6 +130,7 @@ int main(int argc, char *argv[]) {
   
   // serial port setup
   struct termios sp;
+  log_standard("tcgetattr...\n");
   if(tcgetattr(fileno(serial), &sp) != 0) {
     perror("tcgetattr");
   }
@@ -150,7 +151,11 @@ int main(int argc, char *argv[]) {
   sp.c_cc[VMIN] = 1;
   cfsetispeed(&sp, B9600);
   cfsetospeed(&sp, B9600);
-  tcsetattr(fileno(serial), TCSANOW, &sp);
+  log_standard("tcsetattr...\n");
+  if (tcsetattr(fileno(serial), TCSANOW, &sp) != 0) {
+    perror("tcsetattr");
+  }
+  log_standard("tcsetattr.\n");
 
   int current_buffer_size = 0;
   
