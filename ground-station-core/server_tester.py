@@ -3,7 +3,7 @@ import time
 import sys
 
 
-server = sys.argv[1] if len(sys.argv) > 1 else '0.0.0.0'
+server = sys.argv[1] if len(sys.argv) > 1 else '100.70.37.160'
 
 for i in range(3):
     r = requests.get(f'http://{server}:8080/api/data/RocketSensorData', timeout=.1)

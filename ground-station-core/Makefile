@@ -1,33 +1,21 @@
+TARGET_EXEC ?= a.out
+
 BUILD_DIR ?= ./build
+SRC_DIRS ?= ./src ./includes ./lib
 
-SRCS := ./src/command_scheduler.c \
-				./src/database.c \
-				./src/logger.c \
-				./src/web_server.c \
-				./lib/mongoose/mongoose.c \
-				./lib/sqlite3/sqlite3.c \
-				./lib/protocol/crc_hash.c \
-				./lib/protocol/packet_encode.c \
-				./lib/protocol/protocol.c
-
+SRCS := $(shell find $(SRC_DIRS) -name *.cpp -or -name *.c -or -name *.s)
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 DEPS := $(OBJS:.o=.d)
 
-INC_DIRS := ./includes/ \
-						./lib/mongoose/ \
-						./lib/protocol/ \
-						./lib/sqlite3/
+INC_DIRS := $(shell find $(SRC_DIRS) -type d)
 INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 
 CPPFLAGS ?= $(INC_FLAGS) -MMD -MP
 
 CFLAGS := -g
 
-$(BUILD_DIR)/a.out: ./src/main.c $(OBJS)
-	$(CC) $? $(CPPFLAGS) $(CFLAGS) -o $@ $(LDFLAGS)
-
-$(BUILD_DIR)/fake_rocket.out: ./src/fake_rocket_main.c $(OBJS)
-	$(CC) $? $(CPPFLAGS) $(CFLAGS) -o $@ $(LDFLAGS)
+$(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
+	$(CC) $(OBJS) -o $@ $(LDFLAGS)
 
 # assembly
 $(BUILD_DIR)/%.s.o: %.s
@@ -44,7 +32,7 @@ $(BUILD_DIR)/%.cpp.o: %.cpp
 	$(MKDIR_P) $(dir $@)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
 
-install: $(BUILD_DIR)/a.out
+install: $(BUILD_DIR)/$(TARGET_EXEC)
 	mkdir $(out)/bin
 	cp $< $(out)/bin/ground-station-core
 

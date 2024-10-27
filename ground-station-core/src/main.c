@@ -151,7 +151,7 @@ int main(int argc, char *argv[]) {
   sp.c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL); // Disable any special handling of received bytes
   sp.c_oflag &= ~OPOST; // Prevent special interpretation of output bytes (e.g. newline chars)
   sp.c_oflag &= ~ONLCR; // Prevent conversion of newline to carriage return/line feed
-  sp.c_cc[VTIME] = 0;
+  sp.c_cc[VTIME] = 1; // wait for 1+ bytes a max of 1/10 sec
   sp.c_cc[VMIN] = 1;
   cfsetispeed(&sp, B9600);
   cfsetospeed(&sp, B9600);

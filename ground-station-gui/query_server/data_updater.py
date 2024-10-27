@@ -1,5 +1,3 @@
-from collections.abc import Callable
-
 import requests
 
 WEB_SERVER_URL = "http://0.0.0.0:8080/"
@@ -47,7 +45,7 @@ class DataUpdater:
         The structure can be represented as:
             dict[int | str, tuple[callable, list[str]]]
         """
-        self.callbacks: dict[id | str, tuple[Callable, list[str]]] = {}
+        self.callbacks: dict[id | str, tuple[callable, list[str]]] = {}
 
     def is_valid_data_name(self, data_name: str):
         return data_name in self.values

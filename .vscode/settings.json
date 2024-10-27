@@ -11,6 +11,7 @@
         "sqlite3.h": "c",
         "__locale": "c",
         "signal.h": "c",
-        "web_server.h": "c"
+        "web_server.h": "c",
+        "errno.h": "c"
     }
 }
