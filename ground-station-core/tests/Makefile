@@ -38,7 +38,7 @@ TESTS=$(TESTS_C) $(TESTS_CPP)
 # targets
 all: $(TESTS)
 
-SRCDIR=../src
+SRCDIR=../src ../includes
 
 runtest: all
 	./tstrun

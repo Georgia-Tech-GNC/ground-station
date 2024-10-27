@@ -12,6 +12,7 @@
         "__locale": "c",
         "signal.h": "c",
         "web_server.h": "c",
-        "errno.h": "c"
+        "errno.h": "c",
+        "tst.h": "c"
     }
 }
