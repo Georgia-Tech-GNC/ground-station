@@ -43,15 +43,12 @@
           time.timeZone = "America/New_York";
           i18n.defaultLocale = "en_US.UTF-8";
           system.stateVersion = "24.05";
-
           nix.settings.experimental-features = [
             "nix-command"
             "flakes"
           ];
-          nix.settings.auto-optimise-store = true;
-          nix.settings.trusted-users = [ "gnc" ];
+
           services.openssh.enable = true;
-          services.fail2ban.enable = true;
           programs.fish.enable = true;
 
           users.users.gnc = {
@@ -70,6 +67,13 @@
           programs.tmux.enable = true;
           programs.htop.enable = true;
         };
+        devModule = {
+          options = { };
+          config = {
+            nix.settings.trusted-users = [ "gnc" ];
+            nix.settings.auto-optimise-store = true;
+          };
+        };
       in
       rec {
         devShells = {
@@ -82,10 +86,12 @@
               go
               gdb
               nixfmt-rfc-style
-              (python3.withPackages (p: with p; [
-                jinja2
-                requests
-              ]))
+              (python3.withPackages (
+                p: with p; [
+                  jinja2
+                  requests
+                ]
+              ))
             ];
             buildInputs = with pkgs; [ ];
             nativeBuildInputs = with pkgs; [ pkg-config ];
@@ -100,19 +106,19 @@
           system = "aarch64-linux";
           modules = [
             baseModule
-            ({ ... }: {
-              environment.systemPackages = [
-                packages.ground-station-core
-              ] + (with pkgs; [
-                picocom
-              ]);
-              systemd.services.ground-station-core = {
-                description = "XBee-Pi comms server for GNC";
-                serviceConfig.ExecStart = "${packages.ground-station-core}/bin/ground-station-core";
-                wantedBy = [ "multi-user.target" ];
-                enable = true;
-              };
-            })
+            devModule
+            (
+              { ... }:
+              {
+                environment.systemPackages = [ packages.ground-station-core ] + (with pkgs; [ picocom ]);
+                systemd.services.ground-station-core = {
+                  description = "XBee-Pi comms server for GNC";
+                  serviceConfig.ExecStart = "${packages.ground-station-core}/bin/ground-station-core /dev/ttyS1";
+                  wantedBy = [ "multi-user.target" ];
+                  enable = true;
+                };
+              }
+            )
           ];
         };
         images.trixie = nixosConfigurations.trixie.config.system.build.sdImage;
