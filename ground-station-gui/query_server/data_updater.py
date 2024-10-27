@@ -10,8 +10,8 @@ def send_cmd_with_id(cmd_id: int):
         r = requests.get(f'{WEB_SERVER_URL}api/command/send', json={"id": cmd_id}, timeout=.1)
         if (r != 200):
             print(f"Command web api call with command id {cmd_id} failed! (bad status code)")
-    except Exception:
-        print(f"Command web api call with command id {cmd_id} failed! (exception)")
+    except Exception as e:
+        print(f"Command web api call with command id {cmd_id} failed! (exception: {e})")
 
 
 
