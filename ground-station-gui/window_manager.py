@@ -2,6 +2,7 @@ from typing import Callable, Iterable
 from gui_templates.data_viewer_window import DataViewerWindow, DataTypes
 from gui_templates.RocketCommandsWindow import RocketCommands
 from gui_templates.graph_viewer_window import GraphViewerWindow
+from gui_templates.logger_window import LoggerWindow
 from query_server.data_updater import allDataUpdaters, send_cmd_with_id
 import dearpygui.dearpygui as dpg
 import numpy as np
@@ -128,6 +129,7 @@ class WindowType(enum.Enum):
     GRAPH = 0
     DATA = 1
     COMMAND = 2
+    LOGGER = 3
 
 
 class WindowManager:
@@ -189,6 +191,8 @@ class WindowManager:
             self.create_data_viewer_window(*params, preset_id=dpg_id)
         elif regen_command == WindowType.COMMAND:
             self.create_rocket_commands_window(*params, preset_id=dpg_id)
+        elif regen_command == WindowType.LOGGER:
+            self.create_logger_window(*params, preset_id=dpg_id)
 
     def pickle_state(self, filename: str = None) -> None:
         """
@@ -240,6 +244,30 @@ class WindowManager:
         ) as f:
             RocketCommands(*zip(*BUTTON_VALUES.items()))
         
+        self._add_window(dpg_id)
+
+
+    def create_logger_window(self, window_name: str, width: int, preset_id: int = None) -> None:
+        if preset_id is None:
+            dpg_id = dpg.generate_uuid()
+        else:
+            dpg_id = preset_id
+
+        self.regen_commands[dpg_id] = (WindowType.LOGGER, (window_name, width))
+
+        with dpg.window(
+            label=window_name, tag=dpg_id,
+            on_close=lambda *args, dpg_id=dpg_id: self._remove_window(dpg_id),
+            width=width
+        ) as f:
+            l = LoggerWindow(width)
+        
+        # THESE PLACEHOLDERS CAN GO AWAY ONCE LOGGER UPDATER IS WORKING PROPERLY
+        l._log("Test Message 1", 1)
+        l._log("Test Message 2 (Long Test Message) (Long Test Message) (Long Test Message)", 2)
+        l._log("Test Message 3", 3)
+        l._log("Test Message 4", 4)
+
         self._add_window(dpg_id)
         
 

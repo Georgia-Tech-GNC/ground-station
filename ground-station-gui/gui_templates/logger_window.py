@@ -109,21 +109,3 @@ class LoggerWindow:
                 self.msgs_seen = max(map(int, logs.keys()))
             except Exception as e:
                 print(f"ERROR: exception [{e}] when finding maximum of ids")
-        
-
-
-dpg.create_context()
-
-with dpg.window(label="Debug Log", pos=(200, 100), width=700, height=500):
-    l = LoggerWindow(700)
-
-l._log("long: test_1 test_1 test_1 test_1 test_1 test_1 test_1 test_1 test_1 test_1 test_1 test_1 test_1 test_1 test_1", 1)
-l._log("test_2", 2)
-l._log("test_3", 3)
-l._log("test_4", 4)
-
-dpg.create_viewport(title='Custom Title', width=1400, height=1400)
-dpg.setup_dearpygui()
-dpg.show_viewport()
-dpg.start_dearpygui()
-dpg.destroy_context()

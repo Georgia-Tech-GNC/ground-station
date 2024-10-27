@@ -32,6 +32,3 @@ for id, value in logs.items():
 print(f"Last msg recv: {max(map(int, logs.keys()))}")
 
 
-
-
-

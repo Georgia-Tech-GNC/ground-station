@@ -12,6 +12,7 @@ SAVE_FOLDER_PATH = os.path.join(os.path.curdir, 'layout_save_files')
 PICKLE_PATH = os.path.join(SAVE_FOLDER_PATH, 'window_manager_save.pickle')
 INIT_FILE_PATH = os.path.join(SAVE_FOLDER_PATH, 'gui_layout_save.ini')
 
+INTENDED_WIDTH = 400
 
 def init_gui():
     dpg.create_context()
@@ -107,6 +108,7 @@ if __name__ == "__main__":
         
         with dpg.menu(label="Other Windows"):
             dpg.add_menu_item(label='Rocket Commands', callback=lambda: manager.create_rocket_commands_window("Rocket Commands"))
+            dpg.add_menu_item(label='Logger', callback=lambda: manager.create_logger_window("Logger", INTENDED_WIDTH))
 
     manager = WindowManager(PICKLE_PATH)
 
