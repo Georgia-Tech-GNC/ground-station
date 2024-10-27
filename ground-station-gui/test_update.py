@@ -28,7 +28,7 @@ LOG_OPTIONS = [
     ("I'm running out of ideas for random logger messages", 3),
     ("There was an error! Just kidding, there wasn't one", 4),
     ("Did you know that the GUI supports multiple concurrent viewers?", 2),
-    ("This message is reeeeeeaaaaaaaaaaaalllllllllllyyyyyyyyyyyy long so that Sebastian can show off how the GUI wraps long messages", 2)
+    ("This message is reeeeeeaaaaaaaaaaaalllllllllllyyyyyyyyyyyy long so that Sebastien can show off how the GUI wraps long messages", 2)
 ]
 
 def create_random_log_message():
