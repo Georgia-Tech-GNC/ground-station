@@ -25,20 +25,21 @@ int main(int argc, char *argv[]) {
 
   while (1) {
     loop(serial);
+    exit(0);
     sleep(3);
   }
 }
 
 void loop(const FILE *serial) {
-  struct RocketStateVector native = {
-    .velocity_x = (float) rand() / RAND_MAX,
+  struct RocketState native = {
+    .rocket_state = 1,
   };
-  uint8_t *msg = malloc(sizeof(uint8_t) * ROCKETSTATEVECTOR_SIZE);
-  uint8_t *packetizedData = malloc(sizeof(uint8_t) * (ROCKETSTATEVECTOR_SIZE+5));
-  RocketStateVector_encode(&native, msg);
-  int packetizedLength = generate_packet(msg, ROCKETSTATEVECTOR_SIZE, packetizedData, ROCKETSTATEVECTOR_MSG_ID);
-  if (packetizedLength != ROCKETSTATEVECTOR_SIZE+5) {
-    printf("packetizedLength != ROCKETSTATEVECTOR_SIZE+5: %d != %d\n", packetizedLength, ROCKETSTATEVECTOR_SIZE+5);
+  uint8_t *msg = malloc(sizeof(uint8_t) * ROCKETSTATE_SIZE);
+  uint8_t *packetizedData = malloc(sizeof(uint8_t) * (ROCKETSTATE_SIZE+5));
+  RocketState_encode(&native, msg);
+  int packetizedLength = generate_packet(msg, ROCKETSTATE_SIZE, packetizedData, ROCKETSTATE_MSG_ID);
+  if (packetizedLength != ROCKETSTATE_SIZE+5) {
+    printf("packetizedLength != ROCKETSTATE_SIZE+5: %d != %d\n", packetizedLength, ROCKETSTATE_SIZE+5);
     exit(1);
   }
   printf("packetizedLength=%d\n",packetizedLength);
@@ -49,19 +50,11 @@ void loop(const FILE *serial) {
 
   //fprintf(serial, "hello world\n");
 
-  // printf("data[0]=%02x\n", packetizedData[0]);
-  // printf("data[1]=%02x\n", packetizedData[1]);
-  // printf("data[2]=%02x\n", packetizedData[2]);
-  // printf("data[3]=%02x\n", packetizedData[3]);
-  // printf("data[4]=%02x\n", packetizedData[4]);
-  // printf("data[5]=%02x\n", packetizedData[5]);
-  // printf("data[6]=%02x\n", packetizedData[6]);
-  // printf("data[7]=%02x\n", packetizedData[7]);
-  // printf("data[8]=%02x\n", packetizedData[8]);
-
   for (int i = 0; i < packetizedLength; i ++) {
+    printf("%02x\n", packetizedData[i]);
     fprintf(serial, "%c", packetizedData[i]);
   }
+  printf("\n");
   fflush(serial);
   // fprintf(serial, "\r\n");
   // size_t written = fwrite(packetizedData, sizeof(uint8_t), packetizedLength, serial);
