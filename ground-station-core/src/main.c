@@ -36,8 +36,7 @@ void finalize() {
   mg_mgr_free(&manager);
 }
 
-void sigint_handler(int sig_no)
-{
+void sigint_handler(int sig_no) {
     log_header("\n\nCTRL-C pressed, terminating ground station...\n");
     sigaction(SIGINT, &old_action, NULL);
     kill(0, SIGINT);
