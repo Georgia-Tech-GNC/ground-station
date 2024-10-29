@@ -17,6 +17,12 @@
             "${modulesPath}/profiles/headless.nix"
             "${modulesPath}/profiles/minimal.nix"
           ];
+          #boot.initrd.includeDefaultModules = false;
+          #boot.initrd.kernelModules = [ "ext4" ];
+          disabledModules = [
+            "${modulesPath}/profiles/all-hardware.nix"
+            "${modulesPath}/profiles/base.nix"
+          ];
           sdImage.compressImage = false;
           time.timeZone = "America/New_York";
           i18n.defaultLocale = "en_US.UTF-8";
@@ -82,23 +88,25 @@
             (coreModule { inherit pkgs ground-station-core; })
           ];
         };
-      build-shell = pkgs: pkgs.mkShell {
-        packages = with pkgs; [
-          gcc
-          gnumake
-          go
-          gdb
-          nixfmt-rfc-style
-          (python3.withPackages (
-            p: with p; [
-              jinja2
-              requests
-            ]
-          ))
-        ];
-        buildInputs = with pkgs; [ ];
-        nativeBuildInputs = with pkgs; [ pkg-config ];
-      };
+      build-shell =
+        pkgs:
+        pkgs.mkShell {
+          packages = with pkgs; [
+            gcc
+            gnumake
+            go
+            gdb
+            nixfmt-rfc-style
+            (python3.withPackages (
+              p: with p; [
+                jinja2
+                requests
+              ]
+            ))
+          ];
+          buildInputs = with pkgs; [ ];
+          nativeBuildInputs = with pkgs; [ pkg-config ];
+        };
       supportedSystems = [ "x86_64-linux" ];
     in
     flake-utils.lib.eachSystem supportedSystems (
