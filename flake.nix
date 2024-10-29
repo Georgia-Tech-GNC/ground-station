@@ -12,7 +12,11 @@
       baseModule =
         { pkgs, modulesPath, ... }:
         {
-          imports = [ "${modulesPath}/installer/sd-card/sd-image-aarch64.nix" ];
+          imports = [
+            "${modulesPath}/installer/sd-card/sd-image-aarch64.nix"
+            "${modulesPath}/profiles/headless.nix"
+            "${modulesPath}/profiles/minimal.nix"
+          ];
           sdImage.compressImage = false;
           time.timeZone = "America/New_York";
           i18n.defaultLocale = "en_US.UTF-8";
@@ -55,8 +59,7 @@
         { pkgs, ground-station-core }:
         { ... }:
         {
-          environment.systemPackages = (with pkgs; [ picocom ]);
-          # environment.systemPackages = [ ground-station-core ] + (with pkgs; [ picocom ]); # TODO: debug ←
+          environment.systemPackages = [ ground-station-core ] ++ (with pkgs; [ picocom ]); # TODO: debug ←
           systemd.services.ground-station-core = {
             description = "XBee-Pi comms server for GNC";
             serviceConfig.ExecStart = "${ground-station-core}/bin/ground-station-core /dev/ttyS1";
@@ -103,16 +106,18 @@
       let
         pkgs = import nixpkgs { inherit system; };
         pkgsCross = pkgs.pkgsCross.aarch64-multiplatform;
+        pkgs-aarch64-multiplatform = if system == "aarch64-linux" then pkgs else pkgsCross;
       in
       rec {
         devShells = {
           default = build-shell pkgs;
           cross = build-shell pkgsCross;
         };
-        packages.ground-station-core = build-core pkgsCross;
+        packages.ground-station-core = build-core pkgs;
+        packages.ground-station-core-aarch64-multiplatform = build-core pkgs-aarch64-multiplatform;
         nixosConfigurations.trixie = build-trixie {
-          pkgs = pkgsCross;
-          ground-station-core = packages.ground-station-core;
+          pkgs = pkgs-aarch64-multiplatform;
+          ground-station-core = packages.ground-station-core-aarch64-multiplatform;
         };
         images.trixie = nixosConfigurations.trixie.config.system.build.sdImage;
       }

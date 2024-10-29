@@ -157,8 +157,9 @@ int main(int argc, char *argv[]) {
   log_standard("tcsetattr...\n");
   if (tcsetattr(fileno(serial), TCSANOW, &sp) != 0) {
     perror("tcsetattr");
+    return 1;
   }
-  log_standard("tcsetattr.\n");
+  log_standard("tcsetattr done.\n");
 
   int current_buffer_size = 0;
   
