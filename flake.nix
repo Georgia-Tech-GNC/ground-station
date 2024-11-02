@@ -83,6 +83,7 @@
         pkgs.stdenv.mkDerivation {
           name = "ground-station-core";
           src = ./ground-station-core;
+          dontStrip = true;
         };
       build-trixie =
         { pkgs, ground-station-core }:
