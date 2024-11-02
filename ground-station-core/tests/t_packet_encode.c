@@ -171,5 +171,35 @@ tstsuite("Extract Packet") {
         tstassert(-252-5 == process_incoming_byte(packet[252+4], buffer, 252+4));
         tstassert(packet[252+4] == buffer[252+4]);
     }
+
+    for (int size_i = 0; size_i < 7; size_i++) {
+        tstcase("Read packet with size %d bytes", sizes[size_i]) {
+            uint8_t *raw_data = malloc(sizes[size_i]);
+            uint8_t *packetized_data = malloc(sizes[size_i] + 5);
+            uint8_t read_buffer[270];
+
+            for (int i = 0; i < sizes[size_i]; i++) raw_data[i] = rand();
+
+            uint8_t msg_id = rand();
+            if (msg_id == 0x00) msg_id = 0x01;
+
+            generate_packet(raw_data, sizes[size_i], packetized_data, msg_id);
+
+            int buff_size = 0;
+            for (int i = 0; i < 50; i++) {
+                buff_size = process_incoming_byte(rand(), read_buffer, buff_size);
+                if (buff_size < 0) buff_size = 0;
+            }
+
+            for (int i = 0; i < sizes[size_i] + 4; i++) {
+                tstassert(i+1 == process_incoming_byte(packetized_data[i], read_buffer, buff_size));
+                tstassert(packetized_data[i] == read_buffer[i]);
+                buff_size = i+1;
+            }
+
+            tstassert(-sizes[size_i]-5 == process_incoming_byte(packetized_data[sizes[size_i] + 4], read_buffer, buff_size));
+            tstassert(packetized_data[sizes[size_i] + 4] == read_buffer[sizes[size_i] + 4]);
+        }
+    }
 }
 
