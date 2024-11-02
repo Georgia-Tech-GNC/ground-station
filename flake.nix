@@ -25,7 +25,7 @@
           ];
           environment.systemPackages = with pkgs; [
             # re-add packages in base.nix
-            neovim
+            vim
             usbutils
           ];
           sdImage.compressImage = false;
