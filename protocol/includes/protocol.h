@@ -87,20 +87,20 @@ struct RocketStateVector {
 	#define ROCKETSTATEVECTOR_SQL_GET_MOST_RECENT "SELECT velocity_x, velocity_y, velocity_z, angular_velocity_x, angular_velocity_y, angular_velocity_z, attitude_w, attitude_x, attitude_y, attitude_z, position_x, position_y, position_z, time FROM RocketStateVector ORDER BY time LIMIT 1"
 	#define ROCKETSTATEVECTOR_SQL_ADD_ENTRY(buffer, data) sprintf(buffer, \
 		"INSERT INTO ROCKETSTATEVECTOR VALUES ('%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%lld');", \
-		data->velocity_x, \
-		data->velocity_y, \
-		data->velocity_z, \
-		data->angular_velocity_x, \
-		data->angular_velocity_y, \
-		data->angular_velocity_z, \
-		data->attitude_w, \
-		data->attitude_x, \
-		data->attitude_y, \
-		data->attitude_z, \
-		data->position_x, \
-		data->position_y, \
-		data->position_z, \
-		data->timestamp); 
+		(data)->velocity_x, \
+		(data)->velocity_y, \
+		(data)->velocity_z, \
+		(data)->angular_velocity_x, \
+		(data)->angular_velocity_y, \
+		(data)->angular_velocity_z, \
+		(data)->attitude_w, \
+		(data)->attitude_x, \
+		(data)->attitude_y, \
+		(data)->attitude_z, \
+		(data)->position_x, \
+		(data)->position_y, \
+		(data)->position_z, \
+		(data)->timestamp); 
 	#define ROCKETSTATEVECTOR_API_PATH "/api/data/RocketStateVector"
 	#define ROCKETSTATEVECTOR_SQL_SELECT_TO_JSON(sql_row_values) "{ %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\"}", \
 		MG_ESC("velocity_x"), sql_row_values[0], \
@@ -152,11 +152,11 @@ struct RocketServoDeflection {
 	#define ROCKETSERVODEFLECTION_SQL_GET_MOST_RECENT "SELECT servo_deflection_1, servo_deflection_2, servo_deflection_3, servo_deflection_4, time FROM RocketServoDeflection ORDER BY time LIMIT 1"
 	#define ROCKETSERVODEFLECTION_SQL_ADD_ENTRY(buffer, data) sprintf(buffer, \
 		"INSERT INTO ROCKETSERVODEFLECTION VALUES ('%.10E', '%.10E', '%.10E', '%.10E', '%lld');", \
-		data->servo_deflection_1, \
-		data->servo_deflection_2, \
-		data->servo_deflection_3, \
-		data->servo_deflection_4, \
-		data->timestamp); 
+		(data)->servo_deflection_1, \
+		(data)->servo_deflection_2, \
+		(data)->servo_deflection_3, \
+		(data)->servo_deflection_4, \
+		(data)->timestamp); 
 	#define ROCKETSERVODEFLECTION_API_PATH "/api/data/RocketServoDeflection"
 	#define ROCKETSERVODEFLECTION_SQL_SELECT_TO_JSON(sql_row_values) "{ %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\"}", \
 		MG_ESC("servo_deflection_1"), sql_row_values[0], \
@@ -201,12 +201,12 @@ struct RocketState {
 	#define ROCKETSTATE_SQL_GET_MOST_RECENT "SELECT rocket_state, firing_channel_1, firing_channel_2, firing_channel_3, firing_channel_4, time FROM RocketState ORDER BY time LIMIT 1"
 	#define ROCKETSTATE_SQL_ADD_ENTRY(buffer, data) sprintf(buffer, \
 		"INSERT INTO ROCKETSTATE VALUES ('%d', '%d', '%d', '%d', '%d', '%lld');", \
-		data->rocket_state, \
-		data->firing_channel_1, \
-		data->firing_channel_2, \
-		data->firing_channel_3, \
-		data->firing_channel_4, \
-		data->timestamp); 
+		(data)->rocket_state, \
+		(data)->firing_channel_1, \
+		(data)->firing_channel_2, \
+		(data)->firing_channel_3, \
+		(data)->firing_channel_4, \
+		(data)->timestamp); 
 	#define ROCKETSTATE_API_PATH "/api/data/RocketState"
 	#define ROCKETSTATE_SQL_SELECT_TO_JSON(sql_row_values) "{ %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\"}", \
 		MG_ESC("rocket_state"), sql_row_values[0], \
@@ -254,13 +254,13 @@ struct RocketGroundEKF {
 	#define ROCKETGROUNDEKF_SQL_GET_MOST_RECENT "SELECT pn_matrix_d1, pn_matrix_d2, pn_matrix_d3, pn_matrix_d4, pn_matrix_d5, pn_matrix_d6, time FROM RocketGroundEKF ORDER BY time LIMIT 1"
 	#define ROCKETGROUNDEKF_SQL_ADD_ENTRY(buffer, data) sprintf(buffer, \
 		"INSERT INTO ROCKETGROUNDEKF VALUES ('%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%lld');", \
-		data->pn_matrix_d1, \
-		data->pn_matrix_d2, \
-		data->pn_matrix_d3, \
-		data->pn_matrix_d4, \
-		data->pn_matrix_d5, \
-		data->pn_matrix_d6, \
-		data->timestamp); 
+		(data)->pn_matrix_d1, \
+		(data)->pn_matrix_d2, \
+		(data)->pn_matrix_d3, \
+		(data)->pn_matrix_d4, \
+		(data)->pn_matrix_d5, \
+		(data)->pn_matrix_d6, \
+		(data)->timestamp); 
 	#define ROCKETGROUNDEKF_API_PATH "/api/data/RocketGroundEKF"
 	#define ROCKETGROUNDEKF_SQL_SELECT_TO_JSON(sql_row_values) "{ %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\"}", \
 		MG_ESC("pn_matrix_d1"), sql_row_values[0], \
@@ -337,27 +337,27 @@ struct RocketSensorData {
 	#define ROCKETSENSORDATA_SQL_GET_MOST_RECENT "SELECT accelerometer_x, accelerometer_y, accelerometer_z, gyro_x, gyro_y, gyro_z, gps_x, gps_y, gps_z, barometer, accel_bias_x, accel_bias_y, accel_bias_z, gyro_bias_x, gyro_bias_y, gyro_bias_z, gps_offset_x, gps_offset_y, gps_offset_z, barometer_offset, time FROM RocketSensorData ORDER BY time LIMIT 1"
 	#define ROCKETSENSORDATA_SQL_ADD_ENTRY(buffer, data) sprintf(buffer, \
 		"INSERT INTO ROCKETSENSORDATA VALUES ('%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%lld');", \
-		data->accelerometer_x, \
-		data->accelerometer_y, \
-		data->accelerometer_z, \
-		data->gyro_x, \
-		data->gyro_y, \
-		data->gyro_z, \
-		data->gps_x, \
-		data->gps_y, \
-		data->gps_z, \
-		data->barometer, \
-		data->accel_bias_x, \
-		data->accel_bias_y, \
-		data->accel_bias_z, \
-		data->gyro_bias_x, \
-		data->gyro_bias_y, \
-		data->gyro_bias_z, \
-		data->gps_offset_x, \
-		data->gps_offset_y, \
-		data->gps_offset_z, \
-		data->barometer_offset, \
-		data->timestamp); 
+		(data)->accelerometer_x, \
+		(data)->accelerometer_y, \
+		(data)->accelerometer_z, \
+		(data)->gyro_x, \
+		(data)->gyro_y, \
+		(data)->gyro_z, \
+		(data)->gps_x, \
+		(data)->gps_y, \
+		(data)->gps_z, \
+		(data)->barometer, \
+		(data)->accel_bias_x, \
+		(data)->accel_bias_y, \
+		(data)->accel_bias_z, \
+		(data)->gyro_bias_x, \
+		(data)->gyro_bias_y, \
+		(data)->gyro_bias_z, \
+		(data)->gps_offset_x, \
+		(data)->gps_offset_y, \
+		(data)->gps_offset_z, \
+		(data)->barometer_offset, \
+		(data)->timestamp); 
 	#define ROCKETSENSORDATA_API_PATH "/api/data/RocketSensorData"
 	#define ROCKETSENSORDATA_SQL_SELECT_TO_JSON(sql_row_values) "{ %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\"}", \
 		MG_ESC("accelerometer_x"), sql_row_values[0], \

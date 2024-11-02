@@ -67,9 +67,9 @@ int64_t timestamp;
 	#define {{data_message_name.upper()}}_SQL_ADD_ENTRY(buffer, data) sprintf(buffer, \
 		"INSERT INTO {{data_message_name.upper()}} VALUES ({{printf_sql_type(data_message.values()) | join(', ')}}, '%lld');", \
 		{% for variable_name in data_message.keys() -%}
-			data->{{variable_name}}, \
+			(data)->{{variable_name}}, \
 		{% endfor -%}
-			data->timestamp); 
+			(data)->timestamp); 
 	#define {{data_message_name.upper()}}_API_PATH "/api/data/{{data_message_name}}"
 	#define {{data_message_name.upper()}}_SQL_SELECT_TO_JSON(sql_row_values) "{ {{duplicate("%m: \\\"%s\\\"", data_message) | join(', ')}}, %m: \"%s\"}", \
 		{% for variable_name in data_message.keys() -%}
