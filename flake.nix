@@ -9,36 +9,25 @@
       flake-utils,
     }:
     let
-      # to work with older version of flakes
-      lastModifiedDate = self.lastModifiedDate or self.lastModified or "19700101";
-
-      # Generate a user-friendly version number.
-      version =
-        (builtins.substring 0 8 lastModifiedDate) + "-" + (if (self ? rev) then self.rev else "dirty");
-
-      # System types to support.
-      supportedSystems = [
-        "x86_64-linux"
-        "aarch64-linux"
-      ];
-
-      # Helper function to generate an attrset '{ x86_64-linux = f "x86_64-linux"; ... }'.
-      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
-
-      # Nixpkgs instantiated for supported system 
-      nixpkgsFor = forAllSystems (system: import nixpkgs { inherit system; });
-      libFor = forAllSystems (system: import (nixpkgs + "/lib"));
-      nixosLibFor = forAllSystems (system: import (nixpkgs + "/nixos/lib"));
-    in
-    flake-utils.lib.eachSystem supportedSystems (
-      system:
-      let
-        pkgs = import nixpkgs { inherit system; };
-        lib = import (nixpkgs + "/lib") { inherit system; };
-        nixosLib = import (nixpkgs + "/nixos/lib") { inherit system; };
-        ldflags = pkgs: [ "-race" ];
-        baseModule = {
-          imports = [ "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64.nix" ];
+      baseModule =
+        { pkgs, modulesPath, ... }:
+        {
+          imports = [
+            "${modulesPath}/installer/sd-card/sd-image-aarch64.nix"
+            "${modulesPath}/profiles/headless.nix"
+            "${modulesPath}/profiles/minimal.nix"
+          ];
+          #boot.initrd.includeDefaultModules = false;
+          #boot.initrd.kernelModules = [ "ext4" ];
+          disabledModules = [
+            "${modulesPath}/profiles/all-hardware.nix"
+            "${modulesPath}/profiles/base.nix"
+          ];
+          environment.systemPackages = with pkgs; [
+            # re-add packages in base.nix
+            vim
+            usbutils
+          ];
           sdImage.compressImage = false;
           time.timeZone = "America/New_York";
           i18n.defaultLocale = "en_US.UTF-8";
@@ -47,6 +36,8 @@
             "nix-command"
             "flakes"
           ];
+
+          networking.hostName = "trixie";
 
           services.openssh.enable = true;
           programs.fish.enable = true;
@@ -60,6 +51,7 @@
               "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINEhH+5s0m+lBC898M/nrWREaDblRCPSpL6+9wkoZdel inaba@nyiyui.ca"
             ];
             homeMode = "770";
+            hashedPassword = "$y$j9T$pxKDYuGo9ERES1E38/xc00$5IDCOwo.uYH6KiKabibXvzrIkpqbllddU7S0iOGCK/2";
           };
           security.sudo.wheelNeedsPassword = false;
           environment.shells = [ pkgs.fish ];
@@ -67,59 +59,79 @@
           programs.tmux.enable = true;
           programs.htop.enable = true;
         };
-        devModule = {
-          options = { };
-          config = {
-            nix.settings.trusted-users = [ "gnc" ];
-            nix.settings.auto-optimise-store = true;
+      devModule = {
+        options = { };
+        config = {
+          nix.settings.trusted-users = [ "gnc" ];
+          nix.settings.auto-optimise-store = true;
+        };
+      };
+      coreModule =
+        { pkgs, ground-station-core }:
+        { ... }:
+        {
+          environment.systemPackages = [ ground-station-core ] ++ (with pkgs; [ picocom gdb ]);
+          systemd.services.ground-station-core = {
+            description = "XBee-Pi comms server for GNC";
+            serviceConfig.ExecStart = "${ground-station-core}/bin/ground-station-core /dev/ttyS1";
+            wantedBy = [ "multi-user.target" ];
+            enable = true;
           };
         };
+      build-core =
+        pkgs:
+        pkgs.stdenv.mkDerivation {
+          name = "ground-station-core";
+          src = ./ground-station-core;
+          dontStrip = true;
+        };
+      build-trixie =
+        { pkgs, ground-station-core }:
+        pkgs.nixos {
+          imports = [
+            baseModule
+            devModule
+            (coreModule { inherit pkgs ground-station-core; })
+          ];
+        };
+      build-shell =
+        pkgs:
+        pkgs.mkShell {
+          packages = with pkgs; [
+            gcc
+            gnumake
+            go
+            gdb
+            nixfmt-rfc-style
+            (python3.withPackages (
+              p: with p; [
+                jinja2
+                requests
+              ]
+            ))
+          ];
+          buildInputs = with pkgs; [ ];
+          nativeBuildInputs = with pkgs; [ pkg-config ];
+        };
+      supportedSystems = [ "x86_64-linux" ];
+    in
+    flake-utils.lib.eachSystem supportedSystems (
+      system:
+      let
+        pkgs = import nixpkgs { inherit system; };
+        pkgsCross = pkgs.pkgsCross.aarch64-multiplatform;
+        pkgs-aarch64-multiplatform = if system == "aarch64-linux" then pkgs else pkgsCross;
       in
       rec {
         devShells = {
-          default = pkgs.mkShell {
-            packages = with pkgs; [
-              gcc
-              gnumake
-              stlink
-              stlink-gui
-              go
-              gdb
-              nixfmt-rfc-style
-              (python3.withPackages (
-                p: with p; [
-                  jinja2
-                  requests
-                ]
-              ))
-            ];
-            buildInputs = with pkgs; [ ];
-            nativeBuildInputs = with pkgs; [ pkg-config ];
-          };
+          default = build-shell pkgs;
+          cross = build-shell pkgsCross;
         };
-        packages.ground-station-core = pkgs.stdenv.mkDerivation {
-          name = "ground-station-core";
-          src = ./ground-station-core;
-          inherit system;
-        };
-        nixosConfigurations.trixie = nixpkgs.lib.nixosSystem {
-          system = "aarch64-linux";
-          modules = [
-            baseModule
-            devModule
-            (
-              { ... }:
-              {
-                environment.systemPackages = [ packages.ground-station-core ] + (with pkgs; [ picocom ]);
-                systemd.services.ground-station-core = {
-                  description = "XBee-Pi comms server for GNC";
-                  serviceConfig.ExecStart = "${packages.ground-station-core}/bin/ground-station-core /dev/ttyS1";
-                  wantedBy = [ "multi-user.target" ];
-                  enable = true;
-                };
-              }
-            )
-          ];
+        packages.ground-station-core = build-core pkgs;
+        packages.ground-station-core-aarch64-multiplatform = build-core pkgs-aarch64-multiplatform;
+        nixosConfigurations.trixie = build-trixie {
+          pkgs = pkgs-aarch64-multiplatform;
+          ground-station-core = packages.ground-station-core-aarch64-multiplatform;
         };
         images.trixie = nixosConfigurations.trixie.config.system.build.sdImage;
       }
