@@ -1,15 +1,3 @@
-#  SPDX-FileCopyrightText: © 2023 Remo Dentato <rdentato@gmail.com>
-#  SPDX-License-Identifier: MIT
-
-# Uncomment the following line to generate a minimal log.
-# COMPACT="-DTST_STR_COMPACT"
-
-# Uncomment the following line to disable ANSI colors
-# NOCOLOR="-DTST_STR_NOCOLOR"
-
-# Uncomment the following line to enable debugging
-# DEBUG="-DDEBUG"
-
 _EXE=.exe
 STATIC=-static
 
@@ -20,7 +8,9 @@ endif
 
 CXX_AVAILABLE := $(shell $(CXX) --version 2>/dev/null)
 
-CFLAGS=-O2 -Wall -I../lib/tst -I. $(STATIC) $(COMPACT) $(NOCOLOR) $(DEBUG)
+C_PATH_LIB = ../lib/protocol/protocol.c ../lib/protocol/crc_hash.c ../lib/protocol/packet_encode.c
+
+CFLAGS=$(C_PATH_LIB) -O2 -Wall -I../src -I../lib/protocol -I../lib/tst -I../ -I../includes $(STATIC) $(COMPACT) $(NOCOLOR) $(DEBUG)
 LIBS=
 
 TESTS_SRC_C=$(wildcard t_*.c)
@@ -38,9 +28,9 @@ TESTS=$(TESTS_C) $(TESTS_CPP)
 # targets
 all: $(TESTS)
 
-SRCDIR=../src ../includes
+SRCDIR=../lib/tst
 
-runtest: all
+runtests: all
 	./tstrun
 
 MAKEFLAGS += --no-builtin-rules

@@ -7,3 +7,4 @@ protocol/build/
 __pycache__
 *.db
 result
+passwords.txt
