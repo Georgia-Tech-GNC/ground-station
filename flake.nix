@@ -23,6 +23,11 @@
             "${modulesPath}/profiles/all-hardware.nix"
             "${modulesPath}/profiles/base.nix"
           ];
+          environment.systemPackages = with pkgs; [
+            # re-add packages in base.nix
+            neovim
+            usbutils
+          ];
           sdImage.compressImage = false;
           time.timeZone = "America/New_York";
           i18n.defaultLocale = "en_US.UTF-8";
@@ -65,7 +70,7 @@
         { pkgs, ground-station-core }:
         { ... }:
         {
-          environment.systemPackages = [ ground-station-core ] ++ (with pkgs; [ picocom ]); # TODO: debug ←
+          environment.systemPackages = [ ground-station-core ] ++ (with pkgs; [ picocom gdb ]);
           systemd.services.ground-station-core = {
             description = "XBee-Pi comms server for GNC";
             serviceConfig.ExecStart = "${ground-station-core}/bin/ground-station-core /dev/ttyS1";
