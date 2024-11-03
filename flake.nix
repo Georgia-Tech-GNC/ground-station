@@ -70,7 +70,7 @@
         { pkgs, ground-station-core }:
         { ... }:
         {
-          environment.systemPackages = [ ground-station-core ] ++ (with pkgs; [ picocom gdb ]);
+          environment.systemPackages = [ ground-station-core ] ++ (with pkgs; [ picocom sqlite gdb ]);
           systemd.services.ground-station-core = {
             description = "XBee-Pi comms server for GNC";
             serviceConfig.ExecStart = "${ground-station-core}/bin/ground-station-core /dev/ttyS1";
