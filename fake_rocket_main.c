@@ -2,11 +2,15 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <unistd.h>
+#include <stdint.h>
 
 #include "protocol.h"
 #include "packet_encode.h"
 
 char *serialPath;
+
+uint8_t garbage[200];
+uint8_t packetized[215];
 
 void loop(FILE *serial);
 
@@ -60,9 +64,17 @@ void loop(FILE *serial) {
   printf("\n");
   fflush(serial);
 
-  for (int i = 0; i < 10000; i++) {
-    fprintf(serial, "%c", (char)rand());
+  for (int i = 0; i < 50; i++) {
+    for (int j = 0; j < 200; j++) garbage[j] = rand();
+    int l = generate_packet(garbage, 200, packetized, 12);
+
+    for (int j=0; j < l; j++) {
+      printf("%02x\n", packetized[j]);
+      fprintf(serial, "%c", packetized[j]);
+    }
+    fflush(serial);
   }
+
   fflush(serial);
   // fprintf(serial, "\r\n");
   // size_t written = fwrite(packetizedData, sizeof(uint8_t), packetizedLength, serial);
