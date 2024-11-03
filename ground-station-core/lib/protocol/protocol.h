@@ -48,6 +48,40 @@ struct CommandStruct {
 
 #define NUM_COMMAND_TYPES 5
 
+/**
+ * Checks if the inputted packet represents a command
+ * 
+ * @param packet the complete packet (payload + overhead)
+ * @param packet_size the size of packet (should be 7, will return -1 otherwise)
+ * @return		the command id, or -1 if the packet is not a command packet
+ */
+int is_command_packet(uint8_t* packet, size_t packet_size);
+
+/**
+ * Takes a command packet and modifies it inplace to be a command acknowledgement packet
+ * @param packet the packet to convert (should be a valid command packet, see is_command_packet)
+ */
+void reformat_as_command_ack_packet(uint8_t* packet);
+
+/**
+ * Generates a command payload given a command id and a command counter (should be passed into generate packet as raw data)
+ * 
+ * @param buffer the buffer where the generated command should be stored (at least 2 bytes)
+ * @param command_id the desired command id
+ * @param command_counter the desired command counter value
+ * 
+ * @return the size of the generated command (2 bytes)
+ */
+size_t generate_command_payload(uint8_t *buffer, uint8_t command_id, uint8_t command_counter);
+
+/** Takes the payload from a command message and copies it into the given command struct
+ * 
+ * @param buffer the buffer where the command message payload is stored
+ * @param buffer_size the size of the buffer (should be 2 bytes)
+ * @param destination a pointer to the CommandStruct where the values whould be copied
+ * @return true if the operation was successful, and false otherwise
+ */
+bool extract_command(uint8_t *buffer, uint8_t buffer_size, struct CommandStruct* destination);
 
 struct RocketStateVector {
 	float velocity_x;

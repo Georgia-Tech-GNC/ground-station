@@ -16,6 +16,28 @@
 //****************************************************************************************************
 //****************************************************************************************************
 
+int is_command_packet(uint8_t* packet, size_t packet_size) {
+	if (packet_size != 7) return -1; // Incorrect size
+	if (packet[1] != COMMAND_MSG_ID) return -1; // Incorrect command id
+	return packet[4];
+}
+
+void reformat_as_command_ack_packet(uint8_t* packet) {
+	packet[1] = COMMAND_ACK_MSG_ID;
+}
+
+size_t generate_command_payload(uint8_t *buffer, uint8_t command_id, uint8_t command_counter) {
+	memcpy(buffer, command_id, sizeof(command_id));	// Byte 1: command id
+	memcpy(buffer + sizeof(command_id), command_counter, sizeof(command_counter)); // byte 2 command counter
+	return sizeof(command_id) + sizeof(command_counter);
+}
+
+bool extract_command(uint8_t *buffer, uint8_t buffer_size, struct CommandStruct* destination) {
+	if (buffer_size != 2) return false;
+	destination->command_id = buffer[0];
+	destination->command_counter = buffer[1];
+	return true;
+}
 
 int get_msg_size(int message_id) {
 	switch (message_id) {
