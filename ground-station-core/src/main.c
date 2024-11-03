@@ -146,7 +146,6 @@ void *serial_loop(void *serial_) {
   while (true) {
     // int num_read = fread(fread_buffer, sizeof(uint8_t), 250, serial);
     int num_read = read(fileno(serial), &fread_buffer, 1);
-    printf("n_read=%d\n", num_read);
 
     for (int i = 0; i < num_read; i++) {
       uint8_t byte_read = (uint8_t) fread_buffer[i];

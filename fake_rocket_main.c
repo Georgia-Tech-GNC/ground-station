@@ -10,7 +10,7 @@ char *serialPath;
 
 void loop(FILE *serial);
 
-int fake_main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
   if (argc != 3) {
     printf("%s serial_path srand\n", argv[0]);
     return 1;
