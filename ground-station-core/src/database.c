@@ -107,8 +107,13 @@ int execute_sql_command_no_callback(sqlite3 *db, char *sql) {
     int result = sqlite3_exec(db, sql, NULL, 0, &zErrMsg);
 
     if(result != SQLITE_OK ){
-      log_warning("SQL error: %s\n", zErrMsg);
-      sqlite3_free(zErrMsg);
+        if (zErrMsg == NULL) {
+            log_warning("SQL error: no message given\n");
+        } else {
+            log_warning("SQL error: %s\n", zErrMsg);
+            sqlite3_free(zErrMsg);
+        }
+      
       return PROCESS_ABORT_CODE;
     } 
 
