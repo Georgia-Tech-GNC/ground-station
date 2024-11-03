@@ -1,4 +1,4 @@
------ SUIT / t_crc_hash.c "CRC Hashing" 2024-11-02 17:53:47
+----- SUIT / t_crc_hash.c "CRC Hashing" 2024-11-03 14:27:04
    11 CASE,-- Fuzzy testing CRC of array of size 0 bytes
    11     `--- 0 FAIL | 5000 PASS | 0 SKIP
    11 CASE,-- Fuzzy testing CRC of array of size 13 bytes
@@ -15,4 +15,4 @@
    11     `--- 0 FAIL | 5000 PASS | 0 SKIP
    11 CASE,-- Fuzzy testing CRC of array of size 260 bytes
    11     `--- 0 FAIL | 5000 PASS | 0 SKIP
-^^^^^ RSLT \ 0 FAIL | 40000 PASS | 0 SKIP 2024-11-02 17:53:47
+^^^^^ RSLT \ 0 FAIL | 40000 PASS | 0 SKIP 2024-11-03 14:27:04

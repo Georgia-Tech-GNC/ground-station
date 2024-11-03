@@ -83,6 +83,8 @@ size_t generate_command_payload(uint8_t *buffer, uint8_t command_id, uint8_t com
  */
 bool extract_command(uint8_t *buffer, uint8_t buffer_size, struct CommandStruct* destination);
 
+
+
 struct RocketStateVector {
 	float velocity_x;
 	float velocity_y;

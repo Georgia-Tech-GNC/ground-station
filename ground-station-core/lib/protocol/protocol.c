@@ -4,7 +4,6 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
 
 //****************************************************************************************************
 //****************************************************************************************************
@@ -27,8 +26,8 @@ void reformat_as_command_ack_packet(uint8_t* packet) {
 }
 
 size_t generate_command_payload(uint8_t *buffer, uint8_t command_id, uint8_t command_counter) {
-	memcpy(buffer, command_id, sizeof(command_id));	// Byte 1: command id
-	memcpy(buffer + sizeof(command_id), command_counter, sizeof(command_counter)); // byte 2 command counter
+	memcpy(buffer, &command_id, sizeof(command_id));	// Byte 1: command id
+	memcpy(buffer + sizeof(command_id), &command_counter, sizeof(command_counter)); // byte 2 command counter
 	return sizeof(command_id) + sizeof(command_counter);
 }
 
@@ -72,50 +71,45 @@ bool is_data_send_msg(int message_id) {
         if (data_size != ROCKETSTATEVECTOR_SIZE) {
           printf("warning: wrong data size!\n");
         }
-				struct RocketStateVector* cvt_data = malloc(sizeof(struct RocketStateVector));
-				RocketStateVector_decode(data, cvt_data);
-				ROCKETSTATEVECTOR_SQL_ADD_ENTRY(sql_cmd, cvt_data);
-				free(cvt_data);
+				struct RocketStateVector cvt_data;
+				RocketStateVector_decode(data, &cvt_data);
+				ROCKETSTATEVECTOR_SQL_ADD_ENTRY(sql_cmd, &cvt_data);
 				return true;
 			} 
     	    case ROCKETSERVODEFLECTION_MSG_ID: {
         if (data_size != ROCKETSERVODEFLECTION_SIZE) {
           printf("warning: wrong data size!\n");
         }
-				struct RocketServoDeflection* cvt_data = malloc(sizeof(struct RocketServoDeflection));
-				RocketServoDeflection_decode(data, cvt_data);
-				ROCKETSERVODEFLECTION_SQL_ADD_ENTRY(sql_cmd, cvt_data);
-				free(cvt_data);
+				struct RocketServoDeflection cvt_data;
+				RocketServoDeflection_decode(data, &cvt_data);
+				ROCKETSERVODEFLECTION_SQL_ADD_ENTRY(sql_cmd, &cvt_data);
 				return true;
 			} 
     	    case ROCKETSTATE_MSG_ID: {
         if (data_size != ROCKETSTATE_SIZE) {
           printf("warning: wrong data size!\n");
         }
-				struct RocketState* cvt_data = malloc(sizeof(struct RocketState));
-				RocketState_decode(data, cvt_data);
-				ROCKETSTATE_SQL_ADD_ENTRY(sql_cmd, cvt_data);
-				free(cvt_data);
+				struct RocketState cvt_data;
+				RocketState_decode(data, &cvt_data);
+				ROCKETSTATE_SQL_ADD_ENTRY(sql_cmd, &cvt_data);
 				return true;
 			} 
     	    case ROCKETGROUNDEKF_MSG_ID: {
         if (data_size != ROCKETGROUNDEKF_SIZE) {
           printf("warning: wrong data size!\n");
         }
-				struct RocketGroundEKF* cvt_data = malloc(sizeof(struct RocketGroundEKF));
-				RocketGroundEKF_decode(data, cvt_data);
-				ROCKETGROUNDEKF_SQL_ADD_ENTRY(sql_cmd, cvt_data);
-				free(cvt_data);
+				struct RocketGroundEKF cvt_data;
+				RocketGroundEKF_decode(data, &cvt_data);
+				ROCKETGROUNDEKF_SQL_ADD_ENTRY(sql_cmd, &cvt_data);
 				return true;
 			} 
     	    case ROCKETSENSORDATA_MSG_ID: {
         if (data_size != ROCKETSENSORDATA_SIZE) {
           printf("warning: wrong data size!\n");
         }
-				struct RocketSensorData* cvt_data = malloc(sizeof(struct RocketSensorData));
-				RocketSensorData_decode(data, cvt_data);
-				ROCKETSENSORDATA_SQL_ADD_ENTRY(sql_cmd, cvt_data);
-				free(cvt_data);
+				struct RocketSensorData cvt_data;
+				RocketSensorData_decode(data, &cvt_data);
+				ROCKETSENSORDATA_SQL_ADD_ENTRY(sql_cmd, &cvt_data);
 				return true;
 			} 
     		default:
