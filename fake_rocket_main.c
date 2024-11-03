@@ -59,6 +59,11 @@ void loop(FILE *serial) {
   }
   printf("\n");
   fflush(serial);
+
+  for (int i = 0; i < 10000; i++) {
+    fprintf(serial, "%c", (char)rand());
+  }
+  fflush(serial);
   // fprintf(serial, "\r\n");
   // size_t written = fwrite(packetizedData, sizeof(uint8_t), packetizedLength, serial);
   // // size_t written = fwrite(packetizedData, sizeof(uint8_t), packetizedLength, stderr);
