@@ -5,6 +5,7 @@
 #include <signal.h>
 #include <errno.h>
 #include <termios.h>
+#include <pthread.h>
 
 #include "mongoose.h"  
 #include "sqlite3.h"
@@ -56,6 +57,49 @@ bool initialize() {
   return true;
 }
 
+FILE *serial_initialize() {
+  FILE *serial = fopen(serialPath, "rb");
+  if (serial == NULL) {
+    perror("open serial file");
+    return NULL;
+  }
+
+  if (flock(fileno(serial), LOCK_EX | LOCK_NB) != 0) {
+    perror("flock");
+  }
+  
+  // serial port setup
+  struct termios sp;
+  log_standard("tcgetattr...\n");
+  if(tcgetattr(fileno(serial), &sp) != 0) {
+    perror("tcgetattr");
+  }
+  sp.c_cflag &= ~PARENB;
+  sp.c_cflag &= ~CSTOPB;
+  sp.c_cflag &= ~CSIZE;
+  sp.c_cflag |= CS8;
+  sp.c_cflag &= ~CRTSCTS;
+  sp.c_cflag |= CREAD | CLOCAL;
+  sp.c_lflag &= ~ICANON; // non-canonical req'd to NOT read line-by-line
+  sp.c_lflag &= ~ECHO;
+  sp.c_lflag &= ~ISIG;
+  sp.c_iflag &= ~(IXON | IXOFF | IXANY); // software control flow
+  sp.c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL); // Disable any special handling of received bytes
+  sp.c_oflag &= ~OPOST; // Prevent special interpretation of output bytes (e.g. newline chars)
+  sp.c_oflag &= ~ONLCR; // Prevent conversion of newline to carriage return/line feed
+  sp.c_cc[VTIME] = 1; // wait for 1+ bytes a max of 1/10 sec
+  sp.c_cc[VMIN] = 1;
+  cfsetispeed(&sp, B9600);
+  cfsetospeed(&sp, B9600);
+  log_standard("tcsetattr...\n");
+  if (tcsetattr(fileno(serial), TCSANOW, &sp) != 0) {
+    perror("tcsetattr");
+    return NULL;
+  }
+  log_standard("tcsetattr done.\n");
+  return serial;
+}
+
 uint8_t command_send_buffer[COMMAND_SEND_BUFFER_SIZE];
 
 void process_xbee_message(int message_size_bytes) {
@@ -95,6 +139,37 @@ void process_xbee_message(int message_size_bytes) {
   }
 }
 
+void *serial_loop(void *serial_) {
+  FILE *serial = (FILE *) serial_;
+  int current_buffer_size = 0;
+
+  while (true) {
+    // int num_read = fread(fread_buffer, sizeof(uint8_t), 250, serial);
+    int num_read = read(fileno(serial), &fread_buffer, 1);
+    printf("n_read=%d\n", num_read);
+
+    for (int i = 0; i < num_read; i++) {
+      uint8_t byte_read = (uint8_t) fread_buffer[i];
+
+      current_buffer_size = process_incoming_byte(byte_read, buffer, current_buffer_size);
+      log_standard("read byte %02x ", byte_read);
+      log_standard("now, current_buffer_size=%d\n", current_buffer_size);
+      if (current_buffer_size > 255) {
+        log_standard("resetting buffer, too big (>255)\n");
+        current_buffer_size = 0;
+      }
+      if (current_buffer_size < 0) {
+        if (-current_buffer_size == 260) {
+          log_error("something went wrong ): 260-5=255 so overfloe QED\n");
+        }
+        log_standard("Attempting to process message of size %d\n", -current_buffer_size);
+        process_xbee_message(-current_buffer_size);
+        current_buffer_size = 0;
+      }
+    }
+  }
+}
+
 int main(int argc, char *argv[]) {
   if (argc != 2) {
     printf("must have one argument for serial path\n");
@@ -121,80 +196,21 @@ int main(int argc, char *argv[]) {
   log_standard("\nInitialization Complete...\n\n");
 
   log_standard("opening %s...\n", serialPath);
-  FILE *serial = fopen(serialPath, "rb");
+  FILE *serial = serial_initialize();
   if (serial == NULL) {
-    perror("open serial file");
+    log_error("opening serial failed\n");
     return 1;
   }
 
-  if (flock(fileno(serial), LOCK_EX | LOCK_NB) != 0) {
-    perror("flock");
-  }
-  
-  // serial port setup
-  struct termios sp;
-  log_standard("tcgetattr...\n");
-  if(tcgetattr(fileno(serial), &sp) != 0) {
-    perror("tcgetattr");
-  }
-  sp.c_cflag &= ~PARENB;
-  sp.c_cflag &= ~CSTOPB;
-  sp.c_cflag &= ~CSIZE;
-  sp.c_cflag |= CS8;
-  sp.c_cflag &= ~CRTSCTS;
-  sp.c_cflag |= CREAD | CLOCAL;
-  sp.c_lflag &= ~ICANON; // non-canonical req'd to NOT read line-by-line
-  sp.c_lflag &= ~ECHO;
-  sp.c_lflag &= ~ISIG;
-  sp.c_iflag &= ~(IXON | IXOFF | IXANY); // software control flow
-  sp.c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL); // Disable any special handling of received bytes
-  sp.c_oflag &= ~OPOST; // Prevent special interpretation of output bytes (e.g. newline chars)
-  sp.c_oflag &= ~ONLCR; // Prevent conversion of newline to carriage return/line feed
-  sp.c_cc[VTIME] = 1; // wait for 1+ bytes a max of 1/10 sec
-  sp.c_cc[VMIN] = 1;
-  cfsetispeed(&sp, B9600);
-  cfsetospeed(&sp, B9600);
-  log_standard("tcsetattr...\n");
-  if (tcsetattr(fileno(serial), TCSANOW, &sp) != 0) {
-    perror("tcsetattr");
-    return 1;
-  }
-  log_standard("tcsetattr done.\n");
-
-  int current_buffer_size = 0;
+  pthread_t serial_thread;
+  pthread_create(&serial_thread, NULL, serial_loop, (void *) serial);
   
   while (true) {
     // Update web server
     update_server(&manager, LOOP_TIMEOUT_MS);
 
-    // int num_read = fread(fread_buffer, sizeof(uint8_t), 250, serial);
-    int num_read = read(fileno(serial), &fread_buffer, 1);
-    printf("n_read=%d\n", num_read);
-
-    for (int i = 0; i < num_read; i++) {
-      uint8_t byte_read = (uint8_t) fread_buffer[i];
-
-      current_buffer_size = process_incoming_byte(byte_read, buffer, current_buffer_size);
-      log_standard("read byte %02x ", byte_read);
-      log_standard("now, current_buffer_size=%d\n", current_buffer_size);
-      if (current_buffer_size > 255) {
-        log_standard("resetting buffer, too big (>255)\n");
-        current_buffer_size = 0;
-      }
-      if (current_buffer_size < 0) {
-        if (-current_buffer_size == 260) {
-          log_error("something went wrong ): 260-5=255 so overfloe QED\n");
-        }
-        log_standard("Attempting to process message of size %d\n", -current_buffer_size);
-        process_xbee_message(-current_buffer_size);
-        current_buffer_size = 0;
-      }
-    }
-
     // Update command stack
     update_command_stack(command_send_buffer);
   }
-
-
   return 0;
 }
