@@ -49,6 +49,7 @@
             shell = pkgs.fish;
             openssh.authorizedKeys.keys = [
               "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINEhH+5s0m+lBC898M/nrWREaDblRCPSpL6+9wkoZdel inaba@nyiyui.ca"
+              "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDBvcNQPc5UriJhzx+ZEkD2rb4iT3MlAzUC72LNG3E4t4FjOyQzkOtcJIORdk+ACuOJtliL8pIGIJQHBgvNhhFE/khuSIMQ/UYh1dN3DOmNCSveJlJtEVGt+PHDgAALLoXOUWbxqWy/XJFSezYOExlUBddBzvEiuvqsA4u9LcG/bWMidwcbsHI4xmzMHzVJ8Ym8d+5+g8jq+VKtDSDQr6P0aDacQqMv01zPslV94Ry589R3VWtmAY50rD8gQShGDmfDiuOdccF0HmjYi7mm8+PitTzk9cSUC4o7XPa7Atw7DKIgM6pdqSiYZ8COoijsmT48rzQMjo5euCdUnoOPCtWfwoy1EU+oZ6pa8/rT0vlOseAyLxfWt6yq0c4kuyHA8X9tChNzNTabPuavR9bUr1hRulm3TIrirWcAVXp8ZqwufM0c4rtCpVM7+QdpmGN0CC+PqozOOGnMnKMSjpktqkkItPfGmmBV/DjjntLPVK3WbrySMYbuQx3jYgKXdl8bNqE= vparikh@lawn-128-61-12-17.lawn.gatech.edu"
             ];
             homeMode = "770";
             hashedPassword = "$y$j9T$pxKDYuGo9ERES1E38/xc00$5IDCOwo.uYH6KiKabibXvzrIkpqbllddU7S0iOGCK/2";

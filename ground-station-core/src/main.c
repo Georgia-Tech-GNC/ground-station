@@ -63,10 +63,6 @@ FILE *serial_initialize() {
     perror("open serial file");
     return NULL;
   }
-
-  if (flock(fileno(serial), LOCK_EX | LOCK_NB) != 0) {
-    perror("flock");
-  }
   
   // serial port setup
   struct termios sp;
@@ -209,7 +205,14 @@ int main(int argc, char *argv[]) {
     update_server(&manager, LOOP_TIMEOUT_MS);
 
     // Update command stack
-    update_command_stack(command_send_buffer);
+    int write_len = update_command_stack(command_send_buffer);
+
+    if (write_len > 0) {
+      fwrite(command_send_buffer, write_len, 1, serial);
+      if (errno != 0) {
+        perror("command sending failed");
+      }
+    }
   }
   return 0;
 }
