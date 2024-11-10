@@ -57,6 +57,14 @@ struct CommandStruct {
 int is_command_packet(uint8_t* packet, size_t packet_size);
 
 /**
+ * Extracts the command uuid from a packet representing a command
+ *
+ * @param packet the complete packet (payload + overhead)
+ * @return the command uuid
+ */
+int get_command_uuid(uint8_t* packet);
+
+/**
  * Takes a command packet and modifies it inplace to be a command acknowledgement packet
  * @param packet the packet to convert (should be a valid command packet, see is_command_packet)
  */

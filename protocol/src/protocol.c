@@ -21,6 +21,10 @@ int is_command_packet(uint8_t* packet, size_t packet_size) {
 	return packet[4];
 }
 
+int get_command_uuid(uint8_t* packet) {
+	return packet[5];
+}
+
 void reformat_as_command_ack_packet(uint8_t* packet) {
 	packet[1] = COMMAND_ACK_MSG_ID;
 }
