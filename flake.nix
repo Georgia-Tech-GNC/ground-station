@@ -23,6 +23,7 @@
             "${modulesPath}/profiles/all-hardware.nix"
             "${modulesPath}/profiles/base.nix"
           ];
+          hardware.bluetooth.enable = false;
           environment.systemPackages = with pkgs; [
             # re-add packages in base.nix
             vim
