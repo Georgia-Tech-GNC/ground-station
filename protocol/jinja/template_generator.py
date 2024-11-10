@@ -14,6 +14,19 @@ SIZES = {
     'int64_t': 8
 }
 
+""" Extra stuff
+                "accel_bias_x": "float",
+                "accel_bias_y": "float",
+                "accel_bias_z": "float",
+                "gyro_bias_x": "float",
+                "gyro_bias_y": "float",
+                "gyro_bias_z": "float",
+                "gps_offset_x": "float",
+                "gps_offset_y": "float",
+                "gps_offset_z": "float",
+                "barometer_offset": "float"
+"""
+
 def PRINTF_SQL_TYPE(l):
     r = []
     for x in l:

@@ -2,7 +2,7 @@
     "WEB_SERVER_URL": "http://0.0.0.0:8080",
 
     "COMMANDS": [
-        "ROCKET_IDLE_TO_GROUND", "ROCKET_GROUND_TO_ARM", "ROCKET_FIRE_PYRO", "ROCKET_FLASH_SD_CARD", "ROCKET_RUN_VANE_ACTIVATION_TEST"
+        "ROCKET_IDLE_TO_GROUND", "ROCKET_FIRE_PYRO", "ROCKET_FLASH_SD_CARD", "ROCKET_RUN_VANE_ACTIVATION_TEST"
     ],
 
     "DATA_MESSAGES": {
@@ -10,9 +10,6 @@
                 "velocity_x": "float",
                 "velocity_y": "float",
                 "velocity_z": "float",
-                "angular_velocity_x": "float",
-                "angular_velocity_y": "float",
-                "angular_velocity_z": "float",
                 "attitude_w": "float",
                 "attitude_x": "float",
                 "attitude_y": "float",
@@ -33,8 +30,7 @@
                 "rocket_state": "uint8_t",
                 "firing_channel_1": "uint8_t",
                 "firing_channel_2": "uint8_t",
-                "firing_channel_3": "uint8_t",
-                "firing_channel_4": "uint8_t"
+                "firing_channel_3": "uint8_t"
             },
 
             "RocketGroundEKF": {
@@ -56,17 +52,16 @@
                 "gps_x": "float",
                 "gps_y": "float",
                 "gps_z": "float",
-                "barometer": "float",
-                "accel_bias_x": "float",
-                "accel_bias_y": "float",
-                "accel_bias_z": "float",
-                "gyro_bias_x": "float",
-                "gyro_bias_y": "float",
-                "gyro_bias_z": "float",
-                "gps_offset_x": "float",
-                "gps_offset_y": "float",
-                "gps_offset_z": "float",
-                "barometer_offset": "float"
+                "barometer": "float"
+            },
+
+            "RocketAnalogFeedbackData": {
+                "voltage_fb_33": "float",
+                "current_fb_33": "float",
+                "pyro_0_cont": "float",
+                "pyro_1_cont": "float",
+                "pyro_2_cont": "float",
+                "pyro_channel_deploy": "uint8_t"
             }
         }
 }

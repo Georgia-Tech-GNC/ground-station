@@ -383,7 +383,7 @@ class WindowManager:
 
         self.regen_commands[dpg_id] = (WindowType.GRAPH, (graph_entries,))
 
-        with dpg.window(tag=dpg_id, label=f"Graph of {", ".join([i[0] for i in graph_entries])}",
+        with dpg.window(tag=dpg_id, label=f"Graph of {', '.join([i[0] for i in graph_entries])}",
                         on_close=lambda *args, dpg_id=dpg_id, graph_entries=graph_entries: run_all(
                             lambda: self._remove_window(dpg_id),
                             lambda: [allDataUpdaters[upd].remove_callback(str(dpg_id)+f"num_{i}") for i, (_, upd, __) in enumerate(graph_entries)]
