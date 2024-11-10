@@ -1,5 +1,5 @@
 import dearpygui.dearpygui as dpg
-from typing import Any, override
+from typing import Any
 import numpy as np
 from utils import quaternion_to_euler, multiply_quaternion
 from abc import ABC, abstractmethod
@@ -108,7 +108,6 @@ class FloatViewport(Viewport):
             if units != "":
                 dpg.add_text(units)
 
-    @override
     def set_data(self, data: float):
         dpg.set_value(self.tag, data)
 
@@ -134,7 +133,6 @@ class Vector3Viewer(Viewport):
             dpg.add_input_double(readonly=True, width=75, step=0, tag=self.tags[1])
             dpg.add_input_double(readonly=True, width=75, step=0, tag=self.tags[2])
 
-    @override
     def set_data(self, data: np.ndarray):
         dpg.set_value(self.tags[0], data[0])
         dpg.set_value(self.tags[1], data[1])
@@ -165,7 +163,6 @@ class QuaternionViewport(Viewport):
             dpg.add_input_double(readonly=True, width=75, step=0, tag=self.tags[2])
             dpg.add_button(label='Zero', callback=self._set_new_offset)
 
-    @override
     def set_data(self, data: np.ndarray):
         self.most_recent_data = data
 
@@ -192,7 +189,6 @@ class StringViewport(Viewport):
             if units != "":
                 dpg.add_text(units)
 
-    @override
     def set_data(self, data: str):
         dpg.set_value(self.tag, data)
 
