@@ -31,6 +31,7 @@ struct sqlite3 *db = NULL;
 struct sigaction old_action;
 
 char *serialPath;
+int serialBaudNumber;
 
 void finalize() {
   sqlite3_close(db);
@@ -85,8 +86,21 @@ FILE *serial_initialize() {
   sp.c_oflag &= ~ONLCR; // Prevent conversion of newline to carriage return/line feed
   sp.c_cc[VTIME] = 1; // wait for 1+ bytes a max of 1/10 sec
   sp.c_cc[VMIN] = 1;
-  cfsetispeed(&sp, B9600);
-  cfsetospeed(&sp, B9600);
+  speed_t speeeeed;
+  if (serialBaudNumber == 0) speeeeed = B1200;
+  else if (serialBaudNumber == 1) speeeeed = B2400;
+  else if (serialBaudNumber == 2) speeeeed = B4800;
+  else if (serialBaudNumber == 3) speeeeed = B9600;
+  else if (serialBaudNumber == 4) speeeeed = B19200;
+  else if (serialBaudNumber == 5) speeeeed = B38400;
+  else if (serialBaudNumber == 6) speeeeed = B57600;
+  else if (serialBaudNumber == 7) speeeeed = B115200;
+  else {
+    printf("unsupported baud rate: %d\n", serialBaudNumber);
+    exit(1);
+  }
+  cfsetispeed(&sp, speeeeed);
+  cfsetospeed(&sp, speeeeed);
   log_standard("tcsetattr...\n");
   if (tcsetattr(fileno(serial), TCSANOW, &sp) != 0) {
     perror("tcsetattr");
@@ -166,12 +180,13 @@ void *serial_loop(void *serial_) {
 }
 
 int main(int argc, char *argv[]) {
-  if (argc != 2) {
+  if (argc != 3) {
     printf("must have one argument for serial path\n");
     return 1;
   }
 
   serialPath = argv[1];
+  serialBaudNumber = atoi(argv[2]);
 
   // Set up exit code
   struct sigaction action;
@@ -208,9 +223,12 @@ int main(int argc, char *argv[]) {
     int write_len = update_command_stack(command_send_buffer);
 
     if (write_len > 0) {
+      log_standard("writing %d bytes...\n", write_len);
       fwrite(command_send_buffer, write_len, 1, serial);
       if (errno != 0) {
         perror("command sending failed");
+      } else {
+        log_standard("wrote %d bytes...\n", write_len);
       }
     }
   }
