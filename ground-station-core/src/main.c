@@ -6,6 +6,10 @@
 #include <errno.h>
 #include <termios.h>
 #include <pthread.h>
+  
+#include <fcntl.h> 
+#include <string.h>
+#include <unistd.h>
 
 #include "mongoose.h"  
 #include "sqlite3.h"
@@ -15,48 +19,6 @@
 #include "packet_encode.h"
 #include "command_scheduler.h"
 #include "logger.h"
-  
-#include <errno.h>
-#include <fcntl.h> 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <termios.h>
-#include <unistd.h>
-
-int set_interface_attribs(int fd) {
-  struct termios tty;
-
-  if (tcgetattr(fd, &tty) < 0) {
-      printf("Error from tcgetattr: %s\n", strerror(errno));
-      return -1;
-  }
-
-  cfsetospeed(&tty, B38400);
-  cfsetispeed(&tty, B38400);
-
-  tty.c_cflag |= (CLOCAL | CREAD);    /* ignore modem controls */
-  tty.c_cflag &= ~CSIZE;
-  tty.c_cflag |= CS8;         /* 8-bit characters */
-  tty.c_cflag &= ~PARENB;     /* no parity bit */
-  tty.c_cflag &= ~CSTOPB;     /* only need 1 stop bit */
-  tty.c_cflag &= ~CRTSCTS;    /* no hardware flowcontrol */
-
-  /* setup for non-canonical mode */
-  tty.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | IXON);
-  tty.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
-  tty.c_oflag &= ~OPOST;
-
-  /* fetch bytes as they become available */
-  tty.c_cc[VMIN] = 1;
-  tty.c_cc[VTIME] = 1;
-
-  if (tcsetattr(fd, TCSANOW, &tty) != 0) {
-      printf("Error from tcsetattr: %s\n", strerror(errno));
-      return -1;
-  }
-  return 0;
-}
 
 
 #define SERIAL_BUFFER_SIZE 256
@@ -100,6 +62,40 @@ bool initialize() {
   return true;
 }
 
+int serial_set_attribs(int fd) {
+  struct termios tty;
+
+  if (tcgetattr(fd, &tty) < 0) {
+      printf("Error from tcgetattr: %s\n", strerror(errno));
+      return -1;
+  }
+
+  cfsetospeed(&tty, B38400);
+  cfsetispeed(&tty, B38400);
+
+  tty.c_cflag |= (CLOCAL | CREAD);    /* ignore modem controls */
+  tty.c_cflag &= ~CSIZE;
+  tty.c_cflag |= CS8;         /* 8-bit characters */
+  tty.c_cflag &= ~PARENB;     /* no parity bit */
+  tty.c_cflag &= ~CSTOPB;     /* only need 1 stop bit */
+  tty.c_cflag &= ~CRTSCTS;    /* no hardware flowcontrol */
+
+  /* setup for non-canonical mode */
+  tty.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | IXON);
+  tty.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
+  tty.c_oflag &= ~OPOST;
+
+  /* fetch bytes as they become available */
+  tty.c_cc[VMIN] = 1;
+  tty.c_cc[VTIME] = 1;
+
+  if (tcsetattr(fd, TCSANOW, &tty) != 0) {
+      printf("Error from tcsetattr: %s\n", strerror(errno));
+      return -1;
+  }
+  return 0;
+}
+
 FILE *serial_initialize() {
   errno = 0;
   FILE *serial = fopen(serialPath, "r+b");
@@ -109,8 +105,8 @@ FILE *serial_initialize() {
     return NULL;
   }
   printf("file opened\n");
-  if (set_interface_attribs(fileno(serial)) != 0) {
-    printf("set_interface_attribs failed\n");
+  if (serial_set_attribs(fileno(serial)) != 0) {
+    printf("serial_set_attribs failed\n");
     exit(1);
   }
   return serial;
