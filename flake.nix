@@ -57,22 +57,22 @@
           };
           security.sudo.wheelNeedsPassword = false;
           environment.shells = [ pkgs.fish ];
-          programs.git.enable = true;
           programs.tmux.enable = true;
           programs.htop.enable = true;
         };
-      devModule = {
+      devModule = { pkgs, ... }: {
         options = { };
         config = {
+          programs.git.enable = true;
           nix.settings.trusted-users = [ "gnc" ];
           nix.settings.auto-optimise-store = true;
+          environment.systemPackages = with pkgs; [ picocom sqlite gdb ];
         };
       };
       coreModule =
         { pkgs, ground-station-core }:
         { ... }:
         {
-          environment.systemPackages = [ ground-station-core ] ++ (with pkgs; [ picocom sqlite gdb ]);
           systemd.services.ground-station-core = {
             description = "XBee-Pi comms server for GNC";
             serviceConfig.ExecStart = "${ground-station-core}/bin/ground-station-core /dev/ttyS1 5";
