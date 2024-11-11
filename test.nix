@@ -25,8 +25,15 @@ in
           pkgs.socat
         ];
         systemd.services.socat-link.script = ''
-          socat PTY,link=/dev/ttyS10,raw,echo=0 PTY,link=/dev/ttyS11,raw,echo=0
+          ${pkgs.socat}/bin/socat PTY,link=/dev/ttyS10,raw,echo=0,B38400 PTY,link=/dev/ttyS11,raw,echo=0
         '';
+        systemd.services.ground-station-core = {
+          serviceConfig.ExecStart = ''
+            ${ground-station-core}/bin/ground-station-core /dev/ttyS10 5
+          '';
+          requires = [ "socat-link.service" ];
+          serviceConfig.Type = "notify";
+        };
       };
     testScript =
       { ... }:
@@ -37,7 +44,7 @@ in
         default.fail("ground-station-core /dev/notexist")
         default.fail("ground-station-core /dev/notexist 5")
         default.succeed("systemctl start socat-link")
-        #default.succeed("ground-station-core /dev/ttyS10 5")
+        default.succeed("systemctl start ground-station-core")
       '';
   };
 }

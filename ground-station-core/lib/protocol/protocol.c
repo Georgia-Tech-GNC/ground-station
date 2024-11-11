@@ -1,4 +1,5 @@
 #include "protocol.h"
+#include "packet_encode.h"
 #include <time.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -39,7 +40,7 @@ int generate_ack_packet(uint8_t *packet, size_t packet_size, uint8_t *generated_
   }
   uint8_t payload[2];
   payload[0] = command_id; // command id
-  payload[1] = get_command_uuid(packet_size); // command uuid
+  payload[1] = get_command_uuid(packet); // command uuid
   int written = generate_packet(payload, 2, generated_packet, COMMAND_ACK_MSG_ID);
   if (written != 7) {
     return -4;

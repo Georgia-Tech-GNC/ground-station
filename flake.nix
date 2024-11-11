@@ -97,6 +97,8 @@
           name = "ground-station-core";
           src = ./ground-station-core;
           dontStrip = true;
+          buildInputs = [ pkgs.systemdLibs ];
+          makeFlags = [ "USE_SD_NOTIFY=yes" ];
         };
       build-trixie =
         { pkgs, ground-station-core }:

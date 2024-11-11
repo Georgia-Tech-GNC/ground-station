@@ -14,6 +14,11 @@ CPPFLAGS ?= $(INC_FLAGS) -MMD -MP
 
 CFLAGS := -g
 
+ifeq (${USE_SD_NOTIFY},yes)
+	LDFLAGS += "-lsystemd"
+	CFLAGS += "-DUSE_SD_NOTIFY"
+endif
+
 $(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
 	$(CC) $(OBJS) -o $@ $(LDFLAGS)
 

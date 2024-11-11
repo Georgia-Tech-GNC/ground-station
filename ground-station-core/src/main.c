@@ -9,6 +9,9 @@
 #include <fcntl.h> 
 #include <string.h>
 #include <unistd.h>
+#ifdef USE_SD_NOTIFY
+#include <systemd/sd-daemon.h>
+#endif
 
 #include "mongoose.h"  
 #include "sqlite3.h"
@@ -164,6 +167,12 @@ int main(int argc, char *argv[]) {
 
   pthread_t serial_thread;
   pthread_create(&serial_thread, NULL, serial_loop, (void *) serial);
+
+#ifdef USE_SD_NOTIFY
+  sd_notifyf(0, "READY=1\nSTATUS=listening on %s with baud %d", serial_path, serial_get_baud_name(serial_baud_number));
+#else
+  log_standard("ready\n");
+#endif
   
   while (true) {
     // Update web server
