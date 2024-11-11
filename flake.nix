@@ -24,6 +24,8 @@
             "${modulesPath}/profiles/base.nix"
           ];
           hardware.bluetooth.enable = false;
+          boot.blacklistedKernelModules = [ "bluetooth" ];
+          sound.enable = false;
           environment.systemPackages = with pkgs; [
             # re-add packages in base.nix
             vim
