@@ -76,7 +76,9 @@
           environment.systemPackages = [ ground-station-core ] ++ (with pkgs; [ picocom sqlite gdb ]);
           systemd.services.ground-station-core = {
             description = "XBee-Pi comms server for GNC";
-            serviceConfig.ExecStart = "${ground-station-core}/bin/ground-station-core /dev/ttyS1";
+            serviceConfig.ExecStart = "${ground-station-core}/bin/ground-station-core /dev/ttyS1 5";
+            # 5 = 38400 baud
+            # cf. https://scrapbox.io/nyiyui/XBee:_change_baud_rate#6731396ca5fc2b00008a491d
             wantedBy = [ "multi-user.target" ];
             enable = true;
           };
