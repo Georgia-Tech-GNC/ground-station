@@ -25,7 +25,7 @@
           ];
           environment.systemPackages = with pkgs; [
             # re-add packages in base.nix
-            neovim
+            vim # can't cross compile neovim
             usbutils
           ];
           sdImage.compressImage = false;
