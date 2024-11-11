@@ -134,11 +134,11 @@
         };
         packages.ground-station-core = build-core pkgs;
         packages.ground-station-core-aarch64-multiplatform = build-core pkgs-aarch64-multiplatform;
-        nixosConfigurations.trixie = build-trixie {
+        packages.nixosConfigurations.trixie = build-trixie {
           pkgs = pkgs-aarch64-multiplatform;
           ground-station-core = packages.ground-station-core-aarch64-multiplatform;
         };
-        images.trixie = nixosConfigurations.trixie.config.system.build.sdImage;
+        images.trixie = packages.nixosConfigurations.trixie.config.system.build.sdImage;
       }
     );
 }
