@@ -48,28 +48,9 @@ class MapViewerWindow:
         # TODO
         width, height, channels, data = dpg.load_image("map.png")
 
-        with dpg.texture_registry(show=True):
+        with dpg.texture_registry(show=False):
             MAP_TILES.append((
                 dpg.add_static_texture(width, height, data),
                 (-84.405, 33.771),
                 (-84.39, 33.78)
             ))
-    
-    @staticmethod
-    def get_triangle_coordinates(center: tuple[float, float], side_length: float = 0.0001):
-        th = side_length*R3O6
-        return [center[0], center[0] - side_length/2, center[0] + side_length/2, center[0]], [center[1]+th*2, center[1]-th, center[1]-th, center[1]+th*2]
-    
-
-
-
-dpg.create_context()
-
-with dpg.window(label="Outer Map"):
-    MapViewerWindow()
-
-dpg.create_viewport(title='Custom Title', width=1400, height=1400)
-dpg.setup_dearpygui()
-dpg.show_viewport()
-dpg.start_dearpygui()
-dpg.destroy_context()

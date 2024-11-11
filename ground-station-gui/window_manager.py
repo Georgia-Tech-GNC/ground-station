@@ -3,13 +3,14 @@ from gui_templates.data_viewer_window import DataViewerWindow, DataTypes
 from gui_templates.RocketCommandsWindow import RocketCommands
 from gui_templates.graph_viewer_window import GraphViewerWindow
 from gui_templates.logger_window import LoggerWindow
+from gui_templates.map_viewer_window import MapViewerWindow
 from query_server.data_updater import allDataUpdaters, send_cmd_with_id
 import dearpygui.dearpygui as dpg
 import numpy as np
 import enum
 import pickle
 import requests
-
+from test_update import set_ground, set_armed, fire_pyro
 
 def to_nparr(*args):
     """Utility method that returns a numpy array with the given parameters"""
@@ -18,7 +19,16 @@ def to_nparr(*args):
 
 def ROCKET_INT_TO_STATE(x: int):
     # TODO: what is the state?
-    return f"State {x}"
+    if x == 1:
+        return "IDLE"
+    elif x == 2:
+        return "GROUND"
+    elif x == 3:
+        return "ARMED"
+    elif x == 4:
+        return "FIRED PYRO"
+    else:
+        return f"State {x}"
 
 
 def ROCKET_INT_TO_ACTIVE_STATUS(x: int):
@@ -103,12 +113,29 @@ DATA_WINDOWS: dict[str, tuple[
 }
 
 GRAPHABLE_VALUES: dict[str, tuple[str, str]] = {
+    "Rocket State Vector": (None, None),
     "X Velocity": ('updaterRSV', "velocity_x"),
     "Y Velocity": ('updaterRSV', "velocity_y"),
     "Z Velocity": ('updaterRSV', "velocity_z"),
     "Angular X Velocity": ('updaterRSV', "angular_velocity_x"),
     "Angular Y Velocity": ('updaterRSV', "angular_velocity_y"),
     "Angular Z Velocity": ('updaterRSV', "angular_velocity_z"),
+
+    "Servo Deflection": (None, None),
+    'Servo 1 Deflection': ('updaterRSDef', 'servo_deflection_1'),
+    'Servo 2 Deflection': ('updaterRSDef', 'servo_deflection_2'),
+    'Servo 3 Deflection': ('updaterRSDef', 'servo_deflection_3'),
+    'Servo 4 Deflection': ('updaterRSDef', 'servo_deflection_4'),
+
+    "Sensor Data": (None, None),
+    'Accelerometer X': ('updaterRSData', 'accelerometer_x'),
+    'Accelerometer Y': ('updaterRSData', 'accelerometer_y'),
+    'Accelerometer Z': ('updaterRSData', 'accelerometer_z'),
+    'Gyro X': ('updaterRSData', 'gyro_x'),
+    'Gyro Y': ('updaterRSData', 'gyro_y'),
+    'Gyro Z': ('updaterRSData', 'gyro_z'),
+    'GPS Y': ('updaterRSData', 'gps_y'),
+    'Barometer': ('updaterRSData', 'barometer')
 }
 
 BUTTON_VALUES: dict[str | tuple[str, bool], Callable] = {
@@ -130,6 +157,7 @@ class WindowType(enum.Enum):
     DATA = 1
     COMMAND = 2
     LOGGER = 3
+    MAP = 4
 
 
 class WindowManager:
@@ -147,6 +175,7 @@ class WindowManager:
                             files can be generated using the pickle_state method.
                             If this file is nonexistent, then this parameter will be ignored
         """
+        self.all_loggers: dict[int | str, LoggerWindow] = {}
         if pickle_file is not None:
             try:
                 with open(pickle_file, 'rb') as f:
@@ -193,6 +222,8 @@ class WindowManager:
             self.create_rocket_commands_window(*params, preset_id=dpg_id)
         elif regen_command == WindowType.LOGGER:
             self.create_logger_window(*params, preset_id=dpg_id)
+        elif regen_command == WindowType.MAP:
+            self.create_map_viewer_window(*params, preset_id=dpg_id)
 
     def pickle_state(self, filename: str = None) -> None:
         """
@@ -230,6 +261,32 @@ class WindowManager:
         if dpg_id in self.regen_commands:
             del self.regen_commands[dpg_id]
 
+    def _remove_logger(self, dpg_id: int | str) -> None:
+        if dpg_id in self.all_loggers:
+            del self.all_loggers[dpg_id]
+
+        self._remove_window(dpg_id)
+
+    def add_log(self, msg: str, priority: int) -> None:
+        for dpg_id, logger in self.all_loggers.items():
+            logger.log_message(msg, priority)
+
+    def create_map_viewer_window(self, window_name: str, preset_id: int = None) -> None:
+        if preset_id is None:
+            dpg_id = dpg.generate_uuid()
+        else:
+            dpg_id = preset_id
+        
+        self.regen_commands[dpg_id] = (WindowType.MAP, (window_name,))
+
+        with dpg.window(
+            label=window_name, tag=dpg_id,
+            on_close=lambda *args, dpg_id=dpg_id: self._remove_window(dpg_id)
+        ) as f:
+            MapViewerWindow()
+
+        self._add_window(dpg_id)
+
     def create_rocket_commands_window(self, window_name: str, preset_id: int = None) -> None:
         if preset_id is None:
             dpg_id = dpg.generate_uuid()
@@ -257,16 +314,13 @@ class WindowManager:
 
         with dpg.window(
             label=window_name, tag=dpg_id,
-            on_close=lambda *args, dpg_id=dpg_id: self._remove_window(dpg_id),
+            on_close=lambda *args, dpg_id=dpg_id: self._remove_logger(dpg_id),
             width=width
         ) as f:
             l = LoggerWindow(width)
+            self.all_loggers[dpg_id] = l
         
         # THESE PLACEHOLDERS CAN GO AWAY ONCE LOGGER UPDATER IS WORKING PROPERLY
-        l._log("Test Message 1", 1)
-        l._log("Test Message 2 (Long Test Message) (Long Test Message) (Long Test Message)", 2)
-        l._log("Test Message 3", 3)
-        l._log("Test Message 4", 4)
 
         self._add_window(dpg_id)
         

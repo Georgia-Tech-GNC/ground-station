@@ -87,7 +87,9 @@ class LoggerWindow:
         dpg.delete_item(self.filter_id, children_only=True)
         self.count = 0
 
-    
+    def log_message(self, msg, priority: int):
+        self._log(msg, priority)
+
     def update_log(self):
         try:
             r = requests.get(WEB_SERVER_URL + "api/logs/get", json={"msg_cnt": self.msgs_seen}, timeout=.1)
