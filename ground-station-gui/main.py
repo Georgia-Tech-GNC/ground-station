@@ -7,7 +7,6 @@ import time
 import random
 from pathlib import Path
 import os
-from test_update import update_all_tests, create_random_log_message
 
 SAVE_FOLDER_PATH = os.path.join(os.path.curdir, 'layout_save_files')
 PICKLE_PATH = os.path.join(SAVE_FOLDER_PATH, 'window_manager_save.pickle')
@@ -36,18 +35,29 @@ manager: WindowManager = None
 
 def update(event):
     st = time.time()
-    next_log_time = 2.25
     while True:
-        time.sleep(0.02)
+        time.sleep(0.01)
         if event.is_set():
             print("exiting thread!")
             break
 
         t = time.time() - st
-        update_all_tests(t)
-        if t > next_log_time:
-            next_log_time += 2.25
-            manager.add_log(*create_random_log_message())
+        updaterRSV.test({
+            "velocity_x": t * 5.0,
+            "velocity_y": 5,
+            "velocity_z": t + (random.randint(1, 1000)/1000),
+            "angular_velocity_x": t - 3,
+            "angular_velocity_y": t * 4,
+            "angular_velocity_z": t * t,
+            "attitude_w": 1,
+            "attitude_x": 0,
+            "attitude_y": 0,
+            "attitude_z": 0,
+            "position_x": t / 2,
+            "position_y": t * 2 - 50,
+            "position_z": t,
+            "timestamp": t * 1000
+        })
 
 
 def save_current_state():
@@ -76,6 +86,7 @@ if __name__ == "__main__":
                 global graph_menu_checkbox_tags
                 params = []
                 for tag, value in graph_menu_checkbox_tags.items():
+                    print(tag, value, dpg.get_value(tag))
                     if dpg.get_value(tag):
                         params.append(value)
                         dpg.set_value(tag, False)
@@ -90,20 +101,14 @@ if __name__ == "__main__":
                 manager.create_graph_viewer_window(params)
 
             for i, (name, (updater, updater_param)) in enumerate(GRAPHABLE_VALUES.items()):
-                
-                if updater is None:
-                    dpg.add_text(name)
-                else:   
-                    dpg_id = dpg.add_checkbox(label=name)
-                    graph_menu_checkbox_tags[dpg_id] = (name, updater, updater_param)
+                dpg_id = dpg.add_checkbox(label=name)
+                graph_menu_checkbox_tags[dpg_id] = (name, updater, updater_param)
 
             dpg.add_menu_item(label="Create graph", callback=generate_graph)
         
         with dpg.menu(label="Other Windows"):
             dpg.add_menu_item(label='Rocket Commands', callback=lambda: manager.create_rocket_commands_window("Rocket Commands"))
             dpg.add_menu_item(label='Logger', callback=lambda: manager.create_logger_window("Logger", INTENDED_WIDTH))
-            dpg.add_menu_item(label='Map', callback=lambda: manager.create_map_viewer_window("Rocket Position Tracker"))
-
 
     manager = WindowManager(PICKLE_PATH)
 
