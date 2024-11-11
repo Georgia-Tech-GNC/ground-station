@@ -45,7 +45,10 @@
           users.users.gnc = {
             isNormalUser = true;
             description = "GNC";
-            extraGroups = [ "wheel" "dialout" ];
+            extraGroups = [
+              "wheel"
+              "dialout"
+            ];
             shell = pkgs.fish;
             openssh.authorizedKeys.keys = [
               "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINEhH+5s0m+lBC898M/nrWREaDblRCPSpL6+9wkoZdel inaba@nyiyui.ca"
@@ -60,15 +63,21 @@
           programs.tmux.enable = true;
           programs.htop.enable = true;
         };
-      devModule = { pkgs, ... }: {
-        options = { };
-        config = {
-          programs.git.enable = true;
-          nix.settings.trusted-users = [ "gnc" ];
-          nix.settings.auto-optimise-store = true;
-          environment.systemPackages = with pkgs; [ picocom sqlite gdb ];
+      devModule =
+        { pkgs, ... }:
+        {
+          options = { };
+          config = {
+            programs.git.enable = true;
+            nix.settings.trusted-users = [ "gnc" ];
+            nix.settings.auto-optimise-store = true;
+            environment.systemPackages = with pkgs; [
+              picocom
+              sqlite
+              gdb
+            ];
+          };
         };
-      };
       coreModule =
         { pkgs, ground-station-core }:
         { ... }:
@@ -118,6 +127,7 @@
           nativeBuildInputs = with pkgs; [ pkg-config ];
         };
       supportedSystems = [ "x86_64-linux" ];
+      build-test = (import ./test.nix);
     in
     flake-utils.lib.eachSystem supportedSystems (
       system:
@@ -133,11 +143,16 @@
         };
         packages.ground-station-core = build-core pkgs;
         packages.ground-station-core-aarch64-multiplatform = build-core pkgs-aarch64-multiplatform;
-        packages.nixosConfigurations.trixie = build-trixie {
-          pkgs = pkgs-aarch64-multiplatform;
-          ground-station-core = packages.ground-station-core-aarch64-multiplatform;
+        images.trixie =
+          (build-trixie {
+            pkgs = pkgs-aarch64-multiplatform;
+            ground-station-core = packages.ground-station-core-aarch64-multiplatform;
+          }).trixie.config.system.build.sdImage;
+        checks = build-test {
+          inherit pkgs;
+          nixos-lib = (import (nixpkgs + "/nixos/lib") { inherit system; });
+          ground-station-core = packages.ground-station-core;
         };
-        images.trixie = packages.nixosConfigurations.trixie.config.system.build.sdImage;
       }
     );
 }
