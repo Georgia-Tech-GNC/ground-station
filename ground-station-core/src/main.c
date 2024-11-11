@@ -15,6 +15,48 @@
 #include "packet_encode.h"
 #include "command_scheduler.h"
 #include "logger.h"
+  
+#include <errno.h>
+#include <fcntl.h> 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <termios.h>
+#include <unistd.h>
+
+int set_interface_attribs(int fd) {
+  struct termios tty;
+
+  if (tcgetattr(fd, &tty) < 0) {
+      printf("Error from tcgetattr: %s\n", strerror(errno));
+      return -1;
+  }
+
+  cfsetospeed(&tty, B38400);
+  cfsetispeed(&tty, B38400);
+
+  tty.c_cflag |= (CLOCAL | CREAD);    /* ignore modem controls */
+  tty.c_cflag &= ~CSIZE;
+  tty.c_cflag |= CS8;         /* 8-bit characters */
+  tty.c_cflag &= ~PARENB;     /* no parity bit */
+  tty.c_cflag &= ~CSTOPB;     /* only need 1 stop bit */
+  tty.c_cflag &= ~CRTSCTS;    /* no hardware flowcontrol */
+
+  /* setup for non-canonical mode */
+  tty.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | IXON);
+  tty.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
+  tty.c_oflag &= ~OPOST;
+
+  /* fetch bytes as they become available */
+  tty.c_cc[VMIN] = 1;
+  tty.c_cc[VTIME] = 1;
+
+  if (tcsetattr(fd, TCSANOW, &tty) != 0) {
+      printf("Error from tcsetattr: %s\n", strerror(errno));
+      return -1;
+  }
+  return 0;
+}
 
 
 #define SERIAL_BUFFER_SIZE 256
@@ -60,85 +102,17 @@ bool initialize() {
 
 FILE *serial_initialize() {
   errno = 0;
-  FILE *serial = fopen(serialPath, "rb");
+  FILE *serial = fopen(serialPath, "r+b");
+  printf("fopen finished\n");
   if (serial == NULL || errno != 0) {
     perror("open serial file");
     return NULL;
   }
-  
-  // serial port setup
-  struct termios sp;
-  log_standard("tcgetattr...\n");
-  errno = 0;
-  tcgetattr(fileno(serial), &sp);
-  if (errno != 0) {
-    perror("tcgetattr");
-    return NULL;
-  }
-  log_standard("tcgetattr done.\n");
-
-  sp.c_cflag &= ~PARENB;
-  sp.c_cflag &= ~CSTOPB;
-  sp.c_cflag &= ~CSIZE;
-  sp.c_cflag |= CS8;
-  sp.c_cflag &= ~CRTSCTS;
-  sp.c_cflag |= CREAD | CLOCAL;
-  sp.c_lflag &= ~ICANON; // non-canonical req'd to NOT read line-by-line
-  sp.c_lflag &= ~ECHO;
-  sp.c_lflag &= ~ISIG;
-  sp.c_iflag &= ~(IXON | IXOFF | IXANY); // software control flow
-  sp.c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL); // Disable any special handling of received bytes
-  sp.c_oflag &= ~OPOST; // Prevent special interpretation of output bytes (e.g. newline chars)
-  sp.c_oflag &= ~ONLCR; // Prevent conversion of newline to carriage return/line feed
-  sp.c_cc[VTIME] = 1; // wait for 1+ bytes a max of 1/10 sec
-  sp.c_cc[VMIN] = 1;
-
-  log_standard("tcsetattr...\n");
-  errno = 0;
-  tcsetattr(fileno(serial), TCSANOW, &sp);
-  if (errno != 0) {
-    perror("tcsetattr");
-    return NULL;
-  }
-  log_standard("tcsetattr done.\n");
-
-  speed_t speeeeed;
-  if (serialBaudNumber == 0) speeeeed = B1200;
-  else if (serialBaudNumber == 1) speeeeed = B2400;
-  else if (serialBaudNumber == 2) speeeeed = B4800;
-  else if (serialBaudNumber == 3) speeeeed = B9600;
-  else if (serialBaudNumber == 4) speeeeed = B19200;
-  else if (serialBaudNumber == 5) speeeeed = B38400;
-  else if (serialBaudNumber == 6) speeeeed = B57600;
-  else if (serialBaudNumber == 7) speeeeed = B115200;
-  else {
-    printf("unsupported baud rate: %d\n", serialBaudNumber);
+  printf("file opened\n");
+  if (set_interface_attribs(fileno(serial)) != 0) {
+    printf("set_interface_attribs failed\n");
     exit(1);
   }
-
-  errno = 0;
-  cfsetispeed(&sp, speeeeed);
-  if (errno != 0) {
-    perror("cfsetispeed");
-    return NULL;
-  }
-  log_standard("cfsetIspeed done.\n");
-
-  errno = 0;
-  cfsetospeed(&sp, speeeeed);
-  if (errno != 0) {
-    perror("cfsetispeed");
-    return NULL;
-  }
-  log_standard("cfsetOspeed done.\n");
-
-  struct stat ret_stat;
-  errno = 0;
-  if (fstat(fileno(serial), &ret_stat) != 0) {
-    perror("fstat");
-  }
-  printf("st_rdev=%x\n", ret_stat.st_rdev);
-
   return serial;
 }
 
@@ -243,6 +217,7 @@ int main(int argc, char *argv[]) {
     log_error("opening serial failed\n");
     return 1;
   }
+  log_standard("serial_initialize done\n");
 
   pthread_t serial_thread;
   pthread_create(&serial_thread, NULL, serial_loop, (void *) serial);
@@ -257,11 +232,15 @@ int main(int argc, char *argv[]) {
     if (write_len > 0) {
       log_standard("writing %d bytes...\n", write_len);
       errno = 0;
+      for (int i = 0; i < write_len; i ++) {
+        log_standard("%02x ", command_send_buffer[i]);
+      }
+      log_standard("\n");
       int retval = write(fileno(serial), command_send_buffer, write_len);
       if (retval != 0) {
-        perror("command sending failed (retval)");
+        printf("retval=%d\n", retval);
       }
-      //fwrite(command_send_buffer, write_len, 1, serial);
+      // fwrite(command_send_buffer, write_len, 1, serial);
       if (errno != 0) {
         perror("command sending failed");
       } else {
