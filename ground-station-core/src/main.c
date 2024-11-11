@@ -59,8 +59,9 @@ bool initialize() {
 }
 
 FILE *serial_initialize() {
+  errno = 0;
   FILE *serial = fopen(serialPath, "rb");
-  if (serial == NULL) {
+  if (serial == NULL || errno != 0) {
     perror("open serial file");
     return NULL;
   }
@@ -68,9 +69,14 @@ FILE *serial_initialize() {
   // serial port setup
   struct termios sp;
   log_standard("tcgetattr...\n");
-  if(tcgetattr(fileno(serial), &sp) != 0) {
+  errno = 0;
+  tcgetattr(fileno(serial), &sp);
+  if (errno != 0) {
     perror("tcgetattr");
+    return NULL;
   }
+  log_standard("tcgetattr done.\n");
+
   sp.c_cflag &= ~PARENB;
   sp.c_cflag &= ~CSTOPB;
   sp.c_cflag &= ~CSIZE;
@@ -86,6 +92,16 @@ FILE *serial_initialize() {
   sp.c_oflag &= ~ONLCR; // Prevent conversion of newline to carriage return/line feed
   sp.c_cc[VTIME] = 1; // wait for 1+ bytes a max of 1/10 sec
   sp.c_cc[VMIN] = 1;
+
+  log_standard("tcsetattr...\n");
+  errno = 0;
+  tcsetattr(fileno(serial), TCSANOW, &sp);
+  if (errno != 0) {
+    perror("tcsetattr");
+    return NULL;
+  }
+  log_standard("tcsetattr done.\n");
+
   speed_t speeeeed;
   if (serialBaudNumber == 0) speeeeed = B1200;
   else if (serialBaudNumber == 1) speeeeed = B2400;
@@ -99,14 +115,30 @@ FILE *serial_initialize() {
     printf("unsupported baud rate: %d\n", serialBaudNumber);
     exit(1);
   }
+
+  errno = 0;
   cfsetispeed(&sp, speeeeed);
-  cfsetospeed(&sp, speeeeed);
-  log_standard("tcsetattr...\n");
-  if (tcsetattr(fileno(serial), TCSANOW, &sp) != 0) {
-    perror("tcsetattr");
+  if (errno != 0) {
+    perror("cfsetispeed");
     return NULL;
   }
-  log_standard("tcsetattr done.\n");
+  log_standard("cfsetIspeed done.\n");
+
+  errno = 0;
+  cfsetospeed(&sp, speeeeed);
+  if (errno != 0) {
+    perror("cfsetispeed");
+    return NULL;
+  }
+  log_standard("cfsetOspeed done.\n");
+
+  struct stat ret_stat;
+  errno = 0;
+  if (fstat(fileno(serial), &ret_stat) != 0) {
+    perror("fstat");
+  }
+  printf("st_rdev=%x\n", ret_stat.st_rdev);
+
   return serial;
 }
 
@@ -224,7 +256,12 @@ int main(int argc, char *argv[]) {
 
     if (write_len > 0) {
       log_standard("writing %d bytes...\n", write_len);
-      fwrite(command_send_buffer, write_len, 1, serial);
+      errno = 0;
+      int retval = write(fileno(serial), command_send_buffer, write_len);
+      if (retval != 0) {
+        perror("command sending failed (retval)");
+      }
+      //fwrite(command_send_buffer, write_len, 1, serial);
       if (errno != 0) {
         perror("command sending failed");
       } else {
