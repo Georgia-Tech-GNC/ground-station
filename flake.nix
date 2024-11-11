@@ -25,7 +25,7 @@
           ];
           environment.systemPackages = with pkgs; [
             # re-add packages in base.nix
-            vim
+            neovim
             usbutils
           ];
           sdImage.compressImage = false;
@@ -45,7 +45,7 @@
           users.users.gnc = {
             isNormalUser = true;
             description = "GNC";
-            extraGroups = [ "wheel" ];
+            extraGroups = [ "wheel" "dialout" ];
             shell = pkgs.fish;
             openssh.authorizedKeys.keys = [
               "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINEhH+5s0m+lBC898M/nrWREaDblRCPSpL6+9wkoZdel inaba@nyiyui.ca"
