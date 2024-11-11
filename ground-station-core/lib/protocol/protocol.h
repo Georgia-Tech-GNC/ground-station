@@ -66,10 +66,14 @@ int is_command_packet(uint8_t* packet, size_t packet_size);
 int get_command_uuid(uint8_t* packet);
 
 /**
- * Takes a command packet and modifies it inplace to be a command acknowledgement packet
- * @param packet the packet to convert (should be a valid command packet, see is_command_packet)
+ * Checks whether the given packet is a command packet, verifies it, and generates a return acknowledge packet.
+ *
+ * @param packet           original command packet
+ * @param packet_size      original command packet's packet size (must be seven)
+ * @param generated_packet ptr to store generated packet in. must be able to hold 7 bytes
+ * @return                 positive generated packet size if success, failure if zero or negative
  */
-void reformat_as_command_ack_packet(uint8_t* packet);
+int generate_ack_packet(uint8_t *packet, size_t packet_size, uint8_t *generated_packet);
 
 /**
  * Generates a command payload given a command id and a command counter (should be passed into generate packet as raw data)

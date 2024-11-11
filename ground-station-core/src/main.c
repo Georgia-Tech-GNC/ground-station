@@ -81,8 +81,8 @@ void process_xbee_message(int message_size_bytes) {
   } else if (message_id == COMMAND_ACK_MSG_ID) {
     if (message_size_bytes >= 2 + 5) {
       uint8_t command_id = message[0];
-      uint8_t command_counter = message[1];
-      acknowledge_command(command_id, command_counter);
+      uint8_t command_uuid = message[1];
+      acknowledge_command(command_id, command_uuid);
     } else {
       log_warning("Rocket tried to acknowledge a command, but packet size was only %d instead of expected %d", message_size_bytes, sizeof(struct CommandStruct) + 5);
     }
