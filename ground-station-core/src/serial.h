@@ -1,13 +1,9 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <stdint.h>
-#include <signal.h>
 #include <errno.h>
+#include <stdlib.h>
 #include <termios.h>
 #include <pthread.h>
 #include <fcntl.h> 
-#include <string.h>
 #include <unistd.h>
 
 speed_t serial_get_speed(int baud_number) {
@@ -40,8 +36,8 @@ int serial_set_attribs(int fd, int baud_number) {
   struct termios tty;
 
   if (tcgetattr(fd, &tty) < 0) {
-      printf("Error from tcgetattr: %s\n", strerror(errno));
-      return -1;
+    perror("tcgetattr");
+    return -1;
   }
 
   printf("cfsetospeed and cfsetispeed with baud %s...\n", serial_get_baud_name(baud_number));
