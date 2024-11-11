@@ -6,7 +6,6 @@
 #include <errno.h>
 #include <termios.h>
 #include <pthread.h>
-  
 #include <fcntl.h> 
 #include <string.h>
 #include <unistd.h>
@@ -19,6 +18,7 @@
 #include "packet_encode.h"
 #include "command_scheduler.h"
 #include "logger.h"
+#include "serial.h"
 
 
 #define SERIAL_BUFFER_SIZE 256
@@ -33,9 +33,6 @@ struct mg_mgr manager;
 struct sqlite3 *db = NULL;
 
 struct sigaction old_action;
-
-char *serialPath;
-int serialBaudNumber;
 
 void finalize() {
   sqlite3_close(db);
@@ -60,56 +57,6 @@ bool initialize() {
   // TODO: Open Serial Port
 
   return true;
-}
-
-int serial_set_attribs(int fd) {
-  struct termios tty;
-
-  if (tcgetattr(fd, &tty) < 0) {
-      printf("Error from tcgetattr: %s\n", strerror(errno));
-      return -1;
-  }
-
-  cfsetospeed(&tty, B38400);
-  cfsetispeed(&tty, B38400);
-
-  tty.c_cflag |= (CLOCAL | CREAD);    /* ignore modem controls */
-  tty.c_cflag &= ~CSIZE;
-  tty.c_cflag |= CS8;         /* 8-bit characters */
-  tty.c_cflag &= ~PARENB;     /* no parity bit */
-  tty.c_cflag &= ~CSTOPB;     /* only need 1 stop bit */
-  tty.c_cflag &= ~CRTSCTS;    /* no hardware flowcontrol */
-
-  /* setup for non-canonical mode */
-  tty.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | IXON);
-  tty.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
-  tty.c_oflag &= ~OPOST;
-
-  /* fetch bytes as they become available */
-  tty.c_cc[VMIN] = 1;
-  tty.c_cc[VTIME] = 1;
-
-  if (tcsetattr(fd, TCSANOW, &tty) != 0) {
-      printf("Error from tcsetattr: %s\n", strerror(errno));
-      return -1;
-  }
-  return 0;
-}
-
-FILE *serial_initialize() {
-  errno = 0;
-  FILE *serial = fopen(serialPath, "r+b");
-  printf("fopen finished\n");
-  if (serial == NULL || errno != 0) {
-    perror("open serial file");
-    return NULL;
-  }
-  printf("file opened\n");
-  if (serial_set_attribs(fileno(serial)) != 0) {
-    printf("serial_set_attribs failed\n");
-    exit(1);
-  }
-  return serial;
 }
 
 uint8_t command_send_buffer[COMMAND_SEND_BUFFER_SIZE];
@@ -183,12 +130,12 @@ void *serial_loop(void *serial_) {
 
 int main(int argc, char *argv[]) {
   if (argc != 3) {
-    printf("must have one argument for serial path\n");
+    printf("usage: serial-path serial-baud-numbre");
     return 1;
   }
 
-  serialPath = argv[1];
-  serialBaudNumber = atoi(argv[2]);
+  char *serial_path = argv[1];
+  int serial_baud_number = atoi(argv[2]);
 
   // Set up exit code
   struct sigaction action;
@@ -207,8 +154,8 @@ int main(int argc, char *argv[]) {
 
   log_standard("\nInitialization Complete...\n\n");
 
-  log_standard("opening %s...\n", serialPath);
-  FILE *serial = serial_initialize();
+  log_standard("opening %s...\n", serial_path);
+  FILE *serial = serial_initialize(serial_path, serial_baud_number);
   if (serial == NULL) {
     log_error("opening serial failed\n");
     return 1;
