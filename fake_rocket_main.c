@@ -41,6 +41,7 @@ void loop(FILE *serial) {
   struct RocketState native = {
     .rocket_state = 1,
   };
+  /*
   uint8_t *msg = malloc(sizeof(uint8_t) * ROCKETSTATE_SIZE);
   uint8_t *packetizedData = malloc(sizeof(uint8_t) * (ROCKETSTATE_SIZE+5));
   RocketState_encode(&native, msg);
@@ -83,4 +84,5 @@ void loop(FILE *serial) {
   //   perror("fwrite to radio");
   // }
   // printf("written: %d\n", written);
+  */
 }
