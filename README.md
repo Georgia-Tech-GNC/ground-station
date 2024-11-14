@@ -6,6 +6,11 @@ Shell environment (with Python, etc):
 Shell for cross-compiling (only when running gcc et al yourself):
 `nix develop .#devShells.x86_64-linux.cross`
 
+```bash
+# run an interactive test with a virtual machine
+nix build -L .#checks.x86_64-linux.<test-name>.driverInteractive && ./result/bin/nixos-test-driver
+```
+
 ## Building (ground-station-core)
 
 Raspberry Pi 4 platform config:

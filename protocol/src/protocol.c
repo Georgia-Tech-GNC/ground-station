@@ -18,15 +18,33 @@
 int is_command_packet(uint8_t* packet, size_t packet_size) {
 	if (packet_size != 7) return -1; // Incorrect size
 	if (packet[1] != COMMAND_MSG_ID) return -1; // Incorrect command id
-	return packet[4];
+	return packet[3];
 }
 
 int get_command_uuid(uint8_t* packet) {
-	return packet[5];
+	return packet[4];
 }
 
-void reformat_as_command_ack_packet(uint8_t* packet) {
-	packet[1] = COMMAND_ACK_MSG_ID;
+int generate_ack_packet(uint8_t *packet, size_t packet_size, uint8_t *generated_packet) {
+  if (packet_size != 7) {
+    return -1;
+  }
+  if (!verify_packet(packet, packet_size)) {
+    return -2;
+  }
+
+  uint8_t command_id = is_command_packet(packet, packet_size);
+  if (command_id == -1) {
+    return -3;
+  }
+  uint8_t payload[2];
+  payload[0] = command_id; // command id
+  payload[1] = get_command_uuid(packet_size); // command uuid
+  int written = generate_packet(payload, 2, generated_packet, COMMAND_ACK_MSG_ID);
+  if (written != 7) {
+    return -4;
+  }
+  return 7;
 }
 
 size_t generate_command_payload(uint8_t *buffer, uint8_t command_id, uint8_t command_counter) {

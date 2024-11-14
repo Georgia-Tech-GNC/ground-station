@@ -6,6 +6,12 @@
 #include <errno.h>
 #include <termios.h>
 #include <pthread.h>
+#include <fcntl.h> 
+#include <string.h>
+#include <unistd.h>
+#ifdef USE_SD_NOTIFY
+#include <systemd/sd-daemon.h>
+#endif
 
 #include "mongoose.h"  
 #include "sqlite3.h"
@@ -15,6 +21,7 @@
 #include "packet_encode.h"
 #include "command_scheduler.h"
 #include "logger.h"
+#include "serial.h"
 
 #define IN_TESTING_MODE
 
@@ -30,8 +37,6 @@ struct mg_mgr manager;
 struct sqlite3 *db = NULL;
 
 struct sigaction old_action;
-
-char *serialPath;
 
 void finalize() {
   sqlite3_close(db);
@@ -58,47 +63,6 @@ bool initialize() {
   return true;
 }
 
-FILE *serial_initialize() {
-  FILE *serial = fopen(serialPath, "rb");
-  if (serial == NULL) {
-    perror("open serial file");
-    return NULL;
-  }
-  
-  // serial port setup
-  struct termios sp;
-  log_standard("tcgetattr...\n");
-#ifndef IN_TESTING_MODE
-  if(tcgetattr(fileno(serial), &sp) != 0) { 
-    perror("tcgetattr");
-  }
-  sp.c_cflag &= ~PARENB;
-  sp.c_cflag &= ~CSTOPB;
-  sp.c_cflag &= ~CSIZE;
-  sp.c_cflag |= CS8;
-  sp.c_cflag &= ~CRTSCTS;
-  sp.c_cflag |= CREAD | CLOCAL;
-  sp.c_lflag &= ~ICANON; // non-canonical req'd to NOT read line-by-line
-  sp.c_lflag &= ~ECHO;
-  sp.c_lflag &= ~ISIG;
-  sp.c_iflag &= ~(IXON | IXOFF | IXANY); // software control flow
-  sp.c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL); // Disable any special handling of received bytes
-  sp.c_oflag &= ~OPOST; // Prevent special interpretation of output bytes (e.g. newline chars)
-  sp.c_oflag &= ~ONLCR; // Prevent conversion of newline to carriage return/line feed
-  sp.c_cc[VTIME] = 1; // wait for 1+ bytes a max of 1/10 sec
-  sp.c_cc[VMIN] = 1;
-  cfsetispeed(&sp, B9600);
-  cfsetospeed(&sp, B9600);
-  log_standard("tcsetattr...\n");
-  if (tcsetattr(fileno(serial), TCSANOW, &sp) != 0) {
-    perror("tcsetattr");
-    return NULL;
-  }
-  log_standard("tcsetattr done.\n");
-#endif
-  return serial;
-}
-
 uint8_t command_send_buffer[COMMAND_SEND_BUFFER_SIZE];
 
 void process_xbee_message(int message_size_bytes) {
@@ -121,8 +85,8 @@ void process_xbee_message(int message_size_bytes) {
   } else if (message_id == COMMAND_ACK_MSG_ID) {
     if (message_size_bytes >= 2 + 5) {
       uint8_t command_id = message[0];
-      uint8_t command_counter = message[1];
-      acknowledge_command(command_id, command_counter);
+      uint8_t command_uuid = message[1];
+      acknowledge_command(command_id, command_uuid);
     } else {
       log_warning("Rocket tried to acknowledge a command, but packet size was only %d instead of expected %d", message_size_bytes, sizeof(struct CommandStruct) + 5);
     }
@@ -169,12 +133,13 @@ void *serial_loop(void *serial_) {
 }
 
 int main(int argc, char *argv[]) {
-  if (argc != 2) {
-    printf("must have one argument for serial path\n");
+  if (argc != 3) {
+    printf("usage: serial-path serial-baud-numbre");
     return 1;
   }
 
-  serialPath = argv[1];
+  char *serial_path = argv[1];
+  int serial_baud_number = atoi(argv[2]);
 
   // Set up exit code
   struct sigaction action;
@@ -193,15 +158,22 @@ int main(int argc, char *argv[]) {
 
   log_standard("\nInitialization Complete...\n\n");
 
-  log_standard("opening %s...\n", serialPath);
-  FILE *serial = serial_initialize();
+  log_standard("opening %s...\n", serial_path);
+  FILE *serial = serial_initialize(serial_path, serial_baud_number);
   if (serial == NULL) {
     log_error("opening serial failed\n");
     return 1;
   }
+  log_standard("serial_initialize done\n");
 
   pthread_t serial_thread;
   pthread_create(&serial_thread, NULL, serial_loop, (void *) serial);
+
+#ifdef USE_SD_NOTIFY
+  sd_notifyf(0, "READY=1\nSTATUS=listening on %s with baud %d", serial_path, serial_get_baud_name(serial_baud_number));
+#else
+  log_standard("ready\n");
+#endif
   
   while (true) {
     // Update web server
@@ -211,9 +183,21 @@ int main(int argc, char *argv[]) {
     int write_len = update_command_stack(command_send_buffer);
 
     if (write_len > 0) {
-      fwrite(command_send_buffer, write_len, 1, serial);
+      log_standard("writing %d bytes...\n", write_len);
+      errno = 0;
+      for (int i = 0; i < write_len; i ++) {
+        log_standard("%02x ", command_send_buffer[i]);
+      }
+      log_standard("\n");
+      int retval = write(fileno(serial), command_send_buffer, write_len);
+      if (retval != 0) {
+        printf("retval=%d\n", retval);
+      }
+      // fwrite(command_send_buffer, write_len, 1, serial);
       if (errno != 0) {
         perror("command sending failed");
+      } else {
+        log_standard("wrote %d bytes...\n", write_len);
       }
     }
   }
