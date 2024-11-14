@@ -149,7 +149,7 @@
           (build-trixie {
             pkgs = pkgs-aarch64-multiplatform;
             ground-station-core = packages.ground-station-core-aarch64-multiplatform;
-          }).trixie.config.system.build.sdImage;
+          }).config.system.build.sdImage;
         checks = build-test {
           inherit pkgs;
           nixos-lib = (import (nixpkgs + "/nixos/lib") { inherit system; });
