@@ -16,6 +16,7 @@
 #include "command_scheduler.h"
 #include "logger.h"
 
+#define IN_TESTING_MODE
 
 #define SERIAL_BUFFER_SIZE 256
 #define MESSAGE_BUFFER_SIZE 270
@@ -67,7 +68,8 @@ FILE *serial_initialize() {
   // serial port setup
   struct termios sp;
   log_standard("tcgetattr...\n");
-  if(tcgetattr(fileno(serial), &sp) != 0) {
+#ifndef IN_TESTING_MODE
+  if(tcgetattr(fileno(serial), &sp) != 0) { 
     perror("tcgetattr");
   }
   sp.c_cflag &= ~PARENB;
@@ -93,6 +95,7 @@ FILE *serial_initialize() {
     return NULL;
   }
   log_standard("tcsetattr done.\n");
+#endif
   return serial;
 }
 
