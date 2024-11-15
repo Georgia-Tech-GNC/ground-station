@@ -7,7 +7,7 @@
 #include "sqlite3.h"
 #include "database.h"
 
-const int BUFFER1_LEN = 1000;
+#define BUFFER1_LEN 1000
 
 char buffer0[1000];
 char buffer1[BUFFER1_LEN];
