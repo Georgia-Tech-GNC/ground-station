@@ -113,6 +113,7 @@
           imports = [
             baseModule
             devModule
+            (import ./router.nix)
             (coreModule { inherit pkgs ground-station-core; })
           ];
         };
