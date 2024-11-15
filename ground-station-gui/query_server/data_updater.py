@@ -1,11 +1,26 @@
 import requests
+import logging
 
 WEB_SERVER_URL = "http://0.0.0.0:8080/"
+TIMEOUT = 0.1
+
+"""
+SETTING UP LOGGER
+"""
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+ch = logging.StreamHandler()
+ch.setLevel(logging.DEBUG)
+formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+ch.setFormatter(formatter)
+
+logger.addHandler(ch)
 
 
 def send_cmd_with_id(cmd_id: int):
     try: 
-        r = requests.get(f'{WEB_SERVER_URL}api/command/send', json={"id": cmd_id}, timeout=.1)
+        r = requests.get(f'{WEB_SERVER_URL}api/command/send', json={"id": cmd_id}, timeout=TIMEOUT)
         if (r != 200):
             print(f"Command web api call with command id {cmd_id} failed! (bad status code {r})")
     except Exception as e:
@@ -47,7 +62,7 @@ class DataUpdater:
         """
         self.callbacks: dict[id | str, tuple[callable, list[str]]] = {}
 
-    def is_valid_data_name(self, data_name: str):
+    def is_valid_data_name(self, data_name: str) -> bool:
         return data_name in self.values
 
     """
@@ -64,35 +79,35 @@ class DataUpdater:
 
     def add_callback(self, func: callable, dpg_id: int | str, data_names: list[str]):
         if not callable(func):
-            print(f"ERROR: func [{func}] is not callable.")
+            logger.error(f"func [{func}] is not callable.")
             return
 
-        if not isinstance(dpg_id, (int, str)):
-            print(f"ERROR: id [{dpg_id}] is not an int or a str.")
+        if not isinstance(dpg_id, (int, str)) or isinstance(dpg_id, bool):
+            logger.error(f"id [{dpg_id}] is not an int or a str.")
             return
 
         if dpg_id in self.callbacks:
-            print(f"ERROR: id [{dpg_id}] already exists in (self.callbacks).")
+            logger.error(f"id [{dpg_id}] already exists in (self.callbacks).")
             return
 
         if not isinstance(data_names, list):
-            print(f"ERROR: data names argument is not a list.")
+            logger.error(f"data names argument is not a list.")
             return
-
+        
         for data_name in data_names:
             if not isinstance(data_name, str):
-                print(f"ERROR: data name [{data_name}] is not a string.")
+                logger.error(f"data name [{data_name}] is not a string.")
                 return
 
             if data_name not in self.values:
-                print(f"ERROR: data name [{data_name}] not in (self.values).")
+                logger.error(f"data name [{data_name}] not in (self.values).")
                 return
 
         # potentially add check regarding the length of data names compared to
         # the number of expected arguments for func? (use inspect module)
 
         self.callbacks[dpg_id] = (func, data_names)
-        print("SUCCESS: callback added.")
+        logger.info(f"callback with id [{dpg_id}] added succesfully.")
 
     """
     Updates data by making a GET request to self.url and processes the
@@ -115,9 +130,12 @@ class DataUpdater:
 
     def update(self):
         try:
-            r = requests.get(WEB_SERVER_URL + self.url)
+            r = requests.get(WEB_SERVER_URL + self.url, timeout=TIMEOUT)
         except requests.exceptions.InvalidURL:
             print("ERROR: invalid URL (bad initialization of object)")
+            return
+        except requests.exceptions.Timeout:
+            print("ERROR: timeout exception")
             return
         except Exception as e:
             print(f"ERROR: other exception [{e}]")
@@ -130,53 +148,24 @@ class DataUpdater:
                 print(f"ERROR: response is not in JSON format -> [{e}]")
                 return
 
-            for callback, data_names in self.callbacks.values():
-                args = []
-
-                for data_name in data_names:
-
-                    # data name is guaranteed to be in self.values based on error check in
-                    # add_callback() method; however, I included an error-handler anyway
-                    datatype = self.values.get(data_name)
-
-                    if not callable(datatype):
-                        print(f"ERROR: datatype [{datatype}] for data name [{data_name}] is not callable.")
-                        return
-
-                    datum = data.get(data_name)
-
-                    if datum is None:
-                        print(f"ERROR: data name [{data_name}] not in returned JSON")
-                        return
-
-                    if datum == '':
-                        print(f"Warning: Data from {self.url} was blank")
-                        return
-                    try:
-                        casted_datum = datatype(datum)
-                    except Exception as e:
-                        print(f"ERROR: invalid casting of datum [{datum}] to [{datatype}] -> {e}")
-                        return
-
-                    args.append(casted_datum)
-
-                try:
-                    callback(*args)
-                except Exception as e:
-                    print(f"ERROR: exception raised during callback [{callback}] -> [{e}]")
-                    return
+            self.invoke_callbacks(data)
 
         # error messages for bad status codes should be more specific
         elif r.status_code == 401:
-            print("ERROR IN THE API CALL")
+            print("ERROR IN THE API CALL (401 error)")
 
         else:
-            print("OTHER ERROR")
+            print(f"Other error with status code [{r.status_code}]")
 
-    def test(self, data):
-        values = list(self.callbacks.values())
-        for callback, data_names in values:
+    def invoke_callbacks(self, data: dict):
+
+        if type(data) is not dict:
+            print("ERROR: data is not a dictionary")
+            return
+
+        for dpg_id, (callback, data_names) in self.callbacks.items():
             args = []
+            skip_outer = False
 
             for data_name in data_names:
 
@@ -188,22 +177,27 @@ class DataUpdater:
 
                 if datum is None:
                     print(f"ERROR: data name [{data_name}] not in returned JSON")
-                    return
+                    skip_outer = True
+                    break
 
                 try:
                     casted_datum = datatype(datum)
                 except (TypeError, ValueError) as e:
                     print(f"ERROR: invalid casting of datum [{datum}] to [{datatype}]: {e}")
-                    return
+                    skip_outer = True
+                    break
 
                 args.append(casted_datum)
+
+            if skip_outer:
+                continue
 
             try:
                 print(args)
                 callback(*args)
             except Exception as e:
-                print(f"Exception raised during callback [{callback}]: [{e}]")
-                return
+                print(f"Exception raised during callback [{dpg_id}, {callback}]: [{e}]")
+                continue
 
     def clear_callbacks(self):
         print(f"{len(self.callbacks)} callbacks cleared")
