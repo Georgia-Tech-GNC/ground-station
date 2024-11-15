@@ -97,7 +97,7 @@
       wlan0 = {
         band = "2g";
         countryCode = "US";
-        channel = 0; # ACS
+        #channel = 0; # ACS
 
         wifi4.enable = true;
 
