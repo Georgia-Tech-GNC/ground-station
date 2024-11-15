@@ -180,6 +180,9 @@ class DataUpdater:
                     skip_outer = True
                     break
 
+                if datum == '':
+                    print(f"Warning: Data from {self.url} was blank")
+                    return
                 try:
                     casted_datum = datatype(datum)
                 except (TypeError, ValueError) as e:
