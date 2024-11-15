@@ -10,7 +10,6 @@ import numpy as np
 import enum
 import pickle
 import requests
-from test_update import set_ground, set_armed, fire_pyro
 
 def to_nparr(*args):
     """Utility method that returns a numpy array with the given parameters"""
@@ -61,15 +60,15 @@ DATA_WINDOWS: dict[str, tuple[
 
     'Rocket State': (
         lambda: DataViewerWindow(
-            ['State', 'Firing Channel 1', 'Firing Channel 2', 'Firing Channel 3', 'Firing Channel 4'],
-            [DataTypes.STRING, DataTypes.STRING, DataTypes.STRING, DataTypes.STRING, DataTypes.STRING]
+            ['State', 'Firing Channel 1', 'Firing Channel 2', 'Firing Channel 3'],
+            [DataTypes.STRING, DataTypes.STRING, DataTypes.STRING, DataTypes.STRING]
         ),
         'updaterRS',
         lambda window_ref:
-        (lambda s, fc1, fc2, fc3, fc4: window_ref.set_all_values(
+        (lambda s, fc1, fc2, fc3: window_ref.set_all_values(
             [ROCKET_INT_TO_STATE(s), ROCKET_INT_TO_ACTIVE_STATUS(fc1), ROCKET_INT_TO_ACTIVE_STATUS(fc2),
-             ROCKET_INT_TO_ACTIVE_STATUS(fc3), ROCKET_INT_TO_ACTIVE_STATUS(fc4)])),
-        ["rocket_state", "firing_channel_1", "firing_channel_2", "firing_channel_3", "firing_channel_4"]
+             ROCKET_INT_TO_ACTIVE_STATUS(fc3)])),
+        ["rocket_state", "firing_channel_1", "firing_channel_2", "firing_channel_3"]
     ),
 
     'Rocket Grouund EKF': (
@@ -198,7 +197,8 @@ class WindowManager:
                 
                     
             except Exception as e:
-                print(e)
+                print(f"Caught exception {str(e)}")
+                print("Saving the current layout will instead create a new save file")
                 self.regen_commands: dict[int | str, tuple[WindowType, tuple]] = {}
 
         else:

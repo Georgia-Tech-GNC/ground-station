@@ -44,7 +44,7 @@ void send_command(int command_id) {
 }
 
 void acknowledge_command(int command_id, int command_uuid) {
-    if (command_id < 1 || command_id > NUM_COMMAND_TYPES) log_warning("Tried to acknowledge invalid type %d", command_id); // Invalid command id
+    if (command_id < 1 || command_id > NUM_COMMAND_TYPES) log_warning("Tried to acknowledge invalid type %d\n", command_id); // Invalid command id
     else {
         if (!currentCommandStack[command_id].is_active || currentCommandStack[command_id].command_uuid != command_uuid) {
             log_warning("Tried to acknowledge a command with valid type %d, but with an invalid uuid %d\n", command_id, command_uuid);
@@ -72,7 +72,7 @@ int update_command_stack(uint8_t* buffer) {
         currentCommandStack[i].last_send_time = current_time;
         if (currentCommandStack[i].numberSendAttempts >= MAX_COMMAND_RESENDS) {
             currentCommandStack[i].is_active = false;
-            log_warning("Removed cmd of type %d from stack because it was resent %d times without a response", i, MAX_COMMAND_RESENDS);
+            log_warning("Removed cmd of type %d from stack because it was resent %d times without a response\n", i, MAX_COMMAND_RESENDS);
         }
     }
 

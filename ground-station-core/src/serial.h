@@ -6,6 +6,8 @@
 #include <fcntl.h> 
 #include <unistd.h>
 
+//#define IN_OFF_SERIAL_TESTING_MODE
+
 speed_t serial_get_speed(int baud_number) {
   switch (baud_number) {
   case 0: return B1200;
@@ -16,6 +18,9 @@ speed_t serial_get_speed(int baud_number) {
   case 5: return B38400;
   case 6: return B57600;
   case 7: return B115200;
+  default: 
+    printf("Invalid baud number inputted: %d", baud_number);
+    exit(1);
   }
 }
 
@@ -29,6 +34,9 @@ char *serial_get_baud_name(int baud_number) {
   case 5: return "38400";
   case 6: return "57600";
   case 7: return "115200";
+  default: 
+    printf("Invalid baud number inputted: %d", baud_number);
+    exit(1);
   }
 }
 
@@ -82,9 +90,12 @@ FILE *serial_initialize(char *serial_path, int baud_number) {
     return NULL;
   }
   printf("file opened\n");
+
+#ifndef IN_OFF_SERIAL_TESTING_MODE
   if (serial_set_attribs(fileno(serial), baud_number) != 0) {
     printf("serial_set_attribs failed\n");
     exit(1);
   }
+#endif
   return serial;
 }

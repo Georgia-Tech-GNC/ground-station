@@ -34,8 +34,8 @@ int generate_ack_packet(uint8_t *packet, size_t packet_size, uint8_t *generated_
     return -2;
   }
 
-  uint8_t command_id = is_command_packet(packet, packet_size);
-  if (command_id == -1) {
+  int command_id = is_command_packet(packet, packet_size);
+  if (command_id < 0 || command_id > 255) {
     return -3;
   }
   uint8_t payload[2];

@@ -88,7 +88,7 @@ int parse_data_packet_into_sql(sqlite3 *db, int message_id, uint8_t *data, size_
         return PROCESS_ABORT_CODE;
     }
 
-    log_sql_debug("Running SQL Command: %s\n", command_buffer);
+    //log_sql_debug("Running SQL Command: %s\n", command_buffer);
 
 
     int result = execute_sql_command_no_callback(db, command_buffer);
@@ -108,12 +108,25 @@ int execute_sql_command_no_callback(sqlite3 *db, char *sql) {
 
     if(result != SQLITE_OK ){
         if (zErrMsg == NULL) {
-            log_warning("SQL error: no message given\n");
+            printf("SQL error: no message given\n");
         } else {
-            log_warning("SQL error: %s\n", zErrMsg);
+            printf("Message: %s\n", sql);
+            printf("SQL error: %s\n", zErrMsg);
             sqlite3_free(zErrMsg);
         }
       
+      return PROCESS_ABORT_CODE;
+    } 
+
+    return PROCESS_SUCCESSFUL_CODE;
+}
+
+int execute_sql_statement_no_callback(sqlite3 *db, struct sqlite3_stmt *sql) {
+
+    int result = sqlite3_step(sql);
+
+    if(result != SQLITE_DONE ) {
+      printf("SQL error: no message given (log statement with no provided feedback, message id %d)\n", result);
       return PROCESS_ABORT_CODE;
     } 
 
@@ -210,13 +223,14 @@ int query_sql_get_logs(sqlite3 *db, int min_index, char** return_json_str) {
 int query_sql_with_callback(sqlite3 *db, char** data_buffer_ptr, char* sql_cmd) {
     char *zErrMsg = NULL;
 
-    log_sql_debug("Running SQL Command: %s\n", sql_cmd);
+    //log_sql_debug("Running SQL Command: %s\n", sql_cmd);
 
     int result = sqlite3_exec(db, sql_cmd, sql_column_callback, data_buffer_ptr, &zErrMsg);
 
 
     if(result != SQLITE_OK ){
-      log_warning("SQL error: %s\n", zErrMsg);
+      printf("Message: %s\n", sql_cmd);
+      printf("SQL error: %s\n", zErrMsg);
       sqlite3_free(zErrMsg);
       return PROCESS_ABORT_CODE;
     } 

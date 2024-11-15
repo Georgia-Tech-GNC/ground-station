@@ -7,7 +7,7 @@ def send_cmd_with_id(cmd_id: int):
     try: 
         r = requests.get(f'{WEB_SERVER_URL}api/command/send', json={"id": cmd_id}, timeout=.1)
         if (r != 200):
-            print(f"Command web api call with command id {cmd_id} failed! (bad status code)")
+            print(f"Command web api call with command id {cmd_id} failed! (bad status code {r})")
     except Exception as e:
         print(f"Command web api call with command id {cmd_id} failed! (exception: {e})")
 
@@ -149,6 +149,9 @@ class DataUpdater:
                         print(f"ERROR: data name [{data_name}] not in returned JSON")
                         return
 
+                    if datum == '':
+                        print(f"Warning: Data from {self.url} was blank")
+                        return
                     try:
                         casted_datum = datatype(datum)
                     except Exception as e:
@@ -196,6 +199,7 @@ class DataUpdater:
                 args.append(casted_datum)
 
             try:
+                print(args)
                 callback(*args)
             except Exception as e:
                 print(f"Exception raised during callback [{callback}]: [{e}]")
@@ -263,7 +267,6 @@ updaterRS = DataUpdater("/api/data/RocketState", {
     "firing_channel_1": int,
     "firing_channel_2": int,
     "firing_channel_3": int,
-    "firing_channel_4": int,
     "timestamp": int
 })
 

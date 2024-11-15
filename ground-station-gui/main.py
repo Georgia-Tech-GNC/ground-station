@@ -1,13 +1,12 @@
 import dearpygui.dearpygui as dpg
 from window_manager import WindowManager, DATA_WINDOWS, GRAPHABLE_VALUES
-from query_server.data_updater import updaterRSV
+from query_server.data_updater import allDataUpdaters
 from gui_templates.RocketCommandsWindow import RocketCommands
 import threading
 import time
 import random
 from pathlib import Path
 import os
-from test_update import update_all_tests, create_random_log_message
 
 SAVE_FOLDER_PATH = os.path.join(os.path.curdir, 'layout_save_files')
 PICKLE_PATH = os.path.join(SAVE_FOLDER_PATH, 'window_manager_save.pickle')
@@ -35,19 +34,15 @@ manager: WindowManager = None
 
 
 def update(event):
-    st = time.time()
-    next_log_time = 2.25
     while True:
         time.sleep(0.02)
+
+        for updater in allDataUpdaters.values():
+            updater.update()
         if event.is_set():
             print("exiting thread!")
             break
 
-        t = time.time() - st
-        update_all_tests(t)
-        if t > next_log_time:
-            next_log_time += 2.25
-            manager.add_log(*create_random_log_message())
 
 
 def save_current_state():

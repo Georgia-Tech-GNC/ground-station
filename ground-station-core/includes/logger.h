@@ -28,6 +28,8 @@ void log_header(const char* format, ...);
 
 void log_warning(const char* format, ...);
 
+void log_warning_alt_db(sqlite3 *db, const char* format, ...);
+
 void log_error(const char* format, ...);
 
 void log_debug(const char* format, ...);

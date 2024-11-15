@@ -1,21 +1,49 @@
 #include <stdio.h>
 #include <stdarg.h>
+#include <ctype.h>
+#include <string.h>
 
 #include "logger.h"
 #include "sqlite3.h"
 #include "database.h"
 
+const int BUFFER1_LEN = 1000;
+
 char buffer0[1000];
-char buffer1[1000];
+char buffer1[BUFFER1_LEN];
 
 
 sqlite3 *DATABASE_REF; 
 int counter = 1;
 
-void log_sql_message(int priority, char* message) {
-    if (DATABASE_REF == NULL) return;
-    sprintf(buffer1, "INSERT INTO LogData VALUES (\"%d\", \"%d\", \"%s\");", counter++, priority, message);
-    execute_sql_command_no_callback(DATABASE_REF, buffer1);
+void log_sql_message(sqlite3* db, int priority, char* message) {
+    if (db == NULL) return;
+    
+    // Clean message
+    int len = strlen(message);
+    for (int i = 0; i < len; i++) {
+        if (isprint(message[i]) == 0) {
+            message[i] = '?';
+        } else if (message[i] == '"') {
+            message[i] = '~';
+        } else if (message[i] == '\'') {
+            message[i] = '~';
+        }
+    }
+
+    sprintf(buffer1, "INSERT INTO LogData VALUES (\"%d\", \"%d\", ?);", counter++, priority);
+    struct sqlite3_stmt *statement; 
+    if (sqlite3_prepare_v2(db, buffer1, BUFFER1_LEN, &statement, NULL) != SQLITE_OK) {
+        printf("Error preparing log statement");
+        sqlite3_finalize(statement);
+        return;
+    }
+
+    sqlite3_bind_text(statement, 1, message, -1, SQLITE_STATIC);
+
+    execute_sql_statement_no_callback(db, statement);
+
+    sqlite3_finalize(statement);
 }
 
 void set_sql_database(sqlite3 *db) {
@@ -41,7 +69,18 @@ inline void log_warning(const char* format, ...) {
     fprintf(stderr, COLOR_YELLOW "[WARNING] ");
     vfprintf(stderr, format, args);
     vsprintf(buffer0, format, args);
-    log_sql_message(WARNING, buffer0);
+    log_sql_message(DATABASE_REF, WARNING, buffer0);
+    fprintf(stderr, COLOR_DEFAULT);
+    va_end (args);
+}
+
+void log_warning_alt_db(sqlite3 *db, const char* format, ...) {
+    va_list args;
+    va_start (args, format);
+    fprintf(stderr, COLOR_YELLOW "[WARNING] ");
+    vfprintf(stderr, format, args);
+    vsprintf(buffer0, format, args);
+    log_sql_message(db, WARNING, buffer0);
     fprintf(stderr, COLOR_DEFAULT);
     va_end (args);
 }
@@ -52,7 +91,7 @@ inline void log_error(const char* format, ...) {
     fprintf(stderr, COLOR_RED "[ERROR] ");
     vfprintf(stderr, format, args);
     vsprintf(buffer0, format, args);
-    log_sql_message(ERROR, buffer0);
+    log_sql_message(DATABASE_REF, ERROR, buffer0);
     fprintf(stderr, COLOR_DEFAULT);
     va_end (args);
 }
@@ -63,7 +102,7 @@ inline void log_debug(const char* format, ...) {
     fprintf(stderr, COLOR_GREEN "[DEBUG] ");
     vfprintf(stderr, format, args);
     vsprintf(buffer0, format, args);
-    log_sql_message(DEBUG, buffer0);
+    log_sql_message(DATABASE_REF, DEBUG, buffer0);
     fprintf(stderr, COLOR_DEFAULT);
     va_end (args);
 }

@@ -30,7 +30,8 @@ int execute_sql_command_no_callback(sqlite3 *db, char *sql);
 /**
  * Creates a new SQL database using the pre-determined naming convention and initializes it with the tables specified by protocol.h
  * 
- * @param db    a pointer to the SQL database reference
+ * @param db            a pointer to the SQL database reference
+ * @param database_name if not null, the name of the created database will be stored here
  * 
  * @return PROCESS_SUCCESSFUL_CODE if the operation was successful, and PROCESS_ABORT_CODE otherwise
  */
@@ -59,6 +60,9 @@ int parse_data_packet_into_sql(sqlite3 *db, int message_id, uint8_t *data, size_
  * @return PROCESS_SUCCESSFUL_CODE if the operation was successful, and PROCESS_ABORT_CODE otherwise
  */
 int query_sql_with_callback(sqlite3 *db, char** data_buffer_ptr, char* sql_cmd);
+
+/** Identical to execute_sql_command_no_callback, but with a prepared statement instead */
+int execute_sql_statement_no_callback(sqlite3 *db, struct sqlite3_stmt *sql);
 
 int query_sql_get_logs(sqlite3 *db, int min_index, char** return_json_str);
 

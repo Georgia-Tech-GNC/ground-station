@@ -40,8 +40,10 @@ int main(int argc, char *argv[]) {
 void loop(FILE *serial) {
   struct RocketState native = {
     .rocket_state = 1,
+    .firing_channel_1 = 2,
+    .timestamp=15
   };
-  /*
+  
   uint8_t *msg = malloc(sizeof(uint8_t) * ROCKETSTATE_SIZE);
   uint8_t *packetizedData = malloc(sizeof(uint8_t) * (ROCKETSTATE_SIZE+5));
   RocketState_encode(&native, msg);
@@ -50,8 +52,14 @@ void loop(FILE *serial) {
     printf("packetizedLength != ROCKETSTATE_SIZE+5: %d != %d\n", packetizedLength, ROCKETSTATE_SIZE+5);
     exit(1);
   }
+  for (int i = 0; i < packetizedLength; i ++) {
+    printf("%02x\n", packetizedData[i]);
+    fprintf(serial, "%c", packetizedData[i]);
+  }
   printf("packetizedLength=%d\n",packetizedLength);
 
+  
+/*
   // uint8_t *packetizedData = malloc(sizeof(uint8_t) * (4+5));
   // int packetizedLength = generate_packet("abc", 4, packetizedData, 5);
   // printf("packetizedLength=%d\n", packetizedLength);
