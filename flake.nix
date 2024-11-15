@@ -62,6 +62,13 @@
           environment.shells = [ pkgs.fish ];
           programs.tmux.enable = true;
           programs.htop.enable = true;
+
+          networking.interfaces.end0 = {
+            ipv4.addresses = [{
+              address = "10.39.0.1";
+              prefixLength = 32;
+            }];
+          };
         };
       devModule =
         { pkgs, ... }:
