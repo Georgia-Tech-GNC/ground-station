@@ -79,7 +79,7 @@ class TestDataUpdater(unittest.TestCase):
                 self.assertIn(f"ERROR:data_updater:id [{bad_dpg_id}] is not an int or a str.", log.output)
 
     def test_add_callback_id_repeat(self):
-        updater = data_updater.DataUpdater("test/url", {"x": str, "y": str, "2": int})
+        updater = data_updater.DataUpdater("test/url", {"a": str, "b": str, "c": int})
 
         dpg_ids = [5, 9, 0, -4, "hello", "peter", 2, 7, 3]
 
@@ -100,7 +100,7 @@ class TestDataUpdater(unittest.TestCase):
 
         with self.assertLogs("data_updater", level="DEBUG") as log:
 
-            for i in range(bad_data_namess):
+            for i in range(len(bad_data_namess)):
                 updater.add_callback(lambda: None, i, bad_data_namess[i])
                 self.assertIn(f"ERROR:data_updater:data names argument is not a list.", log.output)
 
@@ -112,7 +112,7 @@ class TestDataUpdater(unittest.TestCase):
             ([1, 2, "t", 3, "a", "c", "187", "begl"], 1), 
             ([1, "a", "t", 189, "a", "c", 187, "begl"], 1), 
             ([(2, 3), 1, "t", 3, "a", "c", "187", "begl"], (2, 3)), 
-            (["a", ("t", "a"), "t", 3, "c", "187", "begl"], 3), 
+            (["a", ("t", "a"), "t", 3, "c", "187", "begl"], ("t", "a")), 
             (["b", {"b": 2}, "t", 3, "a", "c", {"a": "b"}, "begl"], {"b": 2}),
         ]
 
@@ -120,7 +120,7 @@ class TestDataUpdater(unittest.TestCase):
 
             for i in range(len(bad_data_namess)):
                 updater.add_callback(lambda: None, i, bad_data_namess[i][0])
-                self.assertIn(f"ERROR:data_updater:data name [{bad_data_namess[i][1]}] is not a string.")
+                self.assertIn(f"ERROR:data_updater:data name [{bad_data_namess[i][1]}] is not a string.", log.output)
     
 
     def test_add_callback_data_names_not_in_values(self):
@@ -138,7 +138,7 @@ class TestDataUpdater(unittest.TestCase):
 
             for i in range(len(bad_data_namess)):
                 updater.add_callback(lambda: None, i, bad_data_namess[i][0])
-                self.assertIn(f"ERROR:data_updater:data name [{bad_data_namess[i][1]}] not in (self.values).")
+                self.assertIn(f"ERROR:data_updater:data name [{bad_data_namess[i][1]}] not in (self.values).", log.output)
     
     def test_add_callback_success(self):
         updater = data_updater.DataUpdater("test/url", {"a": str, "b": int, "c": str, "d": int, "e": float})
@@ -210,27 +210,17 @@ class TestDataUpdater(unittest.TestCase):
 
             for i in range(len(data_namess)):
                 updater.add_callback(lambda: None, i, data_namess[i])
-                self.assertIn(f"INFO:data_updater:callback with id [{i}] added succesfully.")
-
-
-
-    
-
-    
-
-
-            
-
-
-        
+                self.assertIn(f"INFO:data_updater:callback with id [{i}] added succesfully.", log.output)
 
     """
     update tests
     """
 
+
     """
     invoke_callbacks tests
     """
+
 
     """
     clear_callback tests

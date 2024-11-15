@@ -82,7 +82,7 @@ class DataUpdater:
             logger.error(f"func [{func}] is not callable.")
             return
 
-        if not isinstance(dpg_id, (int, str)):
+        if not isinstance(dpg_id, (int, str)) or isinstance(dpg_id, bool):
             logger.error(f"id [{dpg_id}] is not an int or a str.")
             return
 
