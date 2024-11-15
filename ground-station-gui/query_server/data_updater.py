@@ -1,7 +1,7 @@
 import requests
 import logging
 
-WEB_SERVER_URL = "http://0.0.0.0:8080/"
+WEB_SERVER_URL = "http://0.0.0.0:8080"
 TIMEOUT = 0.1
 
 """
@@ -20,7 +20,7 @@ logger.addHandler(ch)
 
 def send_cmd_with_id(cmd_id: int):
     try: 
-        r = requests.get(f'{WEB_SERVER_URL}api/command/send', json={"id": cmd_id}, timeout=TIMEOUT)
+        r = requests.get(f'{WEB_SERVER_URL}/api/command/send', json={"id": cmd_id}, timeout=TIMEOUT)
         if (r != 200):
             print(f"Command web api call with command id {cmd_id} failed! (bad status code {r})")
     except Exception as e:

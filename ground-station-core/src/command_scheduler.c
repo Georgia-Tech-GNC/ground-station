@@ -63,10 +63,9 @@ int update_command_stack(uint8_t* buffer) {
 
         log_debug("Resending command of type %d\n", i);
 
-        struct CommandStruct cmd;
-        cmd.command_id = i;
-        cmd.command_id = currentCommandStack[i].command_uuid;
-        buffer_size += generate_packet((uint8_t*) &cmd, sizeof(cmd), buffer+buffer_size, COMMAND_MSG_ID);
+        uint8_t cmd_payload[2];
+        generate_command_payload(cmd_payload, i, currentCommandStack[i].command_uuid);
+        buffer_size += generate_packet(cmd_payload, 2, buffer+buffer_size, COMMAND_MSG_ID);
 
         currentCommandStack[i].numberSendAttempts++;
         currentCommandStack[i].last_send_time = current_time;
