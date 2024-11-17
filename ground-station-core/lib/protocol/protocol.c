@@ -1,5 +1,5 @@
-#include "protocol.h"
 #include "packet_encode.h"
+#include "protocol.h"
 #include <time.h>
 #include <stdbool.h>
 #include <stdint.h>
