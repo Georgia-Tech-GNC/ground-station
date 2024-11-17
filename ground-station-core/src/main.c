@@ -49,6 +49,7 @@ struct sigaction old_action;
 void finalize() {
   DB_AQUIRE_LOCK;
   sqlite3_close(db);
+  if (db) free(db);
   DB_RELEASE_LOCK;
 
   mg_mgr_free(&manager);
