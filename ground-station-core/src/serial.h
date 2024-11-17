@@ -6,7 +6,7 @@
 #include <fcntl.h> 
 #include <unistd.h>
 
-//#define IN_OFF_SERIAL_TESTING_MODE
+#define IN_OFF_SERIAL_TESTING_MODE
 
 speed_t serial_get_speed(int baud_number) {
   switch (baud_number) {
