@@ -164,7 +164,7 @@ int sql_log_message_callback(void* sll_void_pointer, int num_cols, char** values
     sll->head = nodeToAdd;
 
     sll->total_size_bytes += msg_len;   // Add to total message length (COUNTING NULL TERMINATOR)
-    sll->length++;                      // Increment length\
+    sll->length++;                      // Increment length
 
     return 0;
 }

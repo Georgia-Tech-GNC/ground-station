@@ -12,7 +12,7 @@ INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 
 CPPFLAGS ?= $(INC_FLAGS) -MMD -MP
 
-CFLAGS := -g -Wall -Wextra -Wpedantic
+CFLAGS := -g -Wall -Wextra -Wpedantic -Wno-newline-eof -Wno-unused-parameter -Wno-strict-prototypes
 
 ifeq (${USE_SD_NOTIFY},yes)
 	LDFLAGS += "-lsystemd"
