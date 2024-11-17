@@ -99,7 +99,7 @@
           name = "ground-station-core";
           src = ./ground-station-core;
           dontStrip = true;
-        } / (if use-sd-notify then {
+        } // (if use-sd-notify then {
           buildInputs = [ pkgs.systemdLibs ];
           makeFlags = [ "USE_SD_NOTIFY=yes" ];
         } else {});
