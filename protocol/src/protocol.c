@@ -256,8 +256,7 @@ void RocketSensorData_encode(struct RocketSensorData *input, uint8_t *output) {
 		memcpy(output + 24, &input->gps_x, 4);
 		memcpy(output + 28, &input->gps_y, 4);
 		memcpy(output + 32, &input->gps_z, 4);
-		memcpy(output + 36, &input->barometer, 4);
-		memcpy(output + 40, &input->timestamp, 8);
+		memcpy(output + 36, &input->timestamp, 8);
 
 }
 
@@ -271,31 +270,28 @@ void RocketSensorData_decode(uint8_t *input, struct RocketSensorData *output) {
 		memcpy(&output->gps_x, input + 24, 4);
 		memcpy(&output->gps_y, input + 28, 4);
 		memcpy(&output->gps_z, input + 32, 4);
-		memcpy(&output->barometer, input + 36, 4);
-		memcpy(&output->timestamp, input + 40, 8);
+		memcpy(&output->timestamp, input + 36, 8);
 
 }
 
 
 void RocketAnalogFeedbackData_encode(struct RocketAnalogFeedbackData *input, uint8_t *output) {
-		memcpy(output + 0, &input->voltage_fb_33, 4);
-		memcpy(output + 4, &input->current_fb_33, 4);
-		memcpy(output + 8, &input->pyro_0_cont, 4);
-		memcpy(output + 12, &input->pyro_1_cont, 4);
-		memcpy(output + 16, &input->pyro_2_cont, 4);
-		memcpy(output + 20, &input->pyro_channel_deploy, 1);
-		memcpy(output + 21, &input->timestamp, 8);
+		memcpy(output + 0, &input->current_fb_33, 2);
+		memcpy(output + 2, &input->pyro_0_cont, 2);
+		memcpy(output + 4, &input->pyro_1_cont, 2);
+		memcpy(output + 6, &input->pyro_2_cont, 2);
+		memcpy(output + 8, &input->pyro_channel_deploy, 1);
+		memcpy(output + 9, &input->timestamp, 8);
 
 }
 
 void RocketAnalogFeedbackData_decode(uint8_t *input, struct RocketAnalogFeedbackData *output) {
-		memcpy(&output->voltage_fb_33, input + 0, 4);
-		memcpy(&output->current_fb_33, input + 4, 4);
-		memcpy(&output->pyro_0_cont, input + 8, 4);
-		memcpy(&output->pyro_1_cont, input + 12, 4);
-		memcpy(&output->pyro_2_cont, input + 16, 4);
-		memcpy(&output->pyro_channel_deploy, input + 20, 1);
-		memcpy(&output->timestamp, input + 21, 8);
+		memcpy(&output->current_fb_33, input + 0, 2);
+		memcpy(&output->pyro_0_cont, input + 2, 2);
+		memcpy(&output->pyro_1_cont, input + 4, 2);
+		memcpy(&output->pyro_2_cont, input + 6, 2);
+		memcpy(&output->pyro_channel_deploy, input + 8, 1);
+		memcpy(&output->timestamp, input + 9, 8);
 
 }
 

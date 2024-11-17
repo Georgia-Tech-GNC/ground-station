@@ -15,6 +15,7 @@ def to_nparr(*args):
     """Utility method that returns a numpy array with the given parameters"""
     return np.array(args)
 
+PYRO_INT_TO_VOLT = 3.3 / (2**14)
 
 def ROCKET_INT_TO_STATE(x: int):
     # TODO: what is the state?
@@ -37,6 +38,13 @@ def ROCKET_INT_TO_ACTIVE_STATUS(x: int):
         return "Active"
     else:
         return f"Unknown value {x}"
+    
+def PYRO_INT_TO_DEPLOY(x: int):
+    if x == 0:
+        return "Not Fired"
+    else:
+        return "Fired"
+
 
 
 DATA_WINDOWS: dict[str, tuple[
@@ -47,14 +55,14 @@ DATA_WINDOWS: dict[str, tuple[
 ]] = {
     'Rocket Kinematics': (
         lambda: DataViewerWindow(
-            ['velocity', 'angular velocity', 'attitude', 'position'],
-            [DataTypes.VECTOR, DataTypes.VECTOR, DataTypes.QUATERNION, DataTypes.VECTOR]
+            ['velocity', 'attitude', 'position'],
+            [DataTypes.VECTOR, DataTypes.QUATERNION, DataTypes.VECTOR]
         ),
         'updaterRSV',
         lambda window_ref:
-        (lambda vx, vy, vz, avx, avy, avz, aw, ax, ay, az, px, py, pz: window_ref.set_all_values(
-            [to_nparr(vx, vy, vz), to_nparr(avx, avy, avz), to_nparr(aw, ax, ay, az), to_nparr(px, py, pz)])),
-        ["velocity_x", "velocity_y", "velocity_z", "angular_velocity_x", "angular_velocity_y", "angular_velocity_z",
+        (lambda vx, vy, vz, aw, ax, ay, az, px, py, pz: window_ref.set_all_values(
+            [to_nparr(vx, vy, vz), to_nparr(aw, ax, ay, az), to_nparr(px, py, pz)])),
+        ["velocity_x", "velocity_y", "velocity_z",
          "attitude_w", "attitude_x", "attitude_y", "attitude_z", "position_x", "position_y", "position_z"],
     ),
 
@@ -86,15 +94,15 @@ DATA_WINDOWS: dict[str, tuple[
 
     'Rocket Sensor Data': (
         lambda: DataViewerWindow(
-            ['Accelerometer', 'Gyro', 'GPS', 'Barometer'],
-            [DataTypes.VECTOR, DataTypes.VECTOR, DataTypes.VECTOR, DataTypes.FLOAT]
+            ['Accelerometer', 'Gyro', 'GPS'],
+            [DataTypes.VECTOR, DataTypes.VECTOR, DataTypes.VECTOR]
         ),
         'updaterRSData',
         lambda window_ref:
-            (lambda ax, ay, az, gx, gy, gz, gpx, gpy, gpz, b: window_ref.set_all_values(
-                [to_nparr(ax, ay, az), to_nparr(gx, gy, gz), to_nparr(gpx, gpy, gpz), b]
+            (lambda ax, ay, az, gx, gy, gz, gpx, gpy, gpz: window_ref.set_all_values(
+                [to_nparr(ax, ay, az), to_nparr(gx, gy, gz), to_nparr(gpx, gpy, gpz)]
             )),
-        ["accelerometer_x", "accelerometer_y", "accelerometer_z", "gyro_x", "gyro_y", "gyro_z", "gps_x", "gps_y", "gps_z", "barometer"]
+        ["accelerometer_x", "accelerometer_y", "accelerometer_z", "gyro_x", "gyro_y", "gyro_z", "gps_x", "gps_y", "gps_z"]
     ),
 
     'Rocket Servo Deflection': (
@@ -108,6 +116,20 @@ DATA_WINDOWS: dict[str, tuple[
                 [d1, d2, d3, d4]
             )),
         [f"servo_deflection_{i+1}" for i in range(4)]
+    ),
+
+    'Rocket Analog Feedback': (
+        lambda: DataViewerWindow(
+            ['3.3V Line Voltage', '3.3V Line Current', 'Pyro 0 Continuity', 'Pyro 1 Continuity', 'Pyro 2 Continuity', 'Pyro 0 Deployed', 'Pyro 1 Deployed', 'Pyro 2 Deployed'],
+            [DataTypes.FLOAT, DataTypes.FLOAT, DataTypes.FLOAT, DataTypes.FLOAT, DataTypes.FLOAT, DataTypes.STRING, DataTypes.STRING, DataTypes.STRING]
+        ),
+        'updaterAFD',
+        lambda window_ref:
+            (lambda v, c, pc0, pc1, pc2, dbm: window_ref.set_all_values(
+                [v, c, pc0 * PYRO_INT_TO_VOLT, pc1 * PYRO_INT_TO_VOLT, pc2 * PYRO_INT_TO_VOLT, 
+                 PYRO_INT_TO_DEPLOY(dbm & 0b001), PYRO_INT_TO_DEPLOY((dbm & 0b010) >> 1), PYRO_INT_TO_DEPLOY((dbm & 0b100) >> 2)]
+            )),
+        [f"servo_deflection_{i+1}" for i in range(4)]
     )
 }
 
@@ -116,9 +138,9 @@ GRAPHABLE_VALUES: dict[str, tuple[str, str]] = {
     "X Velocity": ('updaterRSV', "velocity_x"),
     "Y Velocity": ('updaterRSV', "velocity_y"),
     "Z Velocity": ('updaterRSV', "velocity_z"),
-    "Angular X Velocity": ('updaterRSV', "angular_velocity_x"),
-    "Angular Y Velocity": ('updaterRSV', "angular_velocity_y"),
-    "Angular Z Velocity": ('updaterRSV', "angular_velocity_z"),
+    "X Position": ('updaterRSV', "position_x"),
+    "Y Position": ('updaterRSV', "position_y"),
+    "Z Position": ('updaterRSV', "position_z"),
 
     "Servo Deflection": (None, None),
     'Servo 1 Deflection': ('updaterRSDef', 'servo_deflection_1'),
@@ -134,7 +156,12 @@ GRAPHABLE_VALUES: dict[str, tuple[str, str]] = {
     'Gyro Y': ('updaterRSData', 'gyro_y'),
     'Gyro Z': ('updaterRSData', 'gyro_z'),
     'GPS Y': ('updaterRSData', 'gps_y'),
-    'Barometer': ('updaterRSData', 'barometer')
+
+    "Analog Feedback Data": (None, None),
+    '3.3V Line Current': ('updaterAFD', 'current_fb_33'),
+    'Pyro 0 Continuity': ('updaterAFD', 'pyro_0_cont'),
+    'Pyro 1 Continuity': ('updaterAFD', 'pyro_1_cont'),
+    'Pyro 2 Continuity': ('updaterAFD', 'pyro_2_cont'),
 }
 
 BUTTON_VALUES: dict[str | tuple[str, bool], Callable] = {

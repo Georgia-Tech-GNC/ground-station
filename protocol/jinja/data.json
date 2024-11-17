@@ -51,16 +51,14 @@
                 "gyro_z": "float",
                 "gps_x": "float",
                 "gps_y": "float",
-                "gps_z": "float",
-                "barometer": "float"
+                "gps_z": "float"
             },
 
             "RocketAnalogFeedbackData": {
-                "voltage_fb_33": "float",
-                "current_fb_33": "float",
-                "pyro_0_cont": "float",
-                "pyro_1_cont": "float",
-                "pyro_2_cont": "float",
+                "current_fb_33": "uint16_t",
+                "pyro_0_cont": "uint16_t",
+                "pyro_1_cont": "uint16_t",
+                "pyro_2_cont": "uint16_t",
                 "pyro_channel_deploy": "uint8_t"
             }
         }

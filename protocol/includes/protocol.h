@@ -327,12 +327,11 @@ struct RocketSensorData {
 	float gps_x;
 	float gps_y;
 	float gps_z;
-	float barometer;
 	int64_t timestamp;
 };
 #define ROCKETSENSORDATA_MSG_ID 14
-#define ROCKETSENSORDATA_SIZE 48
-#define ROCKETSENSORDATA_NUM_VALUES 11
+#define ROCKETSENSORDATA_SIZE 44
+#define ROCKETSENSORDATA_NUM_VALUES 10
 #ifdef INCLUDE_PROTOCOL_SQL_MACROS
 	#define ROCKETSENSORDATA_SQL_TABLE_GEN "CREATE TABLE RocketSensorData ( " \
 	"accelerometer_x real, " \
@@ -344,11 +343,10 @@ struct RocketSensorData {
 	"gps_x real, " \
 	"gps_y real, " \
 	"gps_z real, " \
-	"barometer real, " \
 	"time bigint PRIMARY KEY);"
-	#define ROCKETSENSORDATA_SQL_GET_MOST_RECENT "SELECT accelerometer_x, accelerometer_y, accelerometer_z, gyro_x, gyro_y, gyro_z, gps_x, gps_y, gps_z, barometer, time FROM RocketSensorData ORDER BY time LIMIT 1"
+	#define ROCKETSENSORDATA_SQL_GET_MOST_RECENT "SELECT accelerometer_x, accelerometer_y, accelerometer_z, gyro_x, gyro_y, gyro_z, gps_x, gps_y, gps_z, time FROM RocketSensorData ORDER BY time LIMIT 1"
 	#define ROCKETSENSORDATA_SQL_ADD_ENTRY(buffer, data) sprintf(buffer, \
-		"INSERT INTO ROCKETSENSORDATA VALUES ('%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%ld');", \
+		"INSERT INTO ROCKETSENSORDATA VALUES ('%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%ld');", \
 		(data)->accelerometer_x, \
 		(data)->accelerometer_y, \
 		(data)->accelerometer_z, \
@@ -358,10 +356,9 @@ struct RocketSensorData {
 		(data)->gps_x, \
 		(data)->gps_y, \
 		(data)->gps_z, \
-		(data)->barometer, \
 		(data)->timestamp); 
 	#define ROCKETSENSORDATA_API_PATH "/api/data/RocketSensorData"
-	#define ROCKETSENSORDATA_SQL_SELECT_TO_JSON(sql_row_values) "{ %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\"}", \
+	#define ROCKETSENSORDATA_SQL_SELECT_TO_JSON(sql_row_values) "{ %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\"}", \
 		MG_ESC("accelerometer_x"), sql_row_values[0], \
 		MG_ESC("accelerometer_y"), sql_row_values[1], \
 		MG_ESC("accelerometer_z"), sql_row_values[2], \
@@ -371,48 +368,44 @@ struct RocketSensorData {
 		MG_ESC("gps_x"), sql_row_values[6], \
 		MG_ESC("gps_y"), sql_row_values[7], \
 		MG_ESC("gps_z"), sql_row_values[8], \
-		MG_ESC("barometer"), sql_row_values[9], \
-		MG_ESC("timestamp"), sql_row_values[10]
+		MG_ESC("timestamp"), sql_row_values[9]
 #endif
 
 /**
  * Serializes the data.
- * Output must have a length of at least 48 bytes.
+ * Output must have a length of at least 44 bytes.
  */
 void RocketSensorData_encode(struct RocketSensorData *input, uint8_t *output);
 
 /**
  * Deserializes the data.
- * Input must have a length of at least 48 bytes.
+ * Input must have a length of at least 44 bytes.
  */
 void RocketSensorData_decode(uint8_t *input, struct RocketSensorData *output);
 
 
 struct RocketAnalogFeedbackData {
-	float voltage_fb_33;
-	float current_fb_33;
-	float pyro_0_cont;
-	float pyro_1_cont;
-	float pyro_2_cont;
+	uint16_t current_fb_33;
+	uint16_t pyro_0_cont;
+	uint16_t pyro_1_cont;
+	uint16_t pyro_2_cont;
 	uint8_t pyro_channel_deploy;
 	int64_t timestamp;
 };
 #define ROCKETANALOGFEEDBACKDATA_MSG_ID 15
-#define ROCKETANALOGFEEDBACKDATA_SIZE 29
-#define ROCKETANALOGFEEDBACKDATA_NUM_VALUES 7
+#define ROCKETANALOGFEEDBACKDATA_SIZE 17
+#define ROCKETANALOGFEEDBACKDATA_NUM_VALUES 6
 #ifdef INCLUDE_PROTOCOL_SQL_MACROS
 	#define ROCKETANALOGFEEDBACKDATA_SQL_TABLE_GEN "CREATE TABLE RocketAnalogFeedbackData ( " \
-	"voltage_fb_33 real, " \
-	"current_fb_33 real, " \
-	"pyro_0_cont real, " \
-	"pyro_1_cont real, " \
-	"pyro_2_cont real, " \
+	"current_fb_33 int, " \
+	"pyro_0_cont int, " \
+	"pyro_1_cont int, " \
+	"pyro_2_cont int, " \
 	"pyro_channel_deploy int, " \
 	"time bigint PRIMARY KEY);"
-	#define ROCKETANALOGFEEDBACKDATA_SQL_GET_MOST_RECENT "SELECT voltage_fb_33, current_fb_33, pyro_0_cont, pyro_1_cont, pyro_2_cont, pyro_channel_deploy, time FROM RocketAnalogFeedbackData ORDER BY time LIMIT 1"
+	#define ROCKETANALOGFEEDBACKDATA_SQL_GET_MOST_RECENT "SELECT current_fb_33, pyro_0_cont, pyro_1_cont, pyro_2_cont, pyro_channel_deploy, time FROM RocketAnalogFeedbackData ORDER BY time LIMIT 1"
 	#define ROCKETANALOGFEEDBACKDATA_SQL_ADD_ENTRY(buffer, data) sprintf(buffer, \
-		"INSERT INTO ROCKETANALOGFEEDBACKDATA VALUES ('%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%d', '%ld');", \
-		(data)->voltage_fb_33, \
+		"INSERT INTO ROCKETANALOGFEEDBACKDATA VALUES ('%d', '%d', '%d', '%d', '%d', '%ld');", \
 		(data)->current_fb_33, \
 		(data)->pyro_0_cont, \
 		(data)->pyro_1_cont, \
@@ -420,25 +413,24 @@ struct RocketAnalogFeedbackData {
 		(data)->pyro_channel_deploy, \
 		(data)->timestamp); 
 	#define ROCKETANALOGFEEDBACKDATA_API_PATH "/api/data/RocketAnalogFeedbackData"
-	#define ROCKETANALOGFEEDBACKDATA_SQL_SELECT_TO_JSON(sql_row_values) "{ %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\"}", \
-		MG_ESC("voltage_fb_33"), sql_row_values[0], \
-		MG_ESC("current_fb_33"), sql_row_values[1], \
-		MG_ESC("pyro_0_cont"), sql_row_values[2], \
-		MG_ESC("pyro_1_cont"), sql_row_values[3], \
-		MG_ESC("pyro_2_cont"), sql_row_values[4], \
-		MG_ESC("pyro_channel_deploy"), sql_row_values[5], \
-		MG_ESC("timestamp"), sql_row_values[6]
+	#define ROCKETANALOGFEEDBACKDATA_SQL_SELECT_TO_JSON(sql_row_values) "{ %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\"}", \
+		MG_ESC("current_fb_33"), sql_row_values[0], \
+		MG_ESC("pyro_0_cont"), sql_row_values[1], \
+		MG_ESC("pyro_1_cont"), sql_row_values[2], \
+		MG_ESC("pyro_2_cont"), sql_row_values[3], \
+		MG_ESC("pyro_channel_deploy"), sql_row_values[4], \
+		MG_ESC("timestamp"), sql_row_values[5]
 #endif
 
 /**
  * Serializes the data.
- * Output must have a length of at least 29 bytes.
+ * Output must have a length of at least 17 bytes.
  */
 void RocketAnalogFeedbackData_encode(struct RocketAnalogFeedbackData *input, uint8_t *output);
 
 /**
  * Deserializes the data.
- * Input must have a length of at least 29 bytes.
+ * Input must have a length of at least 17 bytes.
  */
 void RocketAnalogFeedbackData_decode(uint8_t *input, struct RocketAnalogFeedbackData *output);
 

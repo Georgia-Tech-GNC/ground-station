@@ -238,9 +238,6 @@ updaterRSV = DataUpdater("/api/data/RocketStateVector", {
     "velocity_x": float,
     "velocity_y": float,
     "velocity_z": float,
-    "angular_velocity_x": float,
-    "angular_velocity_y": float,
-    "angular_velocity_z": float,
     "attitude_w": float,
     "attitude_x": float,
     "attitude_y": float,
@@ -287,18 +284,15 @@ updaterRSData = DataUpdater("/api/data/RocketSensorData", {
     "gps_x": float,
     "gps_y": float,
     "gps_z": float,
-    "barometer": float,
-    "accel_bias_x": float,
-    "accel_bias_y": float,
-    "accel_bias_z": float,
-    "gyro_bias_x": float,
-    "gyro_bias_y": float,
-    "gyro_bias_z": float,
-    "gps_offset_x": float,
-    "gps_offset_y": float,
-    "gps_offset_z": float,
-    "barometer_offset": float,
     "timestamp": int
+})
+
+updaterAFD = DataUpdater("/api/data/RocketAnalogFeedbackData", {
+    "current_fb_33": int,
+    "pyro_0_cont": int,
+    "pyro_1_cont": int,
+    "pyro_2_cont": int,
+    "pyro_channel_deploy": int
 })
 
 allDataUpdaters = {
@@ -306,5 +300,6 @@ allDataUpdaters = {
     'updaterRSDef': updaterRSDef,
     'updaterRS': updaterRS,
     'updaterRGEKF': updaterRGEKF,
-    'updaterRSData': updaterRSData
+    'updaterRSData': updaterRSData,
+    'updaterAFD': updaterAFD
 }
