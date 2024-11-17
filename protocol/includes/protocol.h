@@ -44,7 +44,7 @@ struct CommandStruct {
 #define ROCKET_IDLE_TO_GROUND_COMMAND_ID 1
 #define ROCKET_FIRE_PYRO_COMMAND_ID 2
 #define ROCKET_FLASH_SD_CARD_COMMAND_ID 3
-#define ROCKET_RUN_VANE_ACTIVATION_TEST_COMMAND_ID 4
+#define PING_ROCKET_COMMAND_ID 4
 
 #define NUM_COMMAND_TYPES 4
 
@@ -108,11 +108,14 @@ struct RocketStateVector {
 	float position_x;
 	float position_y;
 	float position_z;
+	float world_x;
+	float world_y;
+	float world_z;
 	int64_t timestamp;
 };
 #define ROCKETSTATEVECTOR_MSG_ID 10
-#define ROCKETSTATEVECTOR_SIZE 48
-#define ROCKETSTATEVECTOR_NUM_VALUES 11
+#define ROCKETSTATEVECTOR_SIZE 60
+#define ROCKETSTATEVECTOR_NUM_VALUES 14
 #ifdef INCLUDE_PROTOCOL_SQL_MACROS
 	#define ROCKETSTATEVECTOR_SQL_TABLE_GEN "CREATE TABLE RocketStateVector ( " \
 	"velocity_x real, " \
@@ -125,10 +128,13 @@ struct RocketStateVector {
 	"position_x real, " \
 	"position_y real, " \
 	"position_z real, " \
+	"world_x real, " \
+	"world_y real, " \
+	"world_z real, " \
 	"time bigint PRIMARY KEY);"
-	#define ROCKETSTATEVECTOR_SQL_GET_MOST_RECENT "SELECT velocity_x, velocity_y, velocity_z, attitude_w, attitude_x, attitude_y, attitude_z, position_x, position_y, position_z, time FROM RocketStateVector ORDER BY time LIMIT 1"
+	#define ROCKETSTATEVECTOR_SQL_GET_MOST_RECENT "SELECT velocity_x, velocity_y, velocity_z, attitude_w, attitude_x, attitude_y, attitude_z, position_x, position_y, position_z, world_x, world_y, world_z, time FROM RocketStateVector ORDER BY time LIMIT 1"
 	#define ROCKETSTATEVECTOR_SQL_ADD_ENTRY(buffer, data) sprintf(buffer, \
-		"INSERT INTO ROCKETSTATEVECTOR VALUES ('%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%ld');", \
+		"INSERT INTO ROCKETSTATEVECTOR VALUES ('%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%ld');", \
 		(data)->velocity_x, \
 		(data)->velocity_y, \
 		(data)->velocity_z, \
@@ -139,9 +145,12 @@ struct RocketStateVector {
 		(data)->position_x, \
 		(data)->position_y, \
 		(data)->position_z, \
+		(data)->world_x, \
+		(data)->world_y, \
+		(data)->world_z, \
 		(data)->timestamp); 
 	#define ROCKETSTATEVECTOR_API_PATH "/api/data/RocketStateVector"
-	#define ROCKETSTATEVECTOR_SQL_SELECT_TO_JSON(sql_row_values) "{ %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\"}", \
+	#define ROCKETSTATEVECTOR_SQL_SELECT_TO_JSON(sql_row_values) "{ %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\", %m: \"%s\"}", \
 		MG_ESC("velocity_x"), sql_row_values[0], \
 		MG_ESC("velocity_y"), sql_row_values[1], \
 		MG_ESC("velocity_z"), sql_row_values[2], \
@@ -152,18 +161,21 @@ struct RocketStateVector {
 		MG_ESC("position_x"), sql_row_values[7], \
 		MG_ESC("position_y"), sql_row_values[8], \
 		MG_ESC("position_z"), sql_row_values[9], \
-		MG_ESC("timestamp"), sql_row_values[10]
+		MG_ESC("world_x"), sql_row_values[10], \
+		MG_ESC("world_y"), sql_row_values[11], \
+		MG_ESC("world_z"), sql_row_values[12], \
+		MG_ESC("timestamp"), sql_row_values[13]
 #endif
 
 /**
  * Serializes the data.
- * Output must have a length of at least 48 bytes.
+ * Output must have a length of at least 60 bytes.
  */
 void RocketStateVector_encode(struct RocketStateVector *input, uint8_t *output);
 
 /**
  * Deserializes the data.
- * Input must have a length of at least 48 bytes.
+ * Input must have a length of at least 60 bytes.
  */
 void RocketStateVector_decode(uint8_t *input, struct RocketStateVector *output);
 
@@ -447,7 +459,7 @@ int get_msg_size(int message_id);
 bool is_data_send_msg(int message_id);
 
 #ifdef INCLUDE_PROTOCOL_SQL_MACROS
-	#define MAX_SQL_WRITE_CMD_SIZE 273
+	#define MAX_SQL_WRITE_CMD_SIZE 333
 
 	#define ALL_SQL_TABLE_CREATE_COMMANDS ROCKETSTATEVECTOR_SQL_TABLE_GEN, ROCKETSERVODEFLECTION_SQL_TABLE_GEN, ROCKETSTATE_SQL_TABLE_GEN, ROCKETGROUNDEKF_SQL_TABLE_GEN, ROCKETSENSORDATA_SQL_TABLE_GEN, ROCKETANALOGFEEDBACKDATA_SQL_TABLE_GEN
 

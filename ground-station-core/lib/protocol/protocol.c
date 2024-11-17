@@ -165,7 +165,10 @@ void RocketStateVector_encode(struct RocketStateVector *input, uint8_t *output) 
 		memcpy(output + 28, &input->position_x, 4);
 		memcpy(output + 32, &input->position_y, 4);
 		memcpy(output + 36, &input->position_z, 4);
-		memcpy(output + 40, &input->timestamp, 8);
+		memcpy(output + 40, &input->world_x, 4);
+		memcpy(output + 44, &input->world_y, 4);
+		memcpy(output + 48, &input->world_z, 4);
+		memcpy(output + 52, &input->timestamp, 8);
 
 }
 
@@ -180,7 +183,10 @@ void RocketStateVector_decode(uint8_t *input, struct RocketStateVector *output) 
 		memcpy(&output->position_x, input + 28, 4);
 		memcpy(&output->position_y, input + 32, 4);
 		memcpy(&output->position_z, input + 36, 4);
-		memcpy(&output->timestamp, input + 40, 8);
+		memcpy(&output->world_x, input + 40, 4);
+		memcpy(&output->world_y, input + 44, 4);
+		memcpy(&output->world_z, input + 48, 4);
+		memcpy(&output->timestamp, input + 52, 8);
 
 }
 

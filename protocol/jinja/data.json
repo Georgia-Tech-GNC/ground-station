@@ -2,7 +2,7 @@
     "WEB_SERVER_URL": "http://0.0.0.0:8080",
 
     "COMMANDS": [
-        "ROCKET_IDLE_TO_GROUND", "ROCKET_FIRE_PYRO", "ROCKET_FLASH_SD_CARD", "ROCKET_RUN_VANE_ACTIVATION_TEST"
+        "ROCKET_IDLE_TO_GROUND", "ROCKET_FIRE_PYRO", "ROCKET_FLASH_SD_CARD", "PING_ROCKET"
     ],
 
     "DATA_MESSAGES": {
@@ -16,7 +16,10 @@
                 "attitude_z": "float",
                 "position_x": "float",
                 "position_y": "float",
-                "position_z": "float"
+                "position_z": "float",
+                "world_x": "float",
+                "world_y": "float",
+                "world_z": "float"
             },
 
             "RocketServoDeflection": {
