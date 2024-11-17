@@ -204,7 +204,6 @@ class DataUpdater:
                 continue
 
             try:
-                print(args)
                 callback(*args)
             except Exception as e:
                 print(f"Exception raised during callback [{dpg_id}, {callback}]: [{e}]")
