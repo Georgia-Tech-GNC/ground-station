@@ -131,7 +131,7 @@
           buildInputs = with pkgs; [ ];
           nativeBuildInputs = with pkgs; [ pkg-config ];
         };
-      supportedSystems = [ "x86_64-linux" ];
+      supportedSystems = [ "x86_64-linux" "aarch64-darwin" ];
       build-test = (import ./test.nix);
     in
     flake-utils.lib.eachSystem supportedSystems (
