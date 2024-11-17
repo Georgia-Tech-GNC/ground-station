@@ -158,7 +158,6 @@ void *serial_loop(void *serial_) {
       }
 
 
-      log_standard("now, current_buffer_size=%d\n", current_buffer_size);
       if (current_buffer_size > 255) {
         log_standard("resetting buffer, too big (>255)\n");
         current_buffer_size = 0;
