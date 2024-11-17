@@ -109,14 +109,14 @@
         dontStrip = true;
       };
       build-core = { pkgs, use-sd-notify }:
-        pkgs.stdenv.mkDerivation {
+        pkgs.stdenv.mkDerivation ({
           name = "ground-station-core";
           src = ./ground-station-core;
           dontStrip = true;
         } // (if use-sd-notify then {
           buildInputs = [ pkgs.systemdLibs ];
           makeFlags = [ "USE_SD_NOTIFY=yes" ];
-        } else {});
+        } else {}));
       build-trixie =
         { pkgs, ground-station-core }:
         pkgs.nixos {
@@ -173,6 +173,8 @@
           inherit pkgs;
           nixos-lib = (import (nixpkgs + "/nixos/lib") { inherit system; });
           ground-station-core = build-core { inherit pkgs; use-sd-notify = true; };
+          inherit build-core;
+          inherit build-fake-rocket;
         };
       }
     );

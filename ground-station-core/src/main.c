@@ -201,6 +201,9 @@ int main(int argc, char *argv[]) {
   sigaction(SIGUSR1, &action_toggle_radio_log, &old_action);
 
   log_header("GNC Ground Station v1.0\n");
+#ifdef USE_SD_NOTIFY
+  log_standard("Systemd support enabled\n");
+#endif
   log_standard("Press ctrl-c to terminate\n");
   log_standard("Initializing...\n\n");
 
