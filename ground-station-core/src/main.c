@@ -134,8 +134,14 @@ void *serial_loop(void *serial_) {
     for (int i = 0; i < num_read; i++) {
       uint8_t byte_read = (uint8_t) fread_buffer[i];
 
+      int cbs = current_buffer_size;
       current_buffer_size = process_incoming_byte(byte_read, buffer, current_buffer_size);
-      log_standard("read byte %02x ", byte_read);
+      
+      if (cbs > 0 && current_buffer_size == 1) {
+        log_warning("Overwrite buffer without parsing message");
+      }
+
+
       log_standard("now, current_buffer_size=%d\n", current_buffer_size);
       if (current_buffer_size > 255) {
         log_standard("resetting buffer, too big (>255)\n");

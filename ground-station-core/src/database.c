@@ -125,7 +125,7 @@ int execute_sql_statement_no_callback(sqlite3 *db, struct sqlite3_stmt *sql) {
 
     int result = sqlite3_step(sql);
 
-    if(result != SQLITE_DONE ) {
+    if(result != SQLITE_DONE && result != SQLITE_OK ) {
       printf("SQL error: no message given (log statement with no provided feedback, message id %d)\n", result);
       return PROCESS_ABORT_CODE;
     } 
