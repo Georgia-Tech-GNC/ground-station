@@ -181,7 +181,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  char *log_file_name = "ground-station-core-XXXXXX";
+  char log_file_name[] = "ground-station-core-XXXXXX";
   tmp_log_fileno = mkstemp(log_file_name);
   if (tmp_log_fileno == -1) {
     perror("mkstemp");

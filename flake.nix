@@ -94,6 +94,20 @@
             enable = true;
           };
         };
+      build-fake-rocket = pkgs: pkgs.stdenv.mkDerivation {
+        name = "fake-rocket";
+        src = ./.;
+        buildPhase = ''
+          mkdir -p $out/bin
+          cc -o $out/bin/fake-rocket \
+            ./ground-station-core/lib/protocol/crc_hash.c \
+            ./ground-station-core/lib/protocol/packet_encode.c \
+            ./ground-station-core/lib/protocol/protocol.c \
+            -I./ground-station-core/lib/protocol/ \
+            fake_rocket_main.c
+        '';
+        dontStrip = true;
+      };
       build-core = { pkgs, use-sd-notify }:
         pkgs.stdenv.mkDerivation {
           name = "ground-station-core";
@@ -127,6 +141,7 @@
                 requests
               ]
             ))
+            valgrind
           ];
           buildInputs = with pkgs; [ ];
           nativeBuildInputs = with pkgs; [ pkg-config ];
@@ -148,6 +163,7 @@
         };
         packages.ground-station-core = build-core { inherit pkgs; use-sd-notify = false; };
         packages.ground-station-core-aarch64-multiplatform = build-core { pkgs = pkgs-aarch64-multiplatform; use-sd-notify = true; };
+        packages.fake-rocket = build-fake-rocket pkgs;
         images.trixie =
           (build-trixie {
             pkgs = pkgs-aarch64-multiplatform;
