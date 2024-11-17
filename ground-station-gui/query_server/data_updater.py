@@ -21,7 +21,7 @@ logger.addHandler(ch)
 def send_cmd_with_id(cmd_id: int):
     try: 
         r = requests.get(f'{WEB_SERVER_URL}/api/command/send', json={"id": cmd_id}, timeout=TIMEOUT)
-        if (r != 200):
+        if (r.status_code != 200):
             print(f"Command web api call with command id {cmd_id} failed! (bad status code {r})")
     except Exception as e:
         print(f"Command web api call with command id {cmd_id} failed! (exception: {e})")
@@ -177,7 +177,10 @@ class DataUpdater:
 
                 # data_name is guaranteed to be in self.values based on error check in
                 # add_callback() method
-                datatype = self.values.get(data_name)
+                try:
+                    datatype = self.values.get(data_name)
+                except Exception as e:
+                    print(f"Trying to get {data_name} from returned dict in {self.url} failed with exception {e}")
 
                 datum = data.get(data_name)
 
@@ -252,6 +255,9 @@ updaterRSV = DataUpdater("/api/data/RocketStateVector", {
     "position_x": float,
     "position_y": float,
     "position_z": float,
+    "world_x": float,
+    "world_y": float,
+    "world_z": float,
     "timestamp": int
 })
 

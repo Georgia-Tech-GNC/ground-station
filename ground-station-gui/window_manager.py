@@ -57,15 +57,15 @@ DATA_WINDOWS: dict[str, tuple[
 ]] = {
     'Rocket Kinematics': (
         lambda: DataViewerWindow(
-            ['velocity', 'attitude', 'position'],
-            [DataTypes.VECTOR, DataTypes.QUATERNION, DataTypes.VECTOR]
+            ['velocity', 'attitude', 'position', 'world position'],
+            [DataTypes.VECTOR, DataTypes.QUATERNION, DataTypes.VECTOR, DataTypes.VECTOR]
         ),
         'updaterRSV',
         lambda window_ref:
-        (lambda vx, vy, vz, aw, ax, ay, az, px, py, pz: window_ref.set_all_values(
-            [to_nparr(vx, vy, vz), to_nparr(aw, ax, ay, az), to_nparr(px, py, pz)])),
+        (lambda vx, vy, vz, aw, ax, ay, az, px, py, pz, gx, gy, gz: window_ref.set_all_values(
+            [to_nparr(vx, vy, vz), to_nparr(aw, ax, ay, az), to_nparr(px, py, pz), to_nparr(gx, gy, gz)])),
         ["velocity_x", "velocity_y", "velocity_z",
-         "attitude_w", "attitude_x", "attitude_y", "attitude_z", "position_x", "position_y", "position_z"],
+         "attitude_w", "attitude_x", "attitude_y", "attitude_z", "position_x", "position_y", "position_z", "world_x", "world_y", "world_z"],
     ),
 
     'Rocket State': (
