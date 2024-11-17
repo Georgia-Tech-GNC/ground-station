@@ -220,6 +220,77 @@ class TestDataUpdater(unittest.TestCase):
     """
     invoke_callbacks tests
     """
+    def test_invoke_callbacks_data_not_dict(self):
+        updater = data_updater.DataUpdater("test/url", 
+                                    {"a": str, "b": int, "c": str, "d": int, "e": float})
+        
+        bad_datas = [
+            ("abc", "str"),
+            (42, "int"),
+            (0.50, "float"),
+            ((1, 2, 3), "tuple"),
+            ([1, 2, 3, 4], "list"),
+            (({1: 2, 2: 1}), "tuple"),
+            (({}, {}), "tuple")
+        ]
+
+        with self.assertLogs("data_updater", level="DEBUG") as log:
+
+            for bad_data in bad_datas:
+                updater.invoke_callbacks(bad_data[0])
+                self.assertIn(f"ERROR:data_updater:data is not a dictionary: [{bad_data[1]}]", log.output)
+
+    def test_invoke_callbacks_data_empty(self):
+        updater = data_updater.DataUpdater("test/url", 
+                                    {"a": str, "b": int, "c": str, "d": int, "e": float})
+
+        empty_datas = [
+            {}, {}, {}, {}, {}, {}, {}, {}, {}
+        ]
+
+        with self.assertLogs("data_updater", level="DEBUG") as log:
+
+            for empty_data in empty_datas:
+                updater.invoke_callbacks(empty_data)
+                self.assertIn("ERROR:data_updater:inputted data dictionary is empty", log.output)
+
+
+    def test_invoke_callbacks_incomplete_data(self):
+        updater = data_updater.DataUpdater("test/url", 
+                                           {"a": str, "b": int, "c": str, "d": int, "e": float})
+        
+        updater.callbacks = {
+            0: (lambda: None, ["a", "b", "c", "d", "e"]),
+            1: (lambda: None, ["b", "e", "d", "c"]),
+            2: (lambda: None, ["b", "e", "c"]),
+            3: (lambda: None, ["d", "b"]),
+            4: (lambda: None, ["c"])
+        }
+
+        bad_datas = [
+            ({"b": 7, "e": 2.2, "f": (1, 2)}, ["a", "d", "c", "d", "c"]),
+            ({"b": 14, "g": {1: "str"}, "f": 1.1}, ["a", "e", "e", "d", "c"]),
+            ({"h": lambda: None, "a": "lol", "d": 7}, ["b", "b", "b", "b", "c"]),
+        ]
+
+        for bad_data in bad_datas:
+            
+            with self.assertLogs("data_updater", level="DEBUG") as log:
+
+                updater.invoke_callbacks(bad_data[0])
+                
+                log_list = []
+
+                for i in range(len(bad_data[1])):
+                    self.assertIn(f"ERROR:data_updater:[{bad_data[1][i]}] not in the provided data", log.output)
+
+                    log_list.append(f"ERROR:data_updater:[{bad_data[1][i]}] not in the provided data")
+                
+                self.assertListEqual(log_list, log.output)
+
+
+
+        
 
 
     """

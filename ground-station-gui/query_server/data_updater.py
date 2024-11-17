@@ -109,26 +109,28 @@ class DataUpdater:
         self.callbacks[dpg_id] = (func, data_names)
         logger.info(f"callback with id [{dpg_id}] added succesfully.")
 
-    """
-    Updates data by making a GET request to self.url and processes the
-    returned JSON data. Calls callback functions from self.callbacks with the 
-    relevant data extracted from the JSON response.
-
-    The method performs the following steps:
-    1. Makes a GET request to the URL.
-    2. Handles errors related to invalid URLs and other exceptions.
-    3. Parses the JSON response and extracts required data based on 
-       callback functions.
-    4. Calls each callback with the corresponding data arguments.
-        
-    Notes:
-        - The method assumes that all data names in the callbacks are
-          present in "self.values" based on prior checks in the "add_callback" 
-          method.
-
-    """
+    
 
     def update(self):
+        """
+        Updates data by making a GET request to self.url and processes the
+        returned JSON data. Calls callback functions from self.callbacks with the 
+        relevant data extracted from the JSON response.
+
+        The method performs the following steps:
+        1. Makes a GET request to the URL.
+        2. Handles errors related to invalid URLs and other exceptions.
+        3. Parses the JSON response and extracts required data based on 
+        callback functions.
+        4. Calls each callback with the corresponding data arguments.
+            
+        Notes:
+            - The method assumes that all data names in the callbacks are
+            present in "self.values" based on prior checks in the "add_callback" 
+            method.
+
+        """
+
         try:
             r = requests.get(WEB_SERVER_URL + self.url, timeout=TIMEOUT)
         except requests.exceptions.InvalidURL:
@@ -160,7 +162,11 @@ class DataUpdater:
     def invoke_callbacks(self, data: dict):
 
         if type(data) is not dict:
-            print("ERROR: data is not a dictionary")
+            logger.error(f"data is not a dictionary: [{type(data).__name__}]")
+            return
+        
+        if data == {}:
+            logger.error("inputted data dictionary is empty")
             return
 
         for dpg_id, (callback, data_names) in self.callbacks.items():
@@ -169,20 +175,22 @@ class DataUpdater:
 
             for data_name in data_names:
 
-                # data name is guaranteed to be in self.values based on error check in
+                # data_name is guaranteed to be in self.values based on error check in
                 # add_callback() method
                 datatype = self.values.get(data_name)
 
                 datum = data.get(data_name)
 
                 if datum is None:
-                    print(f"ERROR: data name [{data_name}] not in returned JSON")
+                    logger.error(f"[{data_name}] not in the provided data")
                     skip_outer = True
                     break
 
-                if datum == '':
-                    print(f"Warning: Data from {self.url} was blank")
-                    return
+                if datum == "":
+                    logger.error(f"[{data_name}] key returned blank value")
+                    skip_outer = True
+                    break
+                
                 try:
                     casted_datum = datatype(datum)
                 except (TypeError, ValueError) as e:
