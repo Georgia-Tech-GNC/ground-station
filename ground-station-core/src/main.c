@@ -37,6 +37,9 @@ struct mg_mgr manager;
 struct sqlite3 *db = NULL;
 pthread_mutex_t db_access_mutex = PTHREAD_MUTEX_INITIALIZER;
 
+bool radio_log_enabled = false;
+int tmp_log_fileno;
+
 #define DB_AQUIRE_LOCK pthread_mutex_lock(&db_access_mutex)
 #define DB_RELEASE_LOCK pthread_mutex_unlock(&db_access_mutex)
 
@@ -58,6 +61,11 @@ void sigint_handler(int sig_no) {
 
     finalize();
     log_header("Ground station terminated.\n");
+}
+
+void toggle_radio_log(int sig_no) {
+    radio_log_enabled = !radio_log_enabled;
+    log_header("Radio log %s\n", radio_log_enabled ? "enabled" : "disabled");
 }
 
 bool initialize() {
@@ -140,6 +148,13 @@ void *serial_loop(void *serial_) {
       if (cbs > 0 && current_buffer_size == 1) {
         log_warning("Overwrite buffer without parsing message");
       }
+      if (radio_log_enabled && tmp_log_fileno != -1) {
+        errno = 0;
+        ssize_t size = write(tmp_log_fileno, &byte_read, 1);
+        if (size == -1) {
+          perror("write");
+        }
+      }
 
 
       log_standard("now, current_buffer_size=%d\n", current_buffer_size);
@@ -165,6 +180,12 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
+  tmp_log_fileno = mkstemp("gnc-ground-station-XXXXXX");
+  if (tmp_log_fileno == -1) {
+    perror("mkstemp");
+    log_warning("Failed to create temporary log file\n");
+  }
+
   char *serial_path = argv[1];
   int serial_baud_number = atoi(argv[2]);
 
@@ -173,6 +194,9 @@ int main(int argc, char *argv[]) {
   memset(&action, 0, sizeof(action));
   action.sa_handler = &sigint_handler;
   sigaction(SIGINT, &action, &old_action);
+  struct sigaction action_toggle_radio_log;
+  action_toggle_radio_log.sa_handler = &toggle_radio_log;
+  sigaction(SIGUSR1, &action_toggle_radio_log, &old_action);
 
   log_header("GNC Ground Station v1.0\n");
   log_standard("Press ctrl-c to terminate\n");
