@@ -104,9 +104,16 @@ class LoggerWindow:
                 print(f"ERROR: exception [{e}] when calling r.json(strict=False)")
                 return
             
-            for value in logs.values():
-                self._log(value["value"], int(value["priority"]))
+            if len(logs) == 0 or 'empty' in logs.keys():
+                return
             
+            for value in logs.values():
+                try:
+                    self._log(value["value"], int(value["priority"]))
+                except Exception as e:
+                    print(f"ERROR: Malformatted log value {value}")
+
+                
             try:
                 self.msgs_seen = max(map(int, logs.keys()))
             except Exception as e:

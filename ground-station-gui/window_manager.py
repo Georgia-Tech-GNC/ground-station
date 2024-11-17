@@ -168,10 +168,9 @@ GRAPHABLE_VALUES: dict[str, tuple[str, str]] = {
 
 BUTTON_VALUES: dict[str | tuple[str, bool], Callable] = {
     "IDLE TO GROUND": lambda: send_cmd_with_id(1),
-    "GROUND TO ARMED": lambda: send_cmd_with_id(2),
-    ("FIRE PYRO (!)", True): lambda: send_cmd_with_id(3),
-    "FLASH SD CARD": lambda: send_cmd_with_id(4),
-    "RUN VANE ACTUATION TEST": lambda: send_cmd_with_id(5)
+    ("FIRE PYRO (!)", True): lambda: send_cmd_with_id(2),
+    "FLASH SD CARD": lambda: send_cmd_with_id(3),
+    "PING ROCKET": lambda: send_cmd_with_id(4)
 }
 
 

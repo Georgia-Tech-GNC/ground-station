@@ -39,6 +39,9 @@ def update(event):
 
         for updater in allDataUpdaters.values():
             updater.update()
+        for _, logger in manager.all_loggers.items():
+            logger.update_log()
+
         if event.is_set():
             print("exiting thread!")
             break
