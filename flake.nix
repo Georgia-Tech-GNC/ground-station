@@ -141,6 +141,7 @@
                 requests
               ]
             ))
+            valgrind
           ];
           buildInputs = with pkgs; [ ];
           nativeBuildInputs = with pkgs; [ pkg-config ];
