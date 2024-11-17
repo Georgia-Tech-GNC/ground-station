@@ -57,6 +57,7 @@ in
         default.succeed("systemctl start ground-station-core")
         default.succeed("systemctl start fake-rocket")
         default.succeed("journalctl -eu ground-station-core | grep 'Attempting to process message of size 17'")
+        default.succeed("systemctl stop ground-station-core")
       '';
   };
 }
