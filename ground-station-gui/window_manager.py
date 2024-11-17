@@ -15,7 +15,9 @@ def to_nparr(*args):
     """Utility method that returns a numpy array with the given parameters"""
     return np.array(args)
 
-PYRO_INT_TO_VOLT = 3.3 / (2**14)
+PYRO_INT_TO_VOLT = 3.3 / (2**16)
+PYRO_INT_TO_VOLT_ALT = 3.3 / (2**12)
+
 
 def ROCKET_INT_TO_STATE(x: int):
     # TODO: what is the state?
@@ -126,7 +128,7 @@ DATA_WINDOWS: dict[str, tuple[
         'updaterAFD',
         lambda window_ref:
             (lambda v, c, pc0, pc1, pc2, dbm: window_ref.set_all_values(
-                [v, c, pc0 * PYRO_INT_TO_VOLT, pc1 * PYRO_INT_TO_VOLT, pc2 * PYRO_INT_TO_VOLT, 
+                [v, c, pc0 * PYRO_INT_TO_VOLT, pc1 * PYRO_INT_TO_VOLT_ALT, pc2 * PYRO_INT_TO_VOLT, 
                  PYRO_INT_TO_DEPLOY(dbm & 0b001), PYRO_INT_TO_DEPLOY((dbm & 0b010) >> 1), PYRO_INT_TO_DEPLOY((dbm & 0b100) >> 2)]
             )),
         [f"servo_deflection_{i+1}" for i in range(4)]
