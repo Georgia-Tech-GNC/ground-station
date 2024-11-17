@@ -156,7 +156,7 @@
         checks = build-test {
           inherit pkgs;
           nixos-lib = (import (nixpkgs + "/nixos/lib") { inherit system; });
-          ground-station-core = packages.ground-station-core;
+          ground-station-core = build-core { inherit pkgs; use-sd-notify = true; };
         };
       }
     );

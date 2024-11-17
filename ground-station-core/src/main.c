@@ -38,7 +38,7 @@ struct sqlite3 *db = NULL;
 pthread_mutex_t db_access_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 bool radio_log_enabled = false;
-int tmp_log_fileno;
+int tmp_log_fileno = -1;
 
 #define DB_AQUIRE_LOCK pthread_mutex_lock(&db_access_mutex)
 #define DB_RELEASE_LOCK pthread_mutex_unlock(&db_access_mutex)
@@ -181,7 +181,8 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  tmp_log_fileno = mkstemp("gnc-ground-station-XXXXXX");
+  char *log_file_name = "ground-station-core-XXXXXX";
+  tmp_log_fileno = mkstemp(log_file_name);
   if (tmp_log_fileno == -1) {
     perror("mkstemp");
     log_warning("Failed to create temporary log file\n");
