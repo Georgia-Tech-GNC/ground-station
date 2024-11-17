@@ -94,15 +94,15 @@
             enable = true;
           };
         };
-      build-core =
-        pkgs:
+      build-core = { pkgs, use-sd-notify }:
         pkgs.stdenv.mkDerivation {
           name = "ground-station-core";
           src = ./ground-station-core;
           dontStrip = true;
+        } / (if use-sd-notify then {
           buildInputs = [ pkgs.systemdLibs ];
           makeFlags = [ "USE_SD_NOTIFY=yes" ];
-        };
+        } else {});
       build-trixie =
         { pkgs, ground-station-core }:
         pkgs.nixos {
@@ -146,8 +146,8 @@
           default = build-shell pkgs;
           cross = build-shell pkgsCross;
         };
-        packages.ground-station-core = build-core pkgs;
-        packages.ground-station-core-aarch64-multiplatform = build-core pkgs-aarch64-multiplatform;
+        packages.ground-station-core = build-core { inherit pkgs; use-sd-notify = false; };
+        packages.ground-station-core-aarch64-multiplatform = build-core { pkgs = pkgs-aarch64-multiplatform; use-sd-notify = true; };
         images.trixie =
           (build-trixie {
             pkgs = pkgs-aarch64-multiplatform;
