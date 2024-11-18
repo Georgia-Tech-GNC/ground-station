@@ -132,7 +132,7 @@ struct RocketStateVector {
 	"world_y real, " \
 	"world_z real, " \
 	"time bigint PRIMARY KEY);"
-	#define ROCKETSTATEVECTOR_SQL_GET_MOST_RECENT "SELECT velocity_x, velocity_y, velocity_z, attitude_w, attitude_x, attitude_y, attitude_z, position_x, position_y, position_z, world_x, world_y, world_z, time FROM RocketStateVector ORDER BY time LIMIT 1"
+	#define ROCKETSTATEVECTOR_SQL_GET_MOST_RECENT "SELECT * FROM RocketStateVector WHERE time = (SELECT MAX(time) FROM RocketStateVector);"
 	#define ROCKETSTATEVECTOR_SQL_ADD_ENTRY(buffer, data) sprintf(buffer, \
 		"INSERT INTO ROCKETSTATEVECTOR VALUES ('%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%ld');", \
 		(data)->velocity_x, \
@@ -197,7 +197,7 @@ struct RocketServoDeflection {
 	"servo_deflection_3 real, " \
 	"servo_deflection_4 real, " \
 	"time bigint PRIMARY KEY);"
-	#define ROCKETSERVODEFLECTION_SQL_GET_MOST_RECENT "SELECT servo_deflection_1, servo_deflection_2, servo_deflection_3, servo_deflection_4, time FROM RocketServoDeflection ORDER BY time LIMIT 1"
+	#define ROCKETSERVODEFLECTION_SQL_GET_MOST_RECENT "SELECT * FROM RocketServoDeflection WHERE time = (SELECT MAX(time) FROM RocketServoDeflection);"
 	#define ROCKETSERVODEFLECTION_SQL_ADD_ENTRY(buffer, data) sprintf(buffer, \
 		"INSERT INTO ROCKETSERVODEFLECTION VALUES ('%.10E', '%.10E', '%.10E', '%.10E', '%ld');", \
 		(data)->servo_deflection_1, \
@@ -244,7 +244,7 @@ struct RocketState {
 	"firing_channel_2 int, " \
 	"firing_channel_3 int, " \
 	"time bigint PRIMARY KEY);"
-	#define ROCKETSTATE_SQL_GET_MOST_RECENT "SELECT rocket_state, firing_channel_1, firing_channel_2, firing_channel_3, time FROM RocketState ORDER BY time LIMIT 1"
+	#define ROCKETSTATE_SQL_GET_MOST_RECENT "SELECT * FROM RocketState WHERE time = (SELECT MAX(time) FROM RocketState);"
 	#define ROCKETSTATE_SQL_ADD_ENTRY(buffer, data) sprintf(buffer, \
 		"INSERT INTO ROCKETSTATE VALUES ('%d', '%d', '%d', '%d', '%ld');", \
 		(data)->rocket_state, \
@@ -295,7 +295,7 @@ struct RocketGroundEKF {
 	"pn_matrix_d5 real, " \
 	"pn_matrix_d6 real, " \
 	"time bigint PRIMARY KEY);"
-	#define ROCKETGROUNDEKF_SQL_GET_MOST_RECENT "SELECT pn_matrix_d1, pn_matrix_d2, pn_matrix_d3, pn_matrix_d4, pn_matrix_d5, pn_matrix_d6, time FROM RocketGroundEKF ORDER BY time LIMIT 1"
+	#define ROCKETGROUNDEKF_SQL_GET_MOST_RECENT "SELECT * FROM RocketGroundEKF WHERE time = (SELECT MAX(time) FROM RocketGroundEKF);"
 	#define ROCKETGROUNDEKF_SQL_ADD_ENTRY(buffer, data) sprintf(buffer, \
 		"INSERT INTO ROCKETGROUNDEKF VALUES ('%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%ld');", \
 		(data)->pn_matrix_d1, \
@@ -356,7 +356,7 @@ struct RocketSensorData {
 	"gps_y real, " \
 	"gps_z real, " \
 	"time bigint PRIMARY KEY);"
-	#define ROCKETSENSORDATA_SQL_GET_MOST_RECENT "SELECT accelerometer_x, accelerometer_y, accelerometer_z, gyro_x, gyro_y, gyro_z, gps_x, gps_y, gps_z, time FROM RocketSensorData ORDER BY time LIMIT 1"
+	#define ROCKETSENSORDATA_SQL_GET_MOST_RECENT "SELECT * FROM RocketSensorData WHERE time = (SELECT MAX(time) FROM RocketSensorData);"
 	#define ROCKETSENSORDATA_SQL_ADD_ENTRY(buffer, data) sprintf(buffer, \
 		"INSERT INTO ROCKETSENSORDATA VALUES ('%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%.10E', '%ld');", \
 		(data)->accelerometer_x, \
@@ -415,7 +415,7 @@ struct RocketAnalogFeedbackData {
 	"pyro_2_cont int, " \
 	"pyro_channel_deploy int, " \
 	"time bigint PRIMARY KEY);"
-	#define ROCKETANALOGFEEDBACKDATA_SQL_GET_MOST_RECENT "SELECT current_fb_33, pyro_0_cont, pyro_1_cont, pyro_2_cont, pyro_channel_deploy, time FROM RocketAnalogFeedbackData ORDER BY time LIMIT 1"
+	#define ROCKETANALOGFEEDBACKDATA_SQL_GET_MOST_RECENT "SELECT * FROM RocketAnalogFeedbackData WHERE time = (SELECT MAX(time) FROM RocketAnalogFeedbackData);"
 	#define ROCKETANALOGFEEDBACKDATA_SQL_ADD_ENTRY(buffer, data) sprintf(buffer, \
 		"INSERT INTO ROCKETANALOGFEEDBACKDATA VALUES ('%d', '%d', '%d', '%d', '%d', '%ld');", \
 		(data)->current_fb_33, \

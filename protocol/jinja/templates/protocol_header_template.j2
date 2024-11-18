@@ -112,7 +112,7 @@ int64_t timestamp;
 		"{{variable_name}} {{get_sql_type(variable_type)}}, " \
 	{% endfor -%}
 		"time bigint PRIMARY KEY);"
-	#define {{data_message_name.upper()}}_SQL_GET_MOST_RECENT "SELECT {{data_message.keys() | join(', ')}}, time FROM {{data_message_name}} ORDER BY time LIMIT 1"
+	#define {{data_message_name.upper()}}_SQL_GET_MOST_RECENT "SELECT * FROM {{data_message_name}} WHERE time = (SELECT MAX(time) FROM {{data_message_name}});"
 	#define {{data_message_name.upper()}}_SQL_ADD_ENTRY(buffer, data) sprintf(buffer, \
 		"INSERT INTO {{data_message_name.upper()}} VALUES ({{printf_sql_type(data_message.values()) | join(', ')}}, '%ld');", \
 		{% for variable_name in data_message.keys() -%}
