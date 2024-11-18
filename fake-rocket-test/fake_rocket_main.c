@@ -75,5 +75,19 @@ void loop(FILE *serial, int time) {
   RocketStateVector_encode(&rsv, packet_buffer);
   send_packet(ROCKETSTATEVECTOR_MSG_ID, packet_buffer, ROCKETSTATEVECTOR_SIZE, serial);
 
+  struct RocketAnalogFeedbackData afd = {
+    .current_fb_33 = time * 3,
+    .pyro_0_cont = time*time/16.853,
+    .pyro_channel_deploy = 1 | (1<<2),
+    .timestamp=time
+  };
+  
+  RocketAnalogFeedbackData_encode(&afd, packet_buffer);
+  send_packet(ROCKETANALOGFEEDBACKDATA_MSG_ID, packet_buffer, ROCKETANALOGFEEDBACKDATA_SIZE, serial);
+
   /** YOU CAN ADD MORE DATA TO SEND HERE! */
+  // Send some useless data for testing
+  for (int i = 0; i < 10; i ++) {
+    fprintf(serial, "%c", i);
+  }
 }

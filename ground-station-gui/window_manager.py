@@ -122,16 +122,16 @@ DATA_WINDOWS: dict[str, tuple[
 
     'Rocket Analog Feedback': (
         lambda: DataViewerWindow(
-            ['3.3V Line Voltage', '3.3V Line Current', 'Pyro 0 Continuity', 'Pyro 1 Continuity', 'Pyro 2 Continuity', 'Pyro 0 Deployed', 'Pyro 1 Deployed', 'Pyro 2 Deployed'],
-            [DataTypes.FLOAT, DataTypes.FLOAT, DataTypes.FLOAT, DataTypes.FLOAT, DataTypes.FLOAT, DataTypes.STRING, DataTypes.STRING, DataTypes.STRING]
+            ['3.3V Line Current', 'Pyro 0 Continuity', 'Pyro 1 Continuity', 'Pyro 2 Continuity', 'Pyro 0 Deployed', 'Pyro 1 Deployed', 'Pyro 2 Deployed'],
+            [ DataTypes.FLOAT, DataTypes.FLOAT, DataTypes.FLOAT, DataTypes.FLOAT, DataTypes.STRING, DataTypes.STRING, DataTypes.STRING]
         ),
         'updaterAFD',
         lambda window_ref:
-            (lambda v, c, pc0, pc1, pc2, dbm: window_ref.set_all_values(
-                [v, c, pc0 * PYRO_INT_TO_VOLT, pc1 * PYRO_INT_TO_VOLT_ALT, pc2 * PYRO_INT_TO_VOLT, 
+            (lambda c, pc0, pc1, pc2, dbm: window_ref.set_all_values(
+                [c, pc0 * PYRO_INT_TO_VOLT, pc1 * PYRO_INT_TO_VOLT_ALT, pc2 * PYRO_INT_TO_VOLT, 
                  PYRO_INT_TO_DEPLOY(dbm & 0b001), PYRO_INT_TO_DEPLOY((dbm & 0b010) >> 1), PYRO_INT_TO_DEPLOY((dbm & 0b100) >> 2)]
             )),
-        [f"servo_deflection_{i+1}" for i in range(4)]
+        ["current_fb_33", "pyro_0_cont", "pyro_1_cont", "pyro_2_cont", "pyro_channel_deploy"]
     )
 }
 
@@ -348,8 +348,6 @@ class WindowManager:
             l = LoggerWindow(width)
             self.all_loggers[dpg_id] = l
         
-        # THESE PLACEHOLDERS CAN GO AWAY ONCE LOGGER UPDATER IS WORKING PROPERLY
-
         self._add_window(dpg_id)
         
 

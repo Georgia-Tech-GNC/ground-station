@@ -2,6 +2,7 @@
 #include <stdarg.h>
 #include <ctype.h>
 #include <string.h>
+#include <pthread.h>
 
 #include "logger.h"
 #include "sqlite3.h"
@@ -15,9 +16,30 @@ char buffer1[BUFFER1_LEN];
 
 sqlite3 *DATABASE_REF; 
 int counter = 1;
+unsigned int num_packets_recieved = 0;
+unsigned int num_packets_failed = 0;
+
+void increment_packets_recieved() {
+    __atomic_fetch_add(&num_packets_recieved, 1, __ATOMIC_RELAXED);
+}
+
+int get_num_packets_recieved() {
+    return __atomic_load_n(&num_packets_recieved, __ATOMIC_RELAXED);
+}
+
+void increment_packets_failed() {
+    __atomic_fetch_add(&num_packets_failed, 1, __ATOMIC_RELAXED);
+}
+
+int get_num_packets_failed() {
+    return __atomic_load_n(&num_packets_failed, __ATOMIC_RELAXED);
+}
 
 void log_sql_message(sqlite3* db, int priority, char* message) {
-    if (db == NULL) return;
+    if (db == NULL) {
+        printf("Database was null!\n");
+        return;
+    }
     
     // Clean message
     int len = strlen(message);

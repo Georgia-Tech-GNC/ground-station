@@ -28,6 +28,10 @@ void event_handler(struct mg_connection *c, int ev, void *ev_data) {
       query_sql_get_logs(c->fn_data, logs_get_param + 1e-9, &f);
       mg_http_reply(c, 200, "", f);
       free(f);
+    } else if (mg_match(hm->uri, mg_str("/api/packets/info"), NULL)) {
+      int num_succeeded = get_num_packets_recieved();
+      int num_failed = get_num_packets_failed();
+      mg_http_reply(c, 200, "", "{%m:%d, %m:%d}\n", MG_ESC("succeeded"), num_succeeded, MG_ESC("failed"), num_failed);
     } else {
       log_warning("INVALID API REQUEST RECIEVED: %s\n", hm->uri.buf);
       mg_http_reply(c, 401, NULL, "{}");

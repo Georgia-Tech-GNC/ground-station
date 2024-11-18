@@ -2,6 +2,7 @@ import dearpygui.dearpygui as dpg
 from window_manager import WindowManager, DATA_WINDOWS, GRAPHABLE_VALUES
 from query_server.data_updater import allDataUpdaters
 from gui_templates.RocketCommandsWindow import RocketCommands
+from gui_templates.rocket_comm_debug import RocketHealthTracker
 import threading
 import time
 import random
@@ -31,6 +32,7 @@ def terminate_gui():
 
 
 manager: WindowManager = None
+health_tracker: RocketHealthTracker = None
 
 
 def update(event):
@@ -42,9 +44,13 @@ def update(event):
         for _, logger in manager.all_loggers.items():
             logger.update_log()
 
+        health_tracker.update()
+
         if event.is_set():
             print("exiting thread!")
             break
+
+
 
 
 
@@ -102,6 +108,8 @@ if __name__ == "__main__":
             dpg.add_menu_item(label='Logger', callback=lambda: manager.create_logger_window("Logger", INTENDED_WIDTH))
             dpg.add_menu_item(label='Map', callback=lambda: manager.create_map_viewer_window("Rocket Position Tracker"))
 
+    with dpg.window(label="Rocket Comms Monitor", no_close=True):
+        health_tracker = RocketHealthTracker()
 
     manager = WindowManager(PICKLE_PATH)
 
