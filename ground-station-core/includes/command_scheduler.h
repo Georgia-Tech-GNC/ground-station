@@ -3,6 +3,7 @@
 #include "protocol.h"
 
 #define COMMAND_RESEND_TIMEOUT_MS 100
+// set to 100ms, 15 resends because it works better (:
 #define COMMAND_SEND_BUFFER_SIZE NUM_COMMAND_TYPES*7 + 10
 #define MAX_COMMAND_RESENDS 15
 
