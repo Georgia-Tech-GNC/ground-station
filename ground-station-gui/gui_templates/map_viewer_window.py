@@ -37,7 +37,7 @@ class MapViewerWindow:
         allDataUpdaters['updaterRSData'].add_callback(lambda a, b: self.update(a, b), self.self_id, ['gps_x', 'gps_y'])
 
     def update(self, gps_x: float, gps_y: float):
-        dpg.set_value(self.rocket_series_tag, [gps_x], [gps_y])
+        dpg.set_value(self.rocket_series_tag, [[gps_x], [gps_y]])
 
 
     @staticmethod
