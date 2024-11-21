@@ -1,5 +1,6 @@
 import dearpygui.dearpygui as dpg
 from dearpygui.dearpygui import generate_uuid
+from query_server.data_updater import allDataUpdaters
 from math import sqrt
 
 MAP_TILES: list[tuple[int | str, tuple[float, float], tuple[float, float]]] = []
@@ -13,17 +14,11 @@ class MapViewerWindow:
             MapViewerWindow.setup_all_map_tiles()
 
         self.rocket_pos_theme = generate_uuid()
-        self.station_pos_theme = generate_uuid()
+        self.self_id = generate_uuid()
 
         with dpg.theme(tag=self.rocket_pos_theme):
             with dpg.theme_component(dpg.mvScatterSeries):
                 dpg.add_theme_style(dpg.mvPlotStyleVar_Marker, dpg.mvPlotMarker_Circle, category=dpg.mvThemeCat_Plots)
-                dpg.add_theme_style(dpg.mvPlotStyleVar_MarkerSize, 8, category=dpg.mvThemeCat_Plots)
-                dpg.add_theme_style(dpg.mvPlotCol_MarkerFill, 0, category=dpg.mvThemeCat_Plots)
-
-        with dpg.theme(tag=self.station_pos_theme):
-            with dpg.theme_component(dpg.mvScatterSeries):
-                dpg.add_theme_style(dpg.mvPlotStyleVar_Marker, dpg.mvPlotMarker_Square, category=dpg.mvThemeCat_Plots)
                 dpg.add_theme_style(dpg.mvPlotStyleVar_MarkerSize, 8, category=dpg.mvThemeCat_Plots)
                 dpg.add_theme_style(dpg.mvPlotCol_MarkerFill, 0, category=dpg.mvThemeCat_Plots)
 
@@ -39,8 +34,10 @@ class MapViewerWindow:
                 self.rocket_series_tag = dpg.add_scatter_series([-84.4], [33.776], label="Rocket")
                 dpg.bind_item_theme(self.rocket_series_tag, self.rocket_pos_theme)
 
-                self.ground_series_tag = dpg.add_scatter_series([-84.395], [33.776], label="Ground")
-                dpg.bind_item_theme(self.ground_series_tag, self.station_pos_theme)
+        allDataUpdaters['updaterRSData'].add_callback(self.update, self.self_id, ['gps_x', 'gps_y'])
+
+    def update(self, gps_x: float, gps_y: float):
+        dpg.set_value(self.rocket_series_tag, [gps_x], [gps_y])
 
 
     @staticmethod
