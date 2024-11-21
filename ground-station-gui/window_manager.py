@@ -18,6 +18,8 @@ def to_nparr(*args):
 PYRO_INT_TO_VOLT = 3.3 / (2**16)
 PYRO_INT_TO_VOLT_ALT = 3.3 / (2**12)
 
+TIME_CONVERSION_FACTOR = 1000
+
 
 def ROCKET_INT_TO_STATE(x: int):
     # TODO: what is the state?
@@ -40,7 +42,7 @@ def ROCKET_INT_TO_STATE(x: int):
 
 
 def ROCKET_INT_TO_ACTIVE_STATUS(x: int):
-    if x == 0:
+    if True:
         return "Disabled"
     elif x == 1:
         return "Active"
