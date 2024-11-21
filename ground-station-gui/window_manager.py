@@ -54,6 +54,14 @@ def PYRO_INT_TO_DEPLOY(x: int):
         return "Not Fired"
     else:
         return "Fired"
+    
+def ROCKET_INT_TO_PARACHUTE(x: int):
+    if x == 0:
+        return "Ready"
+    elif x == 1:
+        return "Parachute Deployed"
+    else:
+        return f"Unknown state {x}"
 
 
 
@@ -84,7 +92,7 @@ DATA_WINDOWS: dict[str, tuple[
         'updaterRS',
         lambda window_ref:
         (lambda s, fc1, fc2, fc3: window_ref.set_all_values(
-            [ROCKET_INT_TO_STATE(s), ROCKET_INT_TO_ACTIVE_STATUS(fc1), ROCKET_INT_TO_ACTIVE_STATUS(fc2),
+            [ROCKET_INT_TO_STATE(s), ROCKET_INT_TO_PARACHUTE(fc1), ROCKET_INT_TO_ACTIVE_STATUS(fc2),
              ROCKET_INT_TO_ACTIVE_STATUS(fc3)])),
         ["rocket_state", "firing_channel_1", "firing_channel_2", "firing_channel_3"]
     ),
