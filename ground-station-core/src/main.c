@@ -75,6 +75,7 @@ bool initialize() {
   initialize_command_stack();
 
   // TODO: Open Serial Port
+  set_sql_database(db);
 
   return true;
 }
@@ -86,6 +87,9 @@ void process_xbee_message(int message_size_bytes) {
     DB_AQUIRE_LOCK;
     log_warning_alt_db(db, "Received corrupted message (unable to verify)!\n");
     DB_RELEASE_LOCK;
+
+    increment_packets_failed();
+
     return;
   }
 
@@ -96,6 +100,9 @@ void process_xbee_message(int message_size_bytes) {
     DB_AQUIRE_LOCK;
     log_warning_alt_db(db, "Received corrupted message! (message id was 0)\n");
     DB_RELEASE_LOCK;
+
+    increment_packets_failed();
+
     return;
   }
 
@@ -104,31 +111,45 @@ void process_xbee_message(int message_size_bytes) {
     DB_AQUIRE_LOCK;
     log_warning_alt_db(db, "Rocket tried to send a command\n");
     DB_RELEASE_LOCK;
+
+    increment_packets_failed();
+
   } else if (message_id == COMMAND_ACK_MSG_ID) {
     if (message_size_bytes >= 2 + 5) {
       uint8_t command_id = message[0];
       uint8_t command_uuid = message[1];
+      increment_packets_recieved();
       acknowledge_command(command_id, command_uuid);
     } else {
       DB_AQUIRE_LOCK;
-      log_warning_alt_db(db, "Rocket tried to acknowledge a command, but packet size was only %d instead of expected %d", message_size_bytes, sizeof(struct CommandStruct) + 5);
+      log_warning_alt_db(db, "Rocket tried to acknowledge a command, but packet size was only %d instead of expected %d", message_size_bytes, 7);
       DB_RELEASE_LOCK;
+
+      increment_packets_failed();
     }
   } else if (is_data_send_msg(message_id)) {
     if (get_msg_size(message_id) > message_size_bytes - 5) {
       DB_AQUIRE_LOCK;
       log_warning_alt_db(db, "Recieved incomplete message! Expected %d bytes from message id %d but only recieved %d\n", get_msg_size(message_id) + 5, message_id, message_size_bytes);
       DB_RELEASE_LOCK;
+      
+      increment_packets_failed();
+
     } else {
       // Handle incoming data
       DB_AQUIRE_LOCK;
       parse_data_packet_into_sql(db, message_id, message, payload_size);
       DB_RELEASE_LOCK;
+
+      increment_packets_recieved();
     }
   } else {
     DB_AQUIRE_LOCK;
     log_warning_alt_db(db, "Recieved unexpected message id: %d\n", message_id);
     DB_RELEASE_LOCK;
+
+    increment_packets_failed();
+
   }
 }
 
@@ -148,6 +169,7 @@ void *serial_loop(void *serial_) {
       
       if (cbs > 0 && current_buffer_size == 1) {
         log_warning("Overwrite buffer without parsing message");
+        increment_packets_failed();
       }
       if (radio_log_enabled && tmp_log_fileno != -1) {
         errno = 0;
@@ -160,6 +182,7 @@ void *serial_loop(void *serial_) {
 
       if (current_buffer_size > 255) {
         log_standard("resetting buffer, too big (>255)\n");
+        increment_packets_failed();
         current_buffer_size = 0;
       }
       if (current_buffer_size < 0) {

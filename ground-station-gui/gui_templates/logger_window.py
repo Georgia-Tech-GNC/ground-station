@@ -1,7 +1,10 @@
 import dearpygui.dearpygui as dpg
 import requests
 
-WEB_SERVER_URL = "http://0.0.0.0:8080/"
+import os
+
+WEB_SERVER_URL = os.getenv('GROUND_STATION_WEB_URL', "http://0.0.0.0:8080/")
+
 
 class LoggerWindow:
 

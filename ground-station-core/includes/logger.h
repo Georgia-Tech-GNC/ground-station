@@ -18,6 +18,14 @@ enum PriorityLevel {
     ERROR = 4
 };
 
+void increment_packets_recieved();
+
+int get_num_packets_recieved();
+
+void increment_packets_failed();
+
+int get_num_packets_failed();
+
 int get_num_logged_messages();
 
 void log_sql_debug(const char* format, ...);
