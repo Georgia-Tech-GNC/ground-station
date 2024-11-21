@@ -21,14 +21,20 @@ PYRO_INT_TO_VOLT_ALT = 3.3 / (2**12)
 
 def ROCKET_INT_TO_STATE(x: int):
     # TODO: what is the state?
-    if x == 1:
+    if x == 0:
         return "IDLE"
-    elif x == 2:
+    elif x == 1:
         return "GROUND"
-    elif x == 3:
+    elif x == 2:
         return "ARMED"
+    elif x == 3:
+        return "FAST ASCENT"
     elif x == 4:
-        return "FIRED PYRO"
+        return "SLOW ASCENT"
+    elif x == 5:
+        return "FREE FALL"
+    elif x == 6:
+        return "LANDED"
     else:
         return f"State {x}"
 
