@@ -34,7 +34,7 @@ class MapViewerWindow:
                 self.rocket_series_tag = dpg.add_scatter_series([-84.4], [33.776], label="Rocket")
                 dpg.bind_item_theme(self.rocket_series_tag, self.rocket_pos_theme)
 
-        allDataUpdaters['updaterRSData'].add_callback(lambda a, b: self.update(a, b), self.self_id, ['gps_x', 'gps_y'])
+        allDataUpdaters['updaterRSData'].add_callback(lambda a, b: self.update(a, b), self.self_id, ['gps_y', 'gps_x'])
 
     def update(self, gps_x: float, gps_y: float):
         dpg.set_value(self.rocket_series_tag, [[gps_x], [gps_y]])
