@@ -15,8 +15,9 @@ def to_nparr(*args):
     """Utility method that returns a numpy array with the given parameters"""
     return np.array(args)
 
-PYRO_INT_TO_VOLT = 3.3 / (2**16)
-PYRO_INT_TO_VOLT_ALT = 3.3 / (2**12)
+PYRO_INT_TO_VOLT_16_BIT = 3.3 / (2**16)
+PYRO_INT_TO_VOLT_12_BIT = 3.3 / (2**12)
+
 
 TIME_CONVERSION_FACTOR = 1000
 
@@ -144,7 +145,7 @@ DATA_WINDOWS: dict[str, tuple[
         'updaterAFD',
         lambda window_ref:
             (lambda c, pc0, pc1, pc2, dbm: window_ref.set_all_values(
-                [c, pc0 * PYRO_INT_TO_VOLT, pc1 * PYRO_INT_TO_VOLT_ALT, pc2 * PYRO_INT_TO_VOLT, 
+                [c * PYRO_INT_TO_VOLT_12_BIT * 1000 / (100 * 0.03), pc0 * PYRO_INT_TO_VOLT_12_BIT * 1000 / (200 * 1.5), pc1 * PYRO_INT_TO_VOLT_12_BIT * 1000 / (200 * 1.5), pc2 * PYRO_INT_TO_VOLT_16_BIT * 1000 / (200 * 1.5), 
                  PYRO_INT_TO_DEPLOY(dbm & 0b001), PYRO_INT_TO_DEPLOY((dbm & 0b010) >> 1), PYRO_INT_TO_DEPLOY((dbm & 0b100) >> 2)]
             )),
         ["current_fb_33", "pyro_0_cont", "pyro_1_cont", "pyro_2_cont", "pyro_channel_deploy"]
