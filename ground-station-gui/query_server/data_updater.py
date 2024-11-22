@@ -308,7 +308,8 @@ updaterAFD = DataUpdater("/api/data/RocketAnalogFeedbackData", {
     "pyro_0_cont": int,
     "pyro_1_cont": int,
     "pyro_2_cont": int,
-    "pyro_channel_deploy": int
+    "pyro_channel_deploy": int,
+    "timestamp": int
 })
 
 allDataUpdaters = {
