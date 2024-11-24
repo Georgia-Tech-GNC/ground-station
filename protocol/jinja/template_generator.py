@@ -56,11 +56,10 @@ environment.globals['printf_sql_type'] = PRINTF_SQL_TYPE
 environment.globals['upper_plus_suffix'] = upper_plus_suffix
 environment.globals['get_sql_type'] = get_sql_type
 
-htemplate = environment.get_template("protocol_header_template.j2")
-ctemplate = environment.get_template("protocol_c_template.j2")
-
-H_FILE_LOCATIONS = ["../includes/protocol.h", "../../ground-station-core/lib/protocol/protocol.h"]
-C_FILE_LOCATIONS = ["../src/protocol.c", "../../ground-station-core/lib/protocol/protocol.c"]
+templates = {
+    environment.get_template("protocol_header_template.j2"): ["../includes/protocol.h", "../../ground-station-core/lib/protocol/protocol.h"],
+    environment.get_template("protocol_c_template.j2"): ["../src/protocol.c", "../../ground-station-core/lib/protocol/protocol.c"]
+}
 
 DATA = {}
 with open("data.json") as f:
@@ -71,25 +70,20 @@ def cvt_type_to_max_len_str(i):
     elif i in INT_TYPES: return "-2147483647"
     else: raise Exception(f"Invalid type {i}")
 
-for filepath in H_FILE_LOCATIONS:
-    with open(filepath, "w") as f:
-        # Calculate max sql write size (THIS IS A STRING CHARACTER SIZE! not bits!)
-        data_message_sizes = {}
-        max_sql_write_size = 5
-        for name, message in DATA["DATA_MESSAGES"].items():
-            values = ", ".join(["'" + cvt_type_to_max_len_str(i) + "'" for i in message.values()])
-            size = length = len(f"\"INSERT INTO {name} VALUES ({values}, 'YYYY-MM-DD HH-MI-SS');\"")
-            max_sql_write_size = max(max_sql_write_size, size)
-            data_message_sizes[name] = sum(map(size_of_datatype, message.values())) + 8
+for template, paths in templates.items():
+    data_message_sizes = {}
+    max_sql_write_size = 5
+    for name, message in DATA["DATA_MESSAGES"].items():
+        values = ", ".join(["'" + cvt_type_to_max_len_str(i) + "'" for i in message.values()])
+        size = length = len(f"\"INSERT INTO {name} VALUES ({values}, 'YYYY-MM-DD HH-MI-SS');\"")
+        max_sql_write_size = max(max_sql_write_size, size)
+        data_message_sizes[name] = sum(map(size_of_datatype, message.values())) + 8
 
-        DATA['MAX_SQL_WRITE_SIZE'] = max_sql_write_size + 10 # Extra 10 just in case
-        DATA['DATA_MESSAGE_SIZES'] = data_message_sizes
-        DATA['SIZES'] = SIZES
-
-        f.write(htemplate.render(DATA))
-
-for filepath in C_FILE_LOCATIONS:
-    with open(filepath, "w") as f:
-        f.write(ctemplate.render(DATA))
-
-
+    DATA['MAX_SQL_WRITE_SIZE'] = max_sql_write_size + 10 # Extra 10 just in case
+    DATA['DATA_MESSAGE_SIZES'] = data_message_sizes
+    DATA['SIZES'] = SIZES
+    text = template.render(DATA)
+    for path in paths:
+        with open(path, "w") as f:
+            print(f'Writing to {path}')
+            f.write(text)
