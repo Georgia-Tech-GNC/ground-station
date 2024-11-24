@@ -58,7 +58,9 @@ environment.globals['get_sql_type'] = get_sql_type
 
 templates = {
     environment.get_template("protocol_header_template.j2"): ["../includes/protocol.h", "../../ground-station-core/lib/protocol/protocol.h"],
-    environment.get_template("protocol_c_template.j2"): ["../src/protocol.c", "../../ground-station-core/lib/protocol/protocol.c"]
+    environment.get_template("protocol_c_template.j2"): ["../src/protocol.c", "../../ground-station-core/lib/protocol/protocol.c"],
+    environment.get_template("protocol_sql_macros_header_template.j2"): ["../includes/protocol_sql_macros.h", "../../ground-station-core/lib/protocol/protocol_sql_macros.h"],
+    environment.get_template("protocol_sql_macros_c_template.j2"): ["../includes/protocol_sql_macros.c", "../../ground-station-core/lib/protocol/protocol_sql_macros.c"],
 }
 
 DATA = {}
@@ -85,5 +87,5 @@ for template, paths in templates.items():
     text = template.render(DATA)
     for path in paths:
         with open(path, "w") as f:
-            print(f'Writing to {path}')
+            print(f'writing to {path}')
             f.write(text)
