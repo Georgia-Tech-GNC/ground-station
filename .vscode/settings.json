@@ -13,6 +13,8 @@
         "signal.h": "c",
         "web_server.h": "c",
         "errno.h": "c",
-        "tst.h": "c"
+        "tst.h": "c",
+        "stdatomic.h": "c",
+        "stddef.h": "c"
     }
 }

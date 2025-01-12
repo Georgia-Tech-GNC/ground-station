@@ -1,0 +1,13 @@
+{
+    "Commands": {
+        "Flash SD Card ": ["RequireConfirmation"],
+        "adsqwe 1231sad   ": null
+    },
+
+    "Data Packets": {
+        "Packet 1" : {
+            "a": "float32",
+            "b": "int16"
+        }
+    }
+}

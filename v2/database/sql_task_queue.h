@@ -1,0 +1,65 @@
+#ifndef SQL_TASK_QUEUE_H
+#define SQL_TASK_QUEUE_H
+
+#include <stdint.h>
+#include <stdbool.h>
+
+// Capacity must be a power of 2
+#define TASK_QUEUE_CAPACITY 4096
+
+struct SQL_TASK_ID_1 {
+    uint16_t a;
+    uint16_t b;
+    uint16_t c;
+};
+
+struct SQL_TASK_ID_2 {
+    uint16_t a;
+    uint16_t b;
+    uint8_t c;
+    uint16_t d;
+};
+
+typedef struct {
+    int task_id;
+    union {
+        struct SQL_TASK_ID_1 task_1;
+        struct SQL_TASK_ID_2 task_2;
+    } data;
+} Task;
+
+/**
+ * Non-blocking method which attempts to add an item to the global sql task queue
+ * Returns false if the queue is full, or true if the operation was successful.
+ * This method is thread-safe and non-blocking
+ */
+bool try_enqueue(const Task* task);
+
+/**
+ * Attempts to remove the earliest added element from the queue and store it in the inputted value
+ * 
+ * This method may NOT be called from more then one thread at a time
+ * This method can also NOT be called at the same time as get_estimated_task_queue_size
+ * However, this method CAN be called at the same time as multiple try_enqueue operations without issue.
+ * 
+ */
+bool try_dequeue(Task* task);
+
+/** Returns the estimated size of the queue (including all partially-completed write operations) 
+ * This method may NOT be called from multiple threads or be called at the same time as try_dequeue
+ * 
+ * Note that the returned value is only a rough estimate of magnitude. It should NOT be used for iteration
+ * or looping purposes.
+ * 
+ * The only way to determine the exact size of the queue is to repeatedly call "try_dequeue" until 
+ * the method returns false (indicating the queue is empty).
+ * 
+ * In particular, there may be instances where this method returns a non-zero value even when the queue
+ * is actually empty. This generally means that a thread is in the middle of adding something to the queue, 
+ * but isn't quite finished yet
+ * 
+ * @return the estimated size of the task queue.
+*/
+int32_t get_estimated_task_queue_size();
+
+#endif
