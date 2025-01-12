@@ -15,6 +15,8 @@ nix build -L .#checks.x86_64-linux.<test-name>.driverInteractive && ./result/bin
 
 To cross-compile for Raspberry Pi (64-bit):
 ```sh
+apt install build-essential crossbuild-essential-arm64 # Debian
+
 cd ground-station-core
 CROSS=aarch64-linux-gnu make
 ```
