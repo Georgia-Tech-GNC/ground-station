@@ -8,21 +8,19 @@
 #define TASK_QUEUE_CAPACITY 4096
 
 {% for data_packet_name, data_packet_items in DATA_PACKETS.items() %}
-
 struct SQL_TASK_{{data_packet_name.upper_snake_case}} {
-    {% for param_name, param_type in data_packet_items.items() %}
+    {%- for param_name, param_type in data_packet_items.items() %}
     {{ param_type.c }} item{{ loop.index0 }};
-    {% endfor %}
+    {%- endfor %}
 };
-
 {% endfor %}
 
 typedef struct {
     int task_id;
     union {
-        {% for data_packet_name, data_packet_items in DATA_PACKETS.items() %}
+        {%- for data_packet_name, data_packet_items in DATA_PACKETS.items() %}
         struct SQL_TASK_{{data_packet_name.upper_snake_case}} task_{{ loop.index0 }};
-        {% endfor %}
+        {%- endfor %}
     } data;
 } Task;
 
@@ -59,5 +57,20 @@ bool try_dequeue(Task* task);
  * @return the estimated size of the task queue.
 */
 int32_t get_estimated_task_queue_size();
+
+{% for data_packet_name, data_packet_items in DATA_PACKETS.items() %}
+/**
+ * Non-blocking method which attempts to add a task to the global sql task queue.
+ * This task will add the specified {{data_packet_name}} to the sql database.
+ * Returns false if the queue is full, or true if the operation was successful.
+ * This method is thread-safe and non-blocking
+ */
+bool try_enqueue_{{data_packet_name.lower_snake_case}} (
+{%- for param_name, param_type in data_packet_items.items() %}
+    {{ param_type.c }} {{param_name.lower_snake_case}}{% if loop.index < (data_packet_items | length) %}, {% endif -%}
+{%- endfor %}
+);
+{% endfor %}
+
 
 #endif

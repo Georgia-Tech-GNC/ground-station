@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#define NUM_POSSIBLE_SQL_STATEMENTS 1
+#define NUM_POSSIBLE_SQL_STATEMENTS 2
 
 sqlite3_stmt *compiled_sql_statements[NUM_POSSIBLE_SQL_STATEMENTS];
 
@@ -16,10 +16,17 @@ uint8_t execute_task(const Task* task) {
 bool initialize_database_executer(sqlite3 *db) {
     int result;
     
-    result = sqlite3_prepare_v2(db, "INSERT INTO Packet1 VALUES (?, ?);", 35, &(compiled_sql_statements[0]), NULL);
+    result = sqlite3_prepare_v2(db, "INSERT INTO RocketKinematics VALUES (?, ?, ?, ?, ?, ?, ?);", 59, &(compiled_sql_statements[0]), NULL);
 
     if (result != SQLITE_OK) {
         printf("COMPILING PREPARED STATEMENT 0 FAILED WITH SQL ERROR CODE %d", result);
+        return false;
+    }
+    
+    result = sqlite3_prepare_v2(db, "INSERT INTO RocketState VALUES (?, ?, ?, ?);", 45, &(compiled_sql_statements[1]), NULL);
+
+    if (result != SQLITE_OK) {
+        printf("COMPILING PREPARED STATEMENT 1 FAILED WITH SQL ERROR CODE %d", result);
         return false;
     }
     

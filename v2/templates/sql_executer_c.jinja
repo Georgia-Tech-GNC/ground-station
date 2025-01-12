@@ -32,3 +32,21 @@ void finalize_database_executer() {
         sqlite3_finalize(compiled_sql_statements[i]);
     }
 }
+
+{% for data_packet_name, data_packet_items in DATA_PACKETS.items() %}
+/**
+ * Non-blocking method which attempts to add a task to the global sql task queue.
+ * This task will add the specified {{data_packet_name}} to the sql database.
+ * Returns false if the queue is full, or true if the operation was successful.
+ * This method is thread-safe and non-blocking
+ */
+bool try_enqueue_{{data_packet_name.lower_snake_case}} (
+{%- for param_name, param_type in data_packet_items.items() %}
+    {{ param_type.c }} {{param_name.lower_snake_case}}{% if loop.index < (data_packet_items | length) %}, {% endif -%}
+{%- endfor %}
+) {
+    struct SQL_TASK_{{data_packet_name.upper_snake_case}} task;
+{%- for param_name, param_type in data_packet_items.items %}
+    task.item_{{loop.index0}} = {{param_name.lower_snake_case}};
+{%- endfor %}
+}

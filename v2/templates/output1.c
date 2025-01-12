@@ -8,23 +8,29 @@
 #define TASK_QUEUE_CAPACITY 4096
 
 
-
-struct SQL_TASK_PACKET_1 {
-    
+struct SQL_TASK_ROCKET_KINEMATICS {
     float item0;
-    
-    int16_t item1;
-    
+    float item1;
+    float item2;
+    int16_t item3;
+    int16_t item4;
+    int16_t item5;
+    int32_t item6;
 };
 
+struct SQL_TASK_ROCKET_STATE {
+    uint8_t item0;
+    uint8_t item1;
+    uint8_t item2;
+    uint8_t item3;
+};
 
 
 typedef struct {
     int task_id;
     union {
-        
-        struct SQL_TASK_PACKET_1 task_0;
-        
+        struct SQL_TASK_ROCKET_KINEMATICS task_0;
+        struct SQL_TASK_ROCKET_STATE task_1;
     } data;
 } Task;
 
@@ -61,5 +67,37 @@ bool try_dequeue(Task* task);
  * @return the estimated size of the task queue.
 */
 int32_t get_estimated_task_queue_size();
+
+
+/**
+ * Non-blocking method which attempts to add a task to the global sql task queue.
+ * This task will add the specified Rocket Kinematics to the sql database.
+ * Returns false if the queue is full, or true if the operation was successful.
+ * This method is thread-safe and non-blocking
+ */
+bool try_enqueue_rocket_kinematics (
+    float x_position, 
+    float y_position, 
+    float z_position, 
+    int16_t x_velocity, 
+    int16_t y_velocity, 
+    int16_t z_velocity, 
+    int32_t acceleration_magnitude
+);
+
+/**
+ * Non-blocking method which attempts to add a task to the global sql task queue.
+ * This task will add the specified Rocket State to the sql database.
+ * Returns false if the queue is full, or true if the operation was successful.
+ * This method is thread-safe and non-blocking
+ */
+bool try_enqueue_rocket_state (
+    uint8_t state, 
+    uint8_t firing_channel_1, 
+    uint8_t firing_channel_2, 
+    uint8_t firing_channel_3
+);
+
+
 
 #endif
