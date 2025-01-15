@@ -1,7 +1,15 @@
+ifeq (${CROSS},no)
+	BUILD_DIR ?= build
+else
+	CC=${CROSS}-gcc
+	CXX=${CROSS}-g++
+	AS=${CROSS}-as
+	BUILD_DIR ?= build-${CROSS}
+endif
+
 TARGET_EXEC ?= a.out
 
-BUILD_DIR ?= ./build
-SRC_DIRS ?= ./src ./includes ./lib
+SRC_DIRS ?= src includes lib
 
 SRCS := $(shell find $(SRC_DIRS) -name *.cpp -or -name *.c -or -name *.s)
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)

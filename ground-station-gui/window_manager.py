@@ -15,26 +15,35 @@ def to_nparr(*args):
     """Utility method that returns a numpy array with the given parameters"""
     return np.array(args)
 
-PYRO_INT_TO_VOLT = 3.3 / (2**16)
-PYRO_INT_TO_VOLT_ALT = 3.3 / (2**12)
+PYRO_INT_TO_VOLT_16_BIT = 3.3 / (2**16)
+PYRO_INT_TO_VOLT_12_BIT = 3.3 / (2**12)
+
+
+TIME_CONVERSION_FACTOR = 1000
 
 
 def ROCKET_INT_TO_STATE(x: int):
     # TODO: what is the state?
-    if x == 1:
+    if x == 0:
         return "IDLE"
-    elif x == 2:
+    elif x == 1:
         return "GROUND"
-    elif x == 3:
+    elif x == 2:
         return "ARMED"
+    elif x == 3:
+        return "FAST ASCENT"
     elif x == 4:
-        return "FIRED PYRO"
+        return "SLOW ASCENT"
+    elif x == 5:
+        return "FREE FALL"
+    elif x == 6:
+        return "LANDED"
     else:
         return f"State {x}"
 
 
 def ROCKET_INT_TO_ACTIVE_STATUS(x: int):
-    if x == 0:
+    if True:
         return "Disabled"
     elif x == 1:
         return "Active"
@@ -46,6 +55,14 @@ def PYRO_INT_TO_DEPLOY(x: int):
         return "Not Fired"
     else:
         return "Fired"
+    
+def ROCKET_INT_TO_PARACHUTE(x: int):
+    if x == 0:
+        return "Ready"
+    elif x == 1:
+        return "Parachute Deployed"
+    else:
+        return f"Unknown state {x}"
 
 
 
@@ -76,8 +93,8 @@ DATA_WINDOWS: dict[str, tuple[
         'updaterRS',
         lambda window_ref:
         (lambda s, fc1, fc2, fc3: window_ref.set_all_values(
-            [ROCKET_INT_TO_STATE(s), ROCKET_INT_TO_ACTIVE_STATUS(fc1), ROCKET_INT_TO_ACTIVE_STATUS(fc2),
-             ROCKET_INT_TO_ACTIVE_STATUS(fc3)])),
+            [ROCKET_INT_TO_STATE(s), ROCKET_INT_TO_PARACHUTE(fc1), ROCKET_INT_TO_PARACHUTE(fc2),
+             ROCKET_INT_TO_PARACHUTE(fc3)])),
         ["rocket_state", "firing_channel_1", "firing_channel_2", "firing_channel_3"]
     ),
 
@@ -128,7 +145,7 @@ DATA_WINDOWS: dict[str, tuple[
         'updaterAFD',
         lambda window_ref:
             (lambda c, pc0, pc1, pc2, dbm: window_ref.set_all_values(
-                [c, pc0 * PYRO_INT_TO_VOLT, pc1 * PYRO_INT_TO_VOLT_ALT, pc2 * PYRO_INT_TO_VOLT, 
+                [c * PYRO_INT_TO_VOLT_12_BIT * 1000 / (100 * 0.03), pc0 * PYRO_INT_TO_VOLT_12_BIT * 1000 / (200 * 1.5), pc1 * PYRO_INT_TO_VOLT_12_BIT * 1000 / (200 * 1.5), pc2 * PYRO_INT_TO_VOLT_16_BIT * 1000 / (200 * 1.5), 
                  PYRO_INT_TO_DEPLOY(dbm & 0b001), PYRO_INT_TO_DEPLOY((dbm & 0b010) >> 1), PYRO_INT_TO_DEPLOY((dbm & 0b100) >> 2)]
             )),
         ["current_fb_33", "pyro_0_cont", "pyro_1_cont", "pyro_2_cont", "pyro_channel_deploy"]

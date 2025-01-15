@@ -1,7 +1,10 @@
 import requests
 import logging
 
-WEB_SERVER_URL = "http://0.0.0.0:8080"
+import os
+
+WEB_SERVER_URL = os.getenv('GROUND_STATION_WEB_URL', "http://0.0.0.0:8080")
+
 TIMEOUT = 0.1
 
 """
@@ -305,7 +308,8 @@ updaterAFD = DataUpdater("/api/data/RocketAnalogFeedbackData", {
     "pyro_0_cont": int,
     "pyro_1_cont": int,
     "pyro_2_cont": int,
-    "pyro_channel_deploy": int
+    "pyro_channel_deploy": int,
+    "timestamp": int
 })
 
 allDataUpdaters = {

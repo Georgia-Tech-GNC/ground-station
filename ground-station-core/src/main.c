@@ -75,6 +75,7 @@ bool initialize() {
   initialize_command_stack();
 
   // TODO: Open Serial Port
+  set_sql_database(db);
 
   return true;
 }
