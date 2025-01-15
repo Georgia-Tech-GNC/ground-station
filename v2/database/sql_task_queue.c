@@ -17,6 +17,7 @@ typedef struct {
 } MPSCTaskWrapper;
 
 struct {
+    /* tickets are the first index of sql_task_queue.slots where you can write/read */
     atomic_uint_fast32_t write_ticket;
     uint32_t read_ticket;
     MPSCTaskWrapper slots[TASK_QUEUE_CAPACITY];

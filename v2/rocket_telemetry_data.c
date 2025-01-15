@@ -1,7 +1,7 @@
 #include <stdatomic.h>
 #include <stdbool.h>
 
-// Must be a power of 2
+// Must be a power of 2 so we can piggyback off of uint8 overflow
 #define CANDIDATE_LIST_SIZE 8
 
 atomic_uint_fast32_t rocket_state_current_release_index;
