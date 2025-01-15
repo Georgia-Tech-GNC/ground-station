@@ -29,10 +29,17 @@ struct SQL_TASK_ROCKET_STATE {
 typedef struct {
     int task_id;
     union {
-        struct SQL_TASK_ROCKET_KINEMATICS task_0;
-        struct SQL_TASK_ROCKET_STATE task_1;
+        struct SQL_TASK_ROCKET_KINEMATICS task_10;
+        struct SQL_TASK_ROCKET_STATE task_11;
     } data;
 } Task;
+
+
+uint8_t execute_task(const Task* task);
+
+bool initialize_database_executer(sqlite3 *db);
+
+void finalize_database_executer();
 
 /**
  * Non-blocking method which attempts to add an item to the global sql task queue

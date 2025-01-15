@@ -19,10 +19,32 @@ typedef struct {
     int task_id;
     union {
         {%- for data_packet_name, data_packet_items in DATA_PACKETS.items() %}
-        struct SQL_TASK_{{data_packet_name.upper_snake_case}} task_{{ loop.index0 }};
+        struct SQL_TASK_{{data_packet_name.upper_snake_case}} task_{{ loop.index0 + 10 }};
         {%- endfor %}
     } data;
 } Task;
+
+/**
+ * Executes the given task using the prepared statement created using initialize_database_executer.
+ * This method cannot be called unless initialize_database_executer has been called.
+ * This method is NOT thread safe.
+ *
+ * @param task The task to execute
+ */
+uint8_t execute_task(const Task* task);
+
+/**
+ * Initializes all prepared sql statements
+ * This method should be called once at the start of the program
+ * This method is NOT thread safe.
+ *
+ * @param db A pointer to the sql database to use
+ */ 
+bool initialize_database_executer(sqlite3 *db);
+
+void finalize_database_executer();
+
+void step_sql_task_queue();
 
 /**
  * Non-blocking method which attempts to add an item to the global sql task queue

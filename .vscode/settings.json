@@ -15,6 +15,7 @@
         "errno.h": "c",
         "tst.h": "c",
         "stdatomic.h": "c",
-        "stddef.h": "c"
+        "stddef.h": "c",
+        "sql_task_queue.h": "c"
     }
 }

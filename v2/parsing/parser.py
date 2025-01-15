@@ -125,8 +125,8 @@ environment = Environment(loader=FileSystemLoader("../templates/"))
 template = environment.get_template("sql_executer_c.jinja")
 template2 = environment.get_template("sql_executer_h.jinja")
 
-with open('../templates/output.c', 'w+') as f:
-    f.write(template.render({'NUM_DATA_PACKET_TYPES': len(sql_generate_table_commands), 'sql_prepared_statement_commands': sql_generate_prepared_statement_commands}))
+with open('../templates/sql_task_queue.c', 'w+') as f:
+    f.write(template.render({'DATA_PACKETS': packets, 'NUM_DATA_PACKET_TYPES': len(sql_generate_table_commands), 'sql_prepared_statement_commands': sql_generate_prepared_statement_commands}))
 
-with open('../templates/output1.c', 'w+') as f:
+with open('../templates/sql_task_queue.h', 'w+') as f:
     f.write(template2.render({'DATA_PACKETS': packets, 'NUM_DATA_PACKET_TYPES': len(sql_generate_table_commands), 'sql_prepared_statement_commands': sql_generate_prepared_statement_commands}))
