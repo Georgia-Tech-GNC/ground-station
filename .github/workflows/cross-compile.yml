@@ -1,31 +1,8 @@
-name: Cross compile for ARM64
-
-on: [push]
-
+name: hello-world
+on: push
 jobs:
-  build:
+  my-job:
     runs-on: ubuntu-latest
-    container:
-      image: debian:12
-
     steps:
-      - name: Check out repo
-        uses: actions/checkout@v3
-
-      - name: Install cross compiler and build utils
-        run: |
-          apt-get update
-          apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu cmake build-essential
-
-      - name: Cross compile
-        run: |
-          mkdir rpi-builds
-          cd rpi-builds
-          make ../ground-station/core
-          make --build .
-
-      - name: Upload binary
-        uses: actions/upload-artifact@v3
-        with:
-          name: rpi_gs_build
-          path: build/rpi_gs_build
+      - name: my-step
+        run: echo "Hello World!"

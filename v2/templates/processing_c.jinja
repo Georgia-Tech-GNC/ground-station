@@ -1,0 +1,62 @@
+#include <stdint.h>
+#include <stdatomic.h>
+#include <stdbool.h>
+
+
+// Must be a power of 2 so we can piggyback off of uint8 overflow
+#define CANDIDATE_LIST_SIZE 8
+
+{% for data_packet_name, data_packet_items in DATA_PACKETS.items() %}	
+atomic_uint_fast32_t {{data_packet_name.lower_snake_case}}_current_release_index;
+struct {{data_packet_name.title_case}} {
+{%- for param_name, param_type in data_packet_items.items() %}
+    {{param_type.c}} {{param_name.lower_snake_case}};
+{%- endfor %}
+} {{data_packet_name.lower_snake_case}}_struct_candidate_list[CANDIDATE_LIST_SIZE];
+const size_t {{data_packet_name.lower_snake_case}}_size = {{ data_packet_items.values() | sum(attribute='c_size') }};
+
+const struct {{data_packet_name.title_case}}* get_current_{{data_packet_name.lower_snake_case}}_values() {
+    return &(rocket_state_struct_candidate_list[atomic_load(&rocket_state_current_release_index) % CANDIDATE_LIST_SIZE]);
+}
+
+struct {{data_packet_name.title_case}}* get_{{data_packet_name.lower_snake_case}}_release_candidate() {
+    return &(rocket_state_struct_candidate_list[(1 + atomic_load(&rocket_state_current_release_index)) % CANDIDATE_LIST_SIZE]);
+}
+
+void publish_{{data_packet_name.lower_snake_case}}_release_candidate() {
+    atomic_fetch_add(&rocket_state_current_release_index, 1);
+}
+
+void process_{{data_packet_name.lower_snake_case}}_payload(uint8_t* payload) {
+    struct {{data_packet_name.title_case}}* storage_location = get_{{data_packet_name.lower_snake_case}}_release_candidate();
+    {%- set byte_accumulator = namespace(value=0) %}
+{%- for param_name, param_type in data_packet_items.items() %}
+    {{param_type.c_copy_method_name}}(&storage_location->{{param_name.lower_snake_case}}, payload + {{ byte_accumulator.value }}, {{param_type.c_copy_method_param_3}});
+    {%- set byte_accumulator.value = byte_accumulator.value + param_type.c_size %}
+{%- endfor %}
+    publish_{{data_packet_name.lower_snake_case}}_release_candidate();
+
+    try_enqueue_{{data_packet_name.lower_snake_case}}(
+        {{
+        data_packet_items.keys() 
+                | map(attribute='lower_snake_case') 
+                | map('add_prefix', 'storage_location->') 
+                | join(',\n\t\t')
+        }}
+    );
+}   
+{% endfor %}
+
+
+bool process_payload_with_id(uint8_t* payload, size_t size, uint8_t message_id) {
+    switch (message_id) {
+{%- for data_packet_name, data_packet_items in DATA_PACKETS.items() %}	
+        case {{ loop.index0 + 10 }}:
+            if (size != {{data_packet_name.lower_snake_case}}_size) return false; // Wrong size
+            process_{{data_packet_name.lower_snake_case}}_packet_payload(payload);
+            return true;
+{%- endfor %}
+        default:
+            return false; // Unknown message id
+    }
+}
