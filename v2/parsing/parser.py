@@ -2,7 +2,6 @@ import json
 import re
 from enum import Enum
 from dataclasses import dataclass
-from jinja2 import Environment, FileSystemLoader
 
 class Name:
     VALID_NAME_REGEX_PATTERN = '^[a-zA-Z][a-zA-Z0-9 ]*$'
@@ -89,44 +88,22 @@ def get_data_type_from_str(string: str) -> LanguageDataNames:
 with open('sample.json', 'r') as file:
     data = dict(json.load(file))
 
-    TOP_LEVEL_NAMES = set()
+TOP_LEVEL_NAMES = set()
 
-    packets = {}
-    
-    for item, value in data['Commands'].items():
-        FLAG_NAMES = set() 
-        flags = [] if value is None else [Name(x, FLAG_NAMES) for x in value]
-        print(Name(item, TOP_LEVEL_NAMES), flags)
+packets = {}
 
-    for data_packet_name, contents in data['Data Packets'].items():
-        name = Name(data_packet_name, TOP_LEVEL_NAMES)
-        PARAM_NAMES = set()
-        params = {}
-        for param_name, param_type in contents.items():
-            params[Name(param_name, PARAM_NAMES)] = get_data_type_from_str(param_type)
+for item, value in data['Commands'].items():
+    FLAG_NAMES = set() 
+    flags = [] if value is None else [Name(x, FLAG_NAMES) for x in value]
+    print(Name(item, TOP_LEVEL_NAMES), flags)
 
-        packets[name] = params
+for data_packet_name, contents in data['Data Packets'].items():
+    name = Name(data_packet_name, TOP_LEVEL_NAMES)
+    PARAM_NAMES = set()
+    params = {}
+    for param_name, param_type in contents.items():
+        params[Name(param_name, PARAM_NAMES)] = get_data_type_from_str(param_type)
 
-    print(packets)
+    packets[name] = params
 
-    sql_generate_table_commands = [f"CREATE TABLE {name.title_case} ({", ".join([
-        f"{param_name.title_case} {param_type.sqlite}" for param_name, param_type in content.items()
-    ])});" for name, content in packets.items()]
-
-    sql_generate_prepared_statement_commands = [f"INSERT INTO {name.title_case} VALUES ({", ".join([
-        "?" for _ in content
-    ])});" for name, content in packets.items()]
-    sql_generate_prepared_statement_commands = {x: len(x) + 1 for x in sql_generate_prepared_statement_commands}
-
-    print(sql_generate_table_commands)
-    print(sql_generate_prepared_statement_commands)
-
-environment = Environment(loader=FileSystemLoader("../templates/"))
-template = environment.get_template("sql_executer_c.jinja")
-template2 = environment.get_template("sql_executer_h.jinja")
-
-with open('../templates/sql_task_queue.c', 'w+') as f:
-    f.write(template.render({'DATA_PACKETS': packets, 'NUM_DATA_PACKET_TYPES': len(sql_generate_table_commands), 'sql_prepared_statement_commands': sql_generate_prepared_statement_commands}))
-
-with open('../templates/sql_task_queue.h', 'w+') as f:
-    f.write(template2.render({'DATA_PACKETS': packets, 'NUM_DATA_PACKET_TYPES': len(sql_generate_table_commands), 'sql_prepared_statement_commands': sql_generate_prepared_statement_commands}))
+print(packets)

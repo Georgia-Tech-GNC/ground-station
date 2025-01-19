@@ -1,6 +1,7 @@
 gs-gui/
 ground-station-gui/.idea/
-ground-station-gui/layout_save_files/
+ground-station-gui/layout_save_files/*
+layout_save_files/
 gound-station-core/build/
 protocol/build/
 build-*
