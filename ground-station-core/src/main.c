@@ -22,6 +22,7 @@
 #include "command_scheduler.h"
 #include "logger.h"
 #include "serial.h"
+#include "atomic.h"
 
 #define IN_TESTING_MODE
 
@@ -84,9 +85,7 @@ uint8_t command_send_buffer[COMMAND_SEND_BUFFER_SIZE];
 
 void process_xbee_message(int message_size_bytes) {
   if (!verify_packet(buffer, message_size_bytes)) {
-    DB_AQUIRE_LOCK;
-    log_warning_alt_db(db, "Received corrupted message (unable to verify)!\n");
-    DB_RELEASE_LOCK;
+    log_warning("Received corrupted message (unable to verify)!\n");
 
     increment_packets_failed();
 
@@ -97,9 +96,7 @@ void process_xbee_message(int message_size_bytes) {
   int payload_size = message_size_bytes - 5;
   
   if (message_id == 0) {
-    DB_AQUIRE_LOCK;
-    log_warning_alt_db(db, "Received corrupted message! (message id was 0)\n");
-    DB_RELEASE_LOCK;
+    log_warning("Received corrupted message! (message id was 0)\n");
 
     increment_packets_failed();
 
@@ -108,9 +105,7 @@ void process_xbee_message(int message_size_bytes) {
 
   if (message_id == COMMAND_MSG_ID) {
     // TODO: should the rocket ever send commands?
-    DB_AQUIRE_LOCK;
-    log_warning_alt_db(db, "Rocket tried to send a command\n");
-    DB_RELEASE_LOCK;
+    log_warning("Rocket tried to send a command\n");
 
     increment_packets_failed();
 
@@ -121,22 +116,20 @@ void process_xbee_message(int message_size_bytes) {
       increment_packets_recieved();
       acknowledge_command(command_id, command_uuid);
     } else {
-      DB_AQUIRE_LOCK;
-      log_warning_alt_db(db, "Rocket tried to acknowledge a command, but packet size was only %d instead of expected %d", message_size_bytes, 7);
-      DB_RELEASE_LOCK;
+      log_warning("Rocket tried to acknowledge a command, but packet size was only %d instead of expected %d", message_size_bytes, 7);
 
       increment_packets_failed();
     }
   } else if (is_data_send_msg(message_id)) {
     if (get_msg_size(message_id) > message_size_bytes - 5) {
-      DB_AQUIRE_LOCK;
-      log_warning_alt_db(db, "Recieved incomplete message! Expected %d bytes from message id %d but only recieved %d\n", get_msg_size(message_id) + 5, message_id, message_size_bytes);
-      DB_RELEASE_LOCK;
+      log_warning("Recieved incomplete message! Expected %d bytes from message id %d but only recieved %d\n", get_msg_size(message_id) + 5, message_id, message_size_bytes);
       
       increment_packets_failed();
 
     } else {
       // Handle incoming data
+      data_save(message_id, message, payload_size);
+      // TODO: replace with Vraj's task queue
       DB_AQUIRE_LOCK;
       parse_data_packet_into_sql(db, message_id, message, payload_size);
       DB_RELEASE_LOCK;
@@ -144,9 +137,7 @@ void process_xbee_message(int message_size_bytes) {
       increment_packets_recieved();
     }
   } else {
-    DB_AQUIRE_LOCK;
-    log_warning_alt_db(db, "Recieved unexpected message id: %d\n", message_id);
-    DB_RELEASE_LOCK;
+    log_warning("Recieved unexpected message id: %d\n", message_id);
 
     increment_packets_failed();
 
