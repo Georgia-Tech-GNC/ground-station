@@ -142,7 +142,6 @@
               ]
             ))
             valgrind
-            sqlite
           ];
           buildInputs = with pkgs; [ ];
           nativeBuildInputs = with pkgs; [ pkg-config ];
