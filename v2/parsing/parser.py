@@ -85,25 +85,27 @@ def get_data_type_from_str(string: str) -> LanguageDataNames:
             raise ValueError(f"Type {string.lower()} is not a valid supported type")
         
 
-with open('sample.json', 'r') as file:
-    data = dict(json.load(file))
+def process_json() -> tuple[dict, dict]:
 
-TOP_LEVEL_NAMES = set()
+    with open('sample.json', 'r') as file:
+        data = dict(json.load(file))
 
-packets = {}
+    TOP_LEVEL_NAMES = set()
 
-for item, value in data['Commands'].items():
-    FLAG_NAMES = set() 
-    flags = [] if value is None else [Name(x, FLAG_NAMES) for x in value]
-    print(Name(item, TOP_LEVEL_NAMES), flags)
+    packets = {}
 
-for data_packet_name, contents in data['Data Packets'].items():
-    name = Name(data_packet_name, TOP_LEVEL_NAMES)
-    PARAM_NAMES = set()
-    params = {}
-    for param_name, param_type in contents.items():
-        params[Name(param_name, PARAM_NAMES)] = get_data_type_from_str(param_type)
+    for item, value in data['Commands'].items():
+        FLAG_NAMES = set() 
+        flags = [] if value is None else [Name(x, FLAG_NAMES) for x in value]
+        print(Name(item, TOP_LEVEL_NAMES), flags)
 
-    packets[name] = params
+    for data_packet_name, contents in data['Data Packets'].items():
+        name = Name(data_packet_name, TOP_LEVEL_NAMES)
+        PARAM_NAMES = set()
+        params = {}
+        for param_name, param_type in contents.items():
+            params[Name(param_name, PARAM_NAMES)] = get_data_type_from_str(param_type)
 
-print(packets)
+        packets[name] = params
+
+    return packets, {} # TODO: add commands
