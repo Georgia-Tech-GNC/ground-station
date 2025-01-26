@@ -17,6 +17,7 @@ DEPS := $(OBJS:.o=.d)
 
 INC_DIRS := $(shell find $(SRC_DIRS) -type d)
 INC_FLAGS := $(addprefix -I,$(INC_DIRS))
+INC_FLAGS += $(pkg-config --cflags sqlite3)
 
 CPPFLAGS ?= $(INC_FLAGS) -MMD -MP
 

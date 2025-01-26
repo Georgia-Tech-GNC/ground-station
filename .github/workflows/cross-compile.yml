@@ -5,7 +5,20 @@ jobs:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v2
-      - run: cd ground-station-core && make
+      - name: restore build cache
+        uses: actions/cache@v2
+        with:
+          path: ground-station-core/build-
+          key: ${{ runner.os }}-build
+          # make will update old files if necessary, using modtime
+          # TODO: check if modtime is saved by GitHub's cache
+      - run: make
+        working-directory: ground-station-core
+      - name: save build cache
+        uses: actions/cache@v2
+        with:
+          path: ground-station-core/build-
+          key: ${{ runner.os }}-build
       - uses: actions/upload-artifact@v4
         with:
           name: ground-station-core
