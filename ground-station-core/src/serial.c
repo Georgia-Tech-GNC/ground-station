@@ -1,10 +1,9 @@
 #include <stdio.h>
 #include <errno.h>
 #include <stdlib.h>
-#include <termios.h>
-#include <pthread.h>
 #include <fcntl.h> 
 #include <unistd.h>
+#include "serial.h"
 
 //#define IN_OFF_SERIAL_TESTING_MODE
 
