@@ -1,5 +1,7 @@
 from jinja2 import Environment, FileSystemLoader
-from parser import packets
+from parser import process_json
+
+packets = process_json()[0]
 
 sql_generate_table_commands = [f"CREATE TABLE {name.title_case} ({", ".join([
     f"{param_name.title_case} {param_type.sqlite}" for param_name, param_type in content.items()
