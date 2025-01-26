@@ -247,6 +247,25 @@ class DataUpdater:
             self.remove_callback(callback_id)
 
 
+"""
+from parser import process_json
+
+packets = process_json[0]
+
+allDataUpdaters = {}
+
+for data_group, params in packets.items():
+    data_group_name = data_group.replace(" ", "")
+
+    url = "api/data/" + data_group_name
+
+    updater_name = "updater" + data_group_name
+
+    allDataUpdaters[updater_name] = DataUpdater(url, params)
+
+"""
+
+
 updaterRSV = DataUpdater("/api/data/RocketStateVector", {
     "velocity_x": float,
     "velocity_y": float,
