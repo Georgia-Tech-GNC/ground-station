@@ -1,6 +1,26 @@
 from jinja2 import Environment, FileSystemLoader
 import json
 
+
+TEMPLATES = {
+    "protocol_header_template.j2": [
+        "../includes/protocol.h",
+        "../../ground-station-core/lib/protocol/protocol.h"
+    ],
+    "protocol_c_template.j2": [
+        "../src/protocol.c",
+        "../../ground-station-core/lib/protocol/protocol.c"
+    ],
+    "atomic_c_template.j2": [
+        "../src/atomic.c",
+        "../../ground-station-core/lib/protocol/atomic.c"
+    ],
+    "atomic_header_template.j2": [
+        "../includes/atomic.h",
+        "../../ground-station-core/lib/protocol/atomic.h"
+    ],
+}
+
 FLOAT_TYPES = ['float']
 INT_TYPES = [f'{h}int{x}_t' for h in ('u', '') for x in (8, 16, 32)]
 SIZES = {
@@ -56,40 +76,30 @@ environment.globals['printf_sql_type'] = PRINTF_SQL_TYPE
 environment.globals['upper_plus_suffix'] = upper_plus_suffix
 environment.globals['get_sql_type'] = get_sql_type
 
-htemplate = environment.get_template("protocol_header_template.j2")
-ctemplate = environment.get_template("protocol_c_template.j2")
-
-H_FILE_LOCATIONS = ["../includes/protocol.h", "../../ground-station-core/lib/protocol/protocol.h"]
-C_FILE_LOCATIONS = ["../src/protocol.c", "../../ground-station-core/lib/protocol/protocol.c"]
-
-DATA = {}
-with open("data.json") as f:
-    DATA = json.load(f)
-
 def cvt_type_to_max_len_str(i):
     if i in FLOAT_TYPES: return "1.1234567890E-38"
     elif i in INT_TYPES: return "-2147483647"
     else: raise Exception(f"Invalid type {i}")
 
-for filepath in H_FILE_LOCATIONS:
-    with open(filepath, "w") as f:
-        # Calculate max sql write size (THIS IS A STRING CHARACTER SIZE! not bits!)
-        data_message_sizes = {}
-        max_sql_write_size = 5
-        for name, message in DATA["DATA_MESSAGES"].items():
-            values = ", ".join(["'" + cvt_type_to_max_len_str(i) + "'" for i in message.values()])
-            size = length = len(f"\"INSERT INTO {name} VALUES ({values}, 'YYYY-MM-DD HH-MI-SS');\"")
-            max_sql_write_size = max(max_sql_write_size, size)
-            data_message_sizes[name] = sum(map(size_of_datatype, message.values())) + 8
+if __name__ == "__main__":
+    DATA = {}
+    with open("data.json") as f:
+        DATA = json.load(f)
+    # Calculate max sql write size (THIS IS A STRING CHARACTER SIZE! not bits!)
+    data_message_sizes = {}
+    max_sql_write_size = 5
+    for name, message in DATA["DATA_MESSAGES"].items():
+        values = ", ".join(["'" + cvt_type_to_max_len_str(i) + "'" for i in message.values()])
+        size = length = len(f"\"INSERT INTO {name} VALUES ({values}, 'YYYY-MM-DD HH-MI-SS');\"")
+        max_sql_write_size = max(max_sql_write_size, size)
+        data_message_sizes[name] = sum(map(size_of_datatype, message.values())) + 8
 
-        DATA['MAX_SQL_WRITE_SIZE'] = max_sql_write_size + 10 # Extra 10 just in case
-        DATA['DATA_MESSAGE_SIZES'] = data_message_sizes
-        DATA['SIZES'] = SIZES
+    DATA['MAX_SQL_WRITE_SIZE'] = max_sql_write_size + 10 # Extra 10 just in case
+    DATA['DATA_MESSAGE_SIZES'] = data_message_sizes
+    DATA['SIZES'] = SIZES
 
-        f.write(htemplate.render(DATA))
-
-for filepath in C_FILE_LOCATIONS:
-    with open(filepath, "w") as f:
-        f.write(ctemplate.render(DATA))
-
-
+    for template in TEMPLATES:
+        t = environment.get_template(template)
+        for filepath in TEMPLATES[template]:
+            with open(filepath, "w") as f:
+                f.write(t.render(DATA))

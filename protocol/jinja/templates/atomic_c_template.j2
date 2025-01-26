@@ -1,0 +1,37 @@
+#include "stdatomic.h"
+#include "atomic.h"
+
+// sequential consistency is enough in this case
+volatile int ready_data_index;
+
+struct LatestData latest_data[2];
+
+void data_init() {
+  atomic_init(&ready_data_index, 0);
+}
+
+void data_save(int message_id, uint8_t *data, size_t data_size) {
+  int read_index = atomic_load(&ready_data_index);
+  int write_index = (read_index + 1) % 2;
+  latest_data[write_index] = latest_data[read_index];
+  switch (message_id) {
+{% for data_message_name, data_message in DATA_MESSAGES.items() %}
+	case {{data_message_name.upper()}}_MSG_ID: {
+    if (data_size != {{data_message_name.upper()}}_SIZE) {
+      printf("warning: wrong data size!\n");
+    }
+		struct {{data_message_name}} cvt_data;
+		{{data_message_name}}_decode(data, &cvt_data);
+    latest_data[write_index].{{data_message_name}} = cvt_data;
+    break;
+  }
+{% endfor %}
+  default:
+    break;
+  }
+  atomic_store(&ready_data_index, (write_index + 1) % 2);
+}
+
+struct LatestData *data_get() {
+  return &latest_data[atomic_load(&ready_data_index)];
+}
