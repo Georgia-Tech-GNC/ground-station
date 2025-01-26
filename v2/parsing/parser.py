@@ -103,9 +103,16 @@ def process_json() -> tuple[dict, dict]:
         name = Name(data_packet_name, TOP_LEVEL_NAMES)
         PARAM_NAMES = set()
         params = {}
-        
+
         for param_name, flags in contents.items():
-            param_type = flags[0]
+
+            param_type = None
+            
+            if type(flags) == list:
+                param_type = flags[0]
+            elif type(flags == str):
+                param_type = flags
+
             params[Name(param_name, PARAM_NAMES)] = get_data_type_from_str(param_type)
 
         packets[name] = params
