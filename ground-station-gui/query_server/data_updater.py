@@ -247,76 +247,23 @@ class DataUpdater:
             self.remove_callback(callback_id)
 
 
-updaterRSV = DataUpdater("/api/data/RocketStateVector", {
-    "velocity_x": float,
-    "velocity_y": float,
-    "velocity_z": float,
-    "attitude_w": float,
-    "attitude_x": float,
-    "attitude_y": float,
-    "attitude_z": float,
-    "position_x": float,
-    "position_y": float,
-    "position_z": float,
-    "world_x": float,
-    "world_y": float,
-    "world_z": float,
-    "timestamp": int
+updaterServoPositions = DataUpdater("/api/data/ServoDeflections", {
+    "servo_1_desired": int,
+    "servo_1_actual": int,
+    "servo_2_desired": int,
+    "servo_2_actual": int,
+    "servo_3_desired": int,
+    "servo_3_actual": int,
+    "servo_4_desired": int,
+    "servo_4_actual": int,
 })
 
-updaterRSDef = DataUpdater("/api/data/RocketServoDeflection", {
-    "servo_deflection_1": float,
-    "servo_deflection_2": float,
-    "servo_deflection_3": float,
-    "servo_deflection_4": float,
-    "timestamp": int
+updaterRocketState = DataUpdater("/api/data/RocketState", {
+    "rocket_state": int
 })
 
-updaterRS = DataUpdater("/api/data/RocketState", {
-    "rocket_state": int,
-    "firing_channel_1": int,
-    "firing_channel_2": int,
-    "firing_channel_3": int,
-    "timestamp": int
-})
-
-updaterRGEKF = DataUpdater("/api/data/RocketGroundEKF", {
-    "pn_matrix_d1": float,
-    "pn_matrix_d2": float,
-    "pn_matrix_d3": float,
-    "pn_matrix_d4": float,
-    "pn_matrix_d5": float,
-    "pn_matrix_d6": float,
-    "timestamp": int
-})
-
-updaterRSData = DataUpdater("/api/data/RocketSensorData", {
-    "accelerometer_x": float,
-    "accelerometer_y": float,
-    "accelerometer_z": float,
-    "gyro_x": float,
-    "gyro_y": float,
-    "gyro_z": float,
-    "gps_x": float,
-    "gps_y": float,
-    "gps_z": float,
-    "timestamp": int
-})
-
-updaterAFD = DataUpdater("/api/data/RocketAnalogFeedbackData", {
-    "current_fb_33": int,
-    "pyro_0_cont": int,
-    "pyro_1_cont": int,
-    "pyro_2_cont": int,
-    "pyro_channel_deploy": int,
-    "timestamp": int
-})
 
 allDataUpdaters = {
-    'updaterRSV': updaterRSV,
-    'updaterRSDef': updaterRSDef,
-    'updaterRS': updaterRS,
-    'updaterRGEKF': updaterRGEKF,
-    'updaterRSData': updaterRSData,
-    'updaterAFD': updaterAFD
+    'updaterServoPositions': updaterServoPositions,
+    'updaterRocketState': updaterRocketState,
 }

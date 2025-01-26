@@ -29,41 +29,9 @@ def ROCKET_INT_TO_STATE(x: int):
     elif x == 1:
         return "GROUND"
     elif x == 2:
-        return "ARMED"
-    elif x == 3:
-        return "FAST ASCENT"
-    elif x == 4:
-        return "SLOW ASCENT"
-    elif x == 5:
-        return "FREE FALL"
-    elif x == 6:
-        return "LANDED"
+        return "FIRED"
     else:
         return f"State {x}"
-
-
-def ROCKET_INT_TO_ACTIVE_STATUS(x: int):
-    if True:
-        return "Disabled"
-    elif x == 1:
-        return "Active"
-    else:
-        return f"Unknown value {x}"
-    
-def PYRO_INT_TO_DEPLOY(x: int):
-    if x == 0:
-        return "Not Fired"
-    else:
-        return "Fired"
-    
-def ROCKET_INT_TO_PARACHUTE(x: int):
-    if x == 0:
-        return "Ready"
-    elif x == 1:
-        return "Parachute Deployed"
-    else:
-        return f"Unknown state {x}"
-
 
 
 DATA_WINDOWS: dict[str, tuple[
@@ -72,122 +40,52 @@ DATA_WINDOWS: dict[str, tuple[
     Callable[[DataViewerWindow], Callable[..., None]],
     list[str]
 ]] = {
-    'Rocket Kinematics': (
-        lambda: DataViewerWindow(
-            ['velocity', 'attitude', 'position', 'world position'],
-            [DataTypes.VECTOR, DataTypes.QUATERNION, DataTypes.VECTOR, DataTypes.VECTOR]
-        ),
-        'updaterRSV',
-        lambda window_ref:
-        (lambda vx, vy, vz, aw, ax, ay, az, px, py, pz, gx, gy, gz: window_ref.set_all_values(
-            [to_nparr(vx, vy, vz), to_nparr(aw, ax, ay, az), to_nparr(px, py, pz), to_nparr(gx, gy, gz)])),
-        ["velocity_x", "velocity_y", "velocity_z",
-         "attitude_w", "attitude_x", "attitude_y", "attitude_z", "position_x", "position_y", "position_z", "world_x", "world_y", "world_z"],
-    ),
-
     'Rocket State': (
         lambda: DataViewerWindow(
-            ['State', 'Firing Channel 1', 'Firing Channel 2', 'Firing Channel 3'],
-            [DataTypes.STRING, DataTypes.STRING, DataTypes.STRING, DataTypes.STRING]
+            ['Rocket State',],
+            [DataTypes.STRING]
         ),
-        'updaterRS',
-        lambda window_ref:
-        (lambda s, fc1, fc2, fc3: window_ref.set_all_values(
-            [ROCKET_INT_TO_STATE(s), ROCKET_INT_TO_PARACHUTE(fc1), ROCKET_INT_TO_PARACHUTE(fc2),
-             ROCKET_INT_TO_PARACHUTE(fc3)])),
-        ["rocket_state", "firing_channel_1", "firing_channel_2", "firing_channel_3"]
+        'updaterRocketState',
+        lambda window_ref: (lambda s: window_ref.set_all_values([ROCKET_INT_TO_STATE(s)])),
+        ['rocket_state'],
     ),
 
-    'Rocket Grouund EKF': (
+    'Servo True Positions': (
         lambda: DataViewerWindow(
-            [f'PN Matrix D{i+1}' for i in range(6)],
-            [DataTypes.FLOAT for _ in range(6)]
+            ['Servo 1', 'Servo 2', 'Servo 3', 'Servo 4'],
+            [DataTypes.FLOAT, DataTypes.FLOAT, DataTypes.FLOAT, DataTypes.FLOAT]
         ),
-        'updaterRGEKF',
-        lambda window_ref:
-            (lambda d1, d2, d3, d4, d5, d6: window_ref.set_all_values(
-                [d1, d2, d3, d4, d5, d6]
-            )),
-        [f"pn_matrix_d{i+1}" for i in range(6)]
-    ), 
-
-    'Rocket Sensor Data': (
-        lambda: DataViewerWindow(
-            ['Accelerometer', 'Gyro', 'GPS'],
-            [DataTypes.VECTOR, DataTypes.VECTOR, DataTypes.VECTOR]
-        ),
-        'updaterRSData',
-        lambda window_ref:
-            (lambda ax, ay, az, gx, gy, gz, gpx, gpy, gpz: window_ref.set_all_values(
-                [to_nparr(ax, ay, az), to_nparr(gx, gy, gz), to_nparr(gpx, gpy, gpz)]
-            )),
-        ["accelerometer_x", "accelerometer_y", "accelerometer_z", "gyro_x", "gyro_y", "gyro_z", "gps_x", "gps_y", "gps_z"]
+        'updaterServoPositions',
+        lambda window_ref: (lambda s1, s2, s3, s4: window_ref.set_all_values([s1, s2, s3, s4])),
+        ['servo_1_actual', 'servo_2_actual', 'servo_3_actual', 'servo_4_actual'],
     ),
 
-    'Rocket Servo Deflection': (
+    'Servo Commanded Positions': (
         lambda: DataViewerWindow(
-            [f'Servo {i+1} deflection' for i in range(4)],
-            [DataTypes.FLOAT for _ in range(4)]
+            ['Servo 1', 'Servo 2', 'Servo 3', 'Servo 4'],
+            [DataTypes.FLOAT, DataTypes.FLOAT, DataTypes.FLOAT, DataTypes.FLOAT]
         ),
-        'updaterRSDef',
-        lambda window_ref:
-            (lambda d1, d2, d3, d4: window_ref.set_all_values(
-                [d1, d2, d3, d4]
-            )),
-        [f"servo_deflection_{i+1}" for i in range(4)]
+        'updaterServoPositions',
+        lambda window_ref: (lambda s1, s2, s3, s4: window_ref.set_all_values([s1, s2, s3, s4])),
+        ['servo_1_desired', 'servo_2_desired', 'servo_3_desired', 'servo_4_desired'],
     ),
-
-    'Rocket Analog Feedback': (
-        lambda: DataViewerWindow(
-            ['3.3V Line Current', 'Pyro 0 Continuity', 'Pyro 1 Continuity', 'Pyro 2 Continuity', 'Pyro 0 Deployed', 'Pyro 1 Deployed', 'Pyro 2 Deployed'],
-            [ DataTypes.FLOAT, DataTypes.FLOAT, DataTypes.FLOAT, DataTypes.FLOAT, DataTypes.STRING, DataTypes.STRING, DataTypes.STRING]
-        ),
-        'updaterAFD',
-        lambda window_ref:
-            (lambda c, pc0, pc1, pc2, dbm: window_ref.set_all_values(
-                [c * PYRO_INT_TO_VOLT_12_BIT * 1000 / (100 * 0.03), pc0 * PYRO_INT_TO_VOLT_12_BIT * 1000 / (200 * 1.5), pc1 * PYRO_INT_TO_VOLT_12_BIT * 1000 / (200 * 1.5), pc2 * PYRO_INT_TO_VOLT_16_BIT * 1000 / (200 * 1.5), 
-                 PYRO_INT_TO_DEPLOY(dbm & 0b001), PYRO_INT_TO_DEPLOY((dbm & 0b010) >> 1), PYRO_INT_TO_DEPLOY((dbm & 0b100) >> 2)]
-            )),
-        ["current_fb_33", "pyro_0_cont", "pyro_1_cont", "pyro_2_cont", "pyro_channel_deploy"]
-    )
 }
 
 GRAPHABLE_VALUES: dict[str, tuple[str, str]] = {
-    "Rocket State Vector": (None, None),
-    "X Velocity": ('updaterRSV', "velocity_x"),
-    "Y Velocity": ('updaterRSV', "velocity_y"),
-    "Z Velocity": ('updaterRSV', "velocity_z"),
-    "X Position": ('updaterRSV', "position_x"),
-    "Y Position": ('updaterRSV', "position_y"),
-    "Z Position": ('updaterRSV', "position_z"),
+    "Servo Deflections": (None, None),
+    'Servo 1 True': ('updaterServoPositions', 'servo_1_actual'),
+    'Servo 1 Desired': ('updaterServoPositions', 'servo_1_desired'),
+    'Servo 2 True': ('updaterServoPositions', 'servo_2_actual'),
+    'Servo 2 Desired': ('updaterServoPositions', 'servo_2_desired'),
+    'Servo 3 True': ('updaterServoPositions', 'servo_3_actual'),
+    'Servo 3 Desired': ('updaterServoPositions', 'servo_3_desired'),
+    'Servo 4 True': ('updaterServoPositions', 'servo_4_actual'),
+    'Servo 4 Desired': ('updaterServoPositions', 'servo_4_desired'),
 
-    "Servo Deflection": (None, None),
-    'Servo 1 Deflection': ('updaterRSDef', 'servo_deflection_1'),
-    'Servo 2 Deflection': ('updaterRSDef', 'servo_deflection_2'),
-    'Servo 3 Deflection': ('updaterRSDef', 'servo_deflection_3'),
-    'Servo 4 Deflection': ('updaterRSDef', 'servo_deflection_4'),
-
-    "Sensor Data": (None, None),
-    'Accelerometer X': ('updaterRSData', 'accelerometer_x'),
-    'Accelerometer Y': ('updaterRSData', 'accelerometer_y'),
-    'Accelerometer Z': ('updaterRSData', 'accelerometer_z'),
-    'Gyro X': ('updaterRSData', 'gyro_x'),
-    'Gyro Y': ('updaterRSData', 'gyro_y'),
-    'Gyro Z': ('updaterRSData', 'gyro_z'),
-    'GPS Y': ('updaterRSData', 'gps_y'),
-
-    "Analog Feedback Data": (None, None),
-    '3.3V Line Current': ('updaterAFD', 'current_fb_33'),
-    'Pyro 0 Continuity': ('updaterAFD', 'pyro_0_cont'),
-    'Pyro 1 Continuity': ('updaterAFD', 'pyro_1_cont'),
-    'Pyro 2 Continuity': ('updaterAFD', 'pyro_2_cont'),
 }
 
 BUTTON_VALUES: dict[str | tuple[str, bool], Callable] = {
-    "IDLE TO GROUND": lambda: send_cmd_with_id(1),
-    ("FIRE PYRO (!)", True): lambda: send_cmd_with_id(2),
-    "FLASH SD CARD": lambda: send_cmd_with_id(3),
-    "PING ROCKET": lambda: send_cmd_with_id(4)
+    ("Ignite", True): lambda: send_cmd_with_id(1),
 }
 
 
