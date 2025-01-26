@@ -19,7 +19,7 @@ jobs:
         with:
           path: ground-station-core/build-
           key: ${{ runner.os }}-build
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v3
         with:
           name: ground-station-core
           path: ground-station-core/build-/a.out
