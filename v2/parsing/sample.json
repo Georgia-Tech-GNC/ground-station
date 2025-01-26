@@ -6,20 +6,20 @@
 
     "Data Packets": {
         "Rocket Kinematics" : {
-            "X Position": ["float32"],
-            "Y Position": ["float32"],
-            "Z Position": ["float32"],
-            "X Velocity": ["int16"],
-            "Y Velocity": ["int16"],
-            "Z Velocity": ["int16"],
-            "Acceleration Magnitude": ["int32"]
+            "X Position": "float32",
+            "Y Position": "float32",
+            "Z Position": "float32",
+            "X Velocity": "int16",
+            "Y Velocity": "int16",
+            "Z Velocity": "int16",
+            "Acceleration Magnitude": "int32"
         },
 
         "Rocket State" : {
-            "State": ["uint8"],
-            "Firing Channel 1": ["uint8"],
-            "Firing Channel 2": ["uint8"],
-            "Firing Channel 3": ["uint8"]
+            "State": "uint8",
+            "Firing Channel 1": "uint8",
+            "Firing Channel 2": "uint8",
+            "Firing Channel 3": "uint8"
         }
     }
 }
