@@ -1,7 +1,8 @@
 name: ground-station-core
 on: push
 jobs:
-  my-job:
+  build:
     runs-on: self-hosted
     steps:
+      - uses: actions/checkout@v2
       - run: cd ground-station-core && make
