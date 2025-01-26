@@ -1,8 +1,12 @@
-name: hello-world
+name: ground-station-core
 on: push
 jobs:
-  my-job:
+  build:
     runs-on: self-hosted
     steps:
-      - name: my-step
-        run: echo "Hello World!"
+      - uses: actions/checkout@v2
+      - run: cd ground-station-core && make
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ground-station-core
+          path: ground-station-core/build-/a.out
