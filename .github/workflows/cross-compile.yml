@@ -6,3 +6,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: cd ground-station-core && make
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ground-station-core
+          path: build-/a.out
