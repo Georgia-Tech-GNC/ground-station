@@ -1,8 +1,7 @@
-name: hello-world
+name: ground-station-core
 on: push
 jobs:
   my-job:
     runs-on: self-hosted
     steps:
-      - name: my-step
-        run: echo "Hello World!"
+      - run: cd ground-station-core && make
