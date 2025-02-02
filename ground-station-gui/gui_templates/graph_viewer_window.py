@@ -1,5 +1,7 @@
 import dearpygui.dearpygui as dpg
+from collections import deque
 
+SHOW_LAST_N = 200
 
 class GraphViewerWindow:
 
@@ -16,8 +18,8 @@ class GraphViewerWindow:
         self.x_axis_tag = dpg.generate_uuid()
         self.y_axis_tags = [dpg.generate_uuid() for _ in range(len(plot_names))]
         self.line_series_tag = [dpg.generate_uuid() for _ in range(len(plot_names))]
-        self.x_datas = [[] for _ in range(len(plot_names))]
-        self.y_datas = [[] for _ in range(len(plot_names))]
+        self.x_datas = [deque(maxlen=SHOW_LAST_N) for _ in range(len(plot_names))]
+        self.y_datas = [deque(maxlen=SHOW_LAST_N) for _ in range(len(plot_names))]
 
         with dpg.plot(label=graph_name, height=_height, width=_width, tag=self.plot_tag):
             # optionally create legend
@@ -37,6 +39,6 @@ class GraphViewerWindow:
     def update_graph_data(self, graph_index: int, x_data, y_data):
         self.x_datas[graph_index].append(x_data)
         self.y_datas[graph_index].append(y_data)
-        dpg.set_value(self.line_series_tag[graph_index], [self.x_datas[graph_index], self.y_datas[graph_index]])          
+        dpg.set_value(self.line_series_tag[graph_index], [list(self.x_datas[graph_index]), list(self.y_datas[graph_index])])          
         dpg.fit_axis_data(self.x_axis_tag)
         dpg.fit_axis_data(self.y_axis_tags[graph_index])
