@@ -2,7 +2,7 @@
     "WEB_SERVER_URL": "http://0.0.0.0:8080",
 
     "COMMANDS": [
-        "IGNITE", "PING_ROCKET"
+        "IGNITE", "ZERO_SERVOS", "PING_ROCKET"
     ],
 
     "DATA_MESSAGES": {
