@@ -108,7 +108,7 @@ bool try_enqueue(const Task* item) {
 
     uint_fast8_t expected_empty_state = TASK_QUEUE_STATE_EMPTY;
 
-    if (!atomic_compare_exchange_weak(
+    if (!atomic_compare_exchange_strong(
             &(slot->task_queue_state),  // Check slot state
             &expected_empty_state,      // If empty
             TASK_QUEUE_STATE_AQUIRED    // Set to aquired

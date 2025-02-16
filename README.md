@@ -1,3 +1,12 @@
+# Ground Station V2
+
+## Organization
+
+### Threads
+- Main thread: update SQL task queue
+- Serial thread: read serial input
+- Web thread: host the web socket`
+
 ## Development (ground-station-core)
 
 Shell environment (with Python, etc):
