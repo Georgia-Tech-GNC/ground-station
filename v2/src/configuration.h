@@ -1,7 +1,7 @@
 #ifndef CONFIGURATION_H
 #define CONFIGURATION_H
 
-#include "stdint.h"
+#include <stdint.h>
 
 typedef enum {
     EMPTY_LOG_MESSAGE_TYPE = 0,        // Used internally to store the case where there are currently no log messages
@@ -15,12 +15,15 @@ typedef enum {
     GROUND_STATION_DEBUG_ROCKET_KINEMATICS_PACKET_WRONG_SIZE, // Recieved a rocket kinematics packet that was the wrong size (parameter: recieved packet size)
     
     GROUND_STATION_DEBUG_ROCKET_STATE_PACKET_WRONG_SIZE, // Recieved a rocket state packet that was the wrong size (parameter: recieved packet size)
-} LogMessageType;
+} __attribute__((__packed__)) LogMessageType;
 
 typedef struct {
-    LogMessageType log_message;
     uint32_t message_parameter;
-} LogMessage;
+    uint16_t rotation;
+    LogMessageType log_message;
+} __attribute__((aligned (8))) LogMessage;
+
+_Static_assert(sizeof(LogMessage) == 8, "LogMessage struct is wrong size");
 
 typedef struct {
     float x_position;
