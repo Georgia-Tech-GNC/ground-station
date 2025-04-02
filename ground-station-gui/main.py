@@ -17,10 +17,15 @@ INTENDED_WIDTH = 400
 
 def init_gui():
     dpg.create_context()
+    with dpg.font_registry():
+    # first argument ids the path to the .ttf or .otf file
+        default_font = dpg.add_font("Andale Mono.ttf", 20)
+        dpg.bind_font(default_font)
     dpg.configure_app(docking=True, docking_space=True, init_file=INIT_FILE_PATH)
 
 
 def start_gui():
+    dpg.show_font_manager()
     dpg.create_viewport(title='GNC Ground Station', width=1400, height=900)
     dpg.setup_dearpygui()
     dpg.show_viewport()
@@ -60,6 +65,7 @@ if __name__ == "__main__":
     Path(SAVE_FOLDER_PATH).mkdir(parents=True, exist_ok=True)  # Create the layout save folder if it does not exist
 
     init_gui()
+
 
     with dpg.viewport_menu_bar():
         dpg.add_menu_item(label="Save Layout", callback=save_current_state)
@@ -112,6 +118,7 @@ if __name__ == "__main__":
     update_thread.start()
 
     start_gui()
+
 
     close_event.set()
     update_thread.join()

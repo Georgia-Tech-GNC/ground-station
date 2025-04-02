@@ -20,15 +20,12 @@ def noise(scale: int = 1000):
     return random.randint(1, scale)/1500
 
 LOG_OPTIONS = [
-    ('We are in a CDR!', 3),
-    ('This is a logger message', 2),
-    ('2 + 2 = 5!', 4),
-    ('RRC is still better then YJSP', 2),
-    ('This is another logger message', 3),
-    ("I'm running out of ideas for random logger messages", 3),
-    ("There was an error! Just kidding, there wasn't one", 4),
-    ("Did you know that the GUI supports multiple concurrent viewers?", 2),
-    ("This message is reeeeeeaaaaaaaaaaaalllllllllllyyyyyyyyyyyy long so that Sebastian can show off how the GUI wraps long messages", 2)
+    ('Rocket status update recieved', 2),
+    ('Logging module connection temporarily dropped', 2),
+    ('Battery current draw spike', 3),
+    ('Ground EKF verification running', 2),
+    ("Concurrent race viewer detected", 2),
+    ("Hash verification success", 2)
 ]
 
 def create_random_log_message():
@@ -38,6 +35,7 @@ def update_all_tests(time: float) -> None:
     global ROCKET_STATE
 
     angle = time/5 + noise(10)
+    if time > 5: return 
 
     updaterRSV.test({
             "velocity_x": time * time * 5.0 + noise(10000),
