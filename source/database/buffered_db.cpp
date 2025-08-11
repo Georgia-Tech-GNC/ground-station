@@ -1,6 +1,7 @@
 #include "buffered_db.h"
 
 void BufferedSQLDatabase::add_entry(const DataEntry& data, const timestamp_t timestamp) {
+    most_recent_entries.store(data);
     work_queue.push(std::make_pair(data, timestamp));
 }
 

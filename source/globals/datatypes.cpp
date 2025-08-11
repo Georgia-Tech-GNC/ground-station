@@ -25,3 +25,20 @@ DataEntry::DataEntry(const DataEntry& other) noexcept(true): type(other.type) {
             break;
     }
 }
+
+template<> RocketKinematicsData DataCollection::load() { 
+    return rocket_kinematics_data.load(std::memory_order_relaxed);
+}
+
+template<> RocketSensorData DataCollection::load() { 
+    return rocket_sensor_data.load(std::memory_order_relaxed);
+}
+
+void DataCollection::store(const DataEntry& data) {
+    switch (data.type) {
+        case DataPacketType::ROCKET_KINEMATICS_DATA:
+            rocket_kinematics_data.store(data.data.rocket_kinematics_data, std::memory_order_relaxed);
+        case DataPacketType::ROCKET_SENSOR_DATA:
+            rocket_sensor_data.store(data.data.rocket_sensor_data, std::memory_order_relaxed);
+    }
+}

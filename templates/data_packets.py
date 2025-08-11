@@ -5,7 +5,7 @@ class DataPacket:
         self.title_name = name.title().replace(' ', '')
         self.variable_name = name.lower().replace(' ', '_')
         self.variables = [
-            {'name': var_name, 'sqlite_binding': var_type.sqlite_bind, 'length': var_type.size, 'type': var_type.typename} 
+            {'name': var_name, 'sqlite_binding': var_type.sqlite_bind, 'length': var_type.size, 'type': var_type.typename, 'default': var_type.default_value} 
             for var_name, var_type in variables.items()
         ]
         self.byteform = {'length': sum([var_type.size for var_type in variables.values()])}

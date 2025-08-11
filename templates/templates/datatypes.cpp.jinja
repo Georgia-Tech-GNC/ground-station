@@ -20,3 +20,18 @@ DataEntry::DataEntry(const DataEntry& other) noexcept(true): type(other.type) {
         {% endfor %}
     }
 }
+
+{% for data_packet in all_data_packets%}
+template<> {{data_packet.title_name}} DataCollection::load() { 
+    return {{data_packet.variable_name}}.load(std::memory_order_relaxed);
+}
+
+{% endfor %}
+void DataCollection::store(const DataEntry& data) {
+    switch (data.type) {
+        {% for data_packet in all_data_packets%}
+        case DataPacketType::{{data_packet.variable_name | upper}}:
+            {{data_packet.variable_name}}.store(data.data.{{data_packet.variable_name}}, std::memory_order_relaxed);
+        {% endfor %}
+    }
+}

@@ -14,8 +14,9 @@ class VariableType(Enum):
     FLOAT = ("float", "sqlite3_bind_double", "REAL", 4)
     DOUBLE = ("float", "sqlite3_bind_double", "REAL", 8)
 
-    def __init__(self, typename: str, sqlite_bind: str, sql_type: str, size: int):
+    def __init__(self, typename: str, sqlite_bind: str, sql_type: str, size: int, default_value=0):
         self.typename = typename
         self.sqlite_bind = sqlite_bind
         self.sql_type = sql_type
         self.size = size
+        self.default_value = 0

@@ -25,7 +25,10 @@ static_assert(std::chrono::steady_clock::is_steady, "Steady Clock is not guarant
  * inserting them immediately.
  * 
  * Inserts are handled in batches via the #BufferedSQLDatabase::run_storage_loop method, which
- * should be ran in it's own thread.    
+ * should be ran in it's own thread.  
+ * 
+ * For accessing, this class also retains a copy of the most recent entry of each datatype.
+ * These copies are not stored in the database itself.  
 */
 class BufferedSQLDatabase {
 
@@ -41,6 +44,9 @@ private:
 
     /** Last timestamp when a transaction commit occurred */
     std::chrono::time_point<std::chrono::steady_clock> last_transaction_commit;
+
+    /** Stores the most recent entry of each type */
+    DataCollection most_recent_entries;
 
     /** The number of slots in the work queue used to hold pending insert operations */
     constexpr static uint32_t INTERNAL_WORK_QUEUE_SIZE = 4096;
@@ -61,6 +67,11 @@ public:
      * This method will never block unless the queue is full.
      */
     void add_entry(const DataEntry& data, const timestamp_t timestamp);
+
+    /** Returns the most recent recorded entry of type T */
+    template<typename T> inline T see_most_recent_entry() {
+        return most_recent_entries.load<T>();
+    }
 
     /** Signals that the storage loop should commit any pending changes and gracefully exit. */
     inline void terminate_storage_loop() {

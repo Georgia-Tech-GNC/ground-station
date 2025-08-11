@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <cstddef>
 #include <array>
+#include <atomic>
 
 #include "sqlite3.h"
 
@@ -18,6 +19,10 @@ struct {{data_packet.title_name}} {
     {% for variable_type, variable_names in data_packet.variables_by_type.items() %}
     {{variable_type}} {{variable_names | join(", ")}};
     {% endfor %}
+
+    /** Default (empty) constructor */
+    {{data_packet.title_name}}(): 
+        {{ data_packet.variables | map("strformat", "{0[name]}({0[default]})" ) | join(", ") }} { }
 
     {{data_packet.title_name}}(const std::byte (&raw_array)[{{data_packet.byteform.length}}]); 
     {{data_packet.title_name}}({{ data_packet.variables | map("strformat", "{0[type]} _{0[name]}" )| join(", ") }}):
@@ -52,6 +57,21 @@ struct DataEntry {
     DataEntry({{data_packet.title_name}} _{{data_packet.variable_name}}): 
         type(DataPacketType::{{data_packet.variable_name | upper}}), data(_{{data_packet.variable_name}}) { }
     {% endfor %}
+};
+
+struct DataCollection {
+    {% for data_packet in all_data_packets%}
+    std::atomic<{{data_packet.title_name}}> {{data_packet.variable_name}};
+    {% endfor %}
+
+    /** Default (empty) constructor */
+    DataCollection() { }
+
+    /** Copy constructor */
+    DataCollection(const DataCollection& other) = delete;
+
+    template<typename T> T load();
+    void store(const DataEntry& data);
 };
 
 #endif
