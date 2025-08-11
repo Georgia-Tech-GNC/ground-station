@@ -1,0 +1,46 @@
+\doxysection{include/database/\+MPMCQueue.h File Reference}
+\hypertarget{_m_p_m_c_queue_8h}{}\label{_m_p_m_c_queue_8h}\index{include/database/MPMCQueue.h@{include/database/MPMCQueue.h}}
+{\ttfamily \#include $<$atomic$>$}\newline
+{\ttfamily \#include $<$cassert$>$}\newline
+{\ttfamily \#include $<$cstddef$>$}\newline
+{\ttfamily \#include $<$limits$>$}\newline
+{\ttfamily \#include $<$memory$>$}\newline
+{\ttfamily \#include $<$new$>$}\newline
+{\ttfamily \#include $<$stdexcept$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structmpmc_1_1_aligned_allocator}{mpmc\+::\+Aligned\+Allocator$<$ T $>$}}
+\item 
+struct \mbox{\hyperlink{structmpmc_1_1_slot}{mpmc\+::\+Slot$<$ T $>$}}
+\item 
+class \mbox{\hyperlink{classmpmc_1_1_queue}{mpmc\+::\+Queue$<$ T, Allocator $>$}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespacempmc}{mpmc}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename T, typename Allocator = mpmc\+::\+Aligned\+Allocator$<$mpmc\+::\+Slot$<$\+T$>$$>$$>$ }\\using \mbox{\hyperlink{_m_p_m_c_queue_8h_aebba082b05b25f8dc1ca5210ee360697}{MPMCQueue}} = \mbox{\hyperlink{classmpmc_1_1_queue}{mpmc\+::\+Queue}}$<$T, Allocator$>$
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+static constexpr size\+\_\+t \mbox{\hyperlink{namespacempmc_ad416435dbcadb56065a08daad16a054c}{mpmc\+::hardware\+Interference\+Size}} = 64
+\end{DoxyCompactItemize}
+
+
+\label{doc-typedef-members}
+\Hypertarget{_m_p_m_c_queue_8h_doc-typedef-members}
+\doxysubsection{Typedef Documentation}
+\Hypertarget{_m_p_m_c_queue_8h_aebba082b05b25f8dc1ca5210ee360697}\index{MPMCQueue.h@{MPMCQueue.h}!MPMCQueue@{MPMCQueue}}
+\index{MPMCQueue@{MPMCQueue}!MPMCQueue.h@{MPMCQueue.h}}
+\doxysubsubsection{\texorpdfstring{MPMCQueue}{MPMCQueue}}
+{\footnotesize\ttfamily \label{_m_p_m_c_queue_8h_aebba082b05b25f8dc1ca5210ee360697} 
+template$<$typename T, typename Allocator = mpmc\+::\+Aligned\+Allocator$<$mpmc\+::\+Slot$<$\+T$>$$>$$>$ \\
+using \mbox{\hyperlink{_m_p_m_c_queue_8h_aebba082b05b25f8dc1ca5210ee360697}{MPMCQueue}} = \mbox{\hyperlink{classmpmc_1_1_queue}{mpmc\+::\+Queue}}$<$T, Allocator$>$}
+

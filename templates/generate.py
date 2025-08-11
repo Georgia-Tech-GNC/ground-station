@@ -4,8 +4,8 @@ from data_packets import DataPacket
 import os
 
 TARGETS = [
-    "include/database/sql_commands.h",
-    "source/database/sql_commands.cpp",
+    "include/database/sql_database.h",
+    "source/database/sql_database.cpp",
     "include/globals/datatypes.h",
     "source/globals/datatypes.cpp",
 ]

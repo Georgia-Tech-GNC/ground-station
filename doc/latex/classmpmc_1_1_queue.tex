@@ -1,0 +1,228 @@
+\doxysection{mpmc\+::Queue\texorpdfstring{$<$}{<} T, Allocator \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classmpmc_1_1_queue}{}\label{classmpmc_1_1_queue}\index{mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}}
+
+
+{\ttfamily \#include $<$MPMCQueue.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classmpmc_1_1_queue_a8892008b353ebab72e9c1917c6637011}{Queue}} (const size\+\_\+t capacity, const Allocator \&allocator=Allocator())
+\item 
+\mbox{\hyperlink{classmpmc_1_1_queue_a5430e7a3a55afabfe19d5d3690b53ef3}{\texorpdfstring{$\sim$}{\string~}\+Queue}} () noexcept
+\item 
+\mbox{\hyperlink{classmpmc_1_1_queue_a6265f1293d225af178ea4e972fd04c81}{Queue}} (const \mbox{\hyperlink{classmpmc_1_1_queue}{Queue}} \&)=delete
+\item 
+\mbox{\hyperlink{classmpmc_1_1_queue}{Queue}} \& \mbox{\hyperlink{classmpmc_1_1_queue_a4fc2435c6aa9dd50ab29e43c2a470288}{operator=}} (const \mbox{\hyperlink{classmpmc_1_1_queue}{Queue}} \&)=delete
+\item 
+{\footnotesize template$<$typename... Args$>$ }\\void \mbox{\hyperlink{classmpmc_1_1_queue_a0863e89ba1a317de12b627d22bbdcec6}{emplace}} (Args \&\&...args) noexcept
+\item 
+{\footnotesize template$<$typename... Args$>$ }\\bool \mbox{\hyperlink{classmpmc_1_1_queue_a801460728846f251e4b02ea65db98c5b}{try\+\_\+emplace}} (Args \&\&...args) noexcept
+\item 
+void \mbox{\hyperlink{classmpmc_1_1_queue_aca5810d037af27002410fc44e3f17f3c}{push}} (const T \&v) noexcept
+\item 
+{\footnotesize template$<$typename P, typename = typename std\+::enable\+\_\+if$<$                std\+::is\+\_\+nothrow\+\_\+constructible$<$\+T, P \&\&$>$\+::value$>$\+::type$>$ }\\void \mbox{\hyperlink{classmpmc_1_1_queue_ab7a4b10fa4489f0ee9c42ceff5b3caee}{push}} (P \&\&v) noexcept
+\item 
+bool \mbox{\hyperlink{classmpmc_1_1_queue_a615da9795649c6312f08ec47e11976e8}{try\+\_\+push}} (const T \&v) noexcept
+\item 
+{\footnotesize template$<$typename P, typename = typename std\+::enable\+\_\+if$<$                std\+::is\+\_\+nothrow\+\_\+constructible$<$\+T, P \&\&$>$\+::value$>$\+::type$>$ }\\bool \mbox{\hyperlink{classmpmc_1_1_queue_abbabe37cedc3539f674b8a5b194f5903}{try\+\_\+push}} (P \&\&v) noexcept
+\item 
+bool \mbox{\hyperlink{classmpmc_1_1_queue_ae0dd40976cf0729896dc8cc3e1350e30}{pop}} (T \&v, const std\+::atomic\+\_\+flag \&exit\+\_\+flag) noexcept
+\item 
+bool \mbox{\hyperlink{classmpmc_1_1_queue_a873d762aa52153b2a10bec6729ab4478}{try\+\_\+pop}} (T \&v) noexcept
+\item 
+ptrdiff\+\_\+t \mbox{\hyperlink{classmpmc_1_1_queue_aa197444f2b9a7ab04ab688318689a674}{size}} () const noexcept
+\item 
+bool \mbox{\hyperlink{classmpmc_1_1_queue_a423dfe0bc53f9fe594c7b4a29dbd697c}{empty}} () const noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+constexpr size\+\_\+t \mbox{\hyperlink{classmpmc_1_1_queue_a8d7d7d5aadb19a016e09fa9041bcd089}{idx}} (size\+\_\+t i) const noexcept
+\item 
+constexpr size\+\_\+t \mbox{\hyperlink{classmpmc_1_1_queue_accc7ef4ba91c63f524636344de5657de}{turn}} (size\+\_\+t i) const noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+const size\+\_\+t \mbox{\hyperlink{classmpmc_1_1_queue_a409d68c336103316814f15a60c88b911}{capacity\+\_\+}}
+\item 
+\mbox{\hyperlink{structmpmc_1_1_slot}{Slot}}$<$ T $>$ \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{classmpmc_1_1_queue_a3c56d09d178fbb34f59e10f03d0fe3f7}{slots\+\_\+}}
+\item 
+Allocator \mbox{\hyperlink{classmpmc_1_1_queue_a4ba20c927e1fb0d04c23a5e1da54a892}{allocator\+\_\+}}
+\item 
+std\+::atomic$<$ size\+\_\+t $>$ \mbox{\hyperlink{classmpmc_1_1_queue_a5a58d8b3064af3bc671e7afdedd00352}{head\+\_\+}}
+\item 
+std\+::atomic$<$ size\+\_\+t $>$ \mbox{\hyperlink{classmpmc_1_1_queue_a8bd5121ae81d176e1174c75cdeb9a3f4}{tail\+\_\+}}
+\end{DoxyCompactItemize}
+
+
+\label{doc-constructors}
+\Hypertarget{classmpmc_1_1_queue_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classmpmc_1_1_queue_a8892008b353ebab72e9c1917c6637011}\index{mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}!Queue@{Queue}}
+\index{Queue@{Queue}!mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{Queue()}{Queue()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classmpmc_1_1_queue_a8892008b353ebab72e9c1917c6637011} 
+template$<$typename T, typename Allocator = Aligned\+Allocator$<$\+Slot$<$\+T$>$$>$$>$ \\
+\mbox{\hyperlink{classmpmc_1_1_queue}{mpmc\+::\+Queue}}$<$ T, Allocator $>$\+::\+Queue (\begin{DoxyParamCaption}\item[{const size\+\_\+t}]{capacity}{, }\item[{const Allocator \&}]{allocator}{ = {\ttfamily Allocator()}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}
+
+\Hypertarget{classmpmc_1_1_queue_a5430e7a3a55afabfe19d5d3690b53ef3}\index{mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}!````~Queue@{\texorpdfstring{$\sim$}{\string~}Queue}}
+\index{````~Queue@{\texorpdfstring{$\sim$}{\string~}Queue}!mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}Queue()}{\string~Queue()}}
+{\footnotesize\ttfamily \label{classmpmc_1_1_queue_a5430e7a3a55afabfe19d5d3690b53ef3} 
+template$<$typename T, typename Allocator = Aligned\+Allocator$<$\+Slot$<$\+T$>$$>$$>$ \\
+\mbox{\hyperlink{classmpmc_1_1_queue}{mpmc\+::\+Queue}}$<$ T, Allocator $>$\+::\texorpdfstring{$\sim$}{\string~}\mbox{\hyperlink{classmpmc_1_1_queue}{Queue}} (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{classmpmc_1_1_queue_a6265f1293d225af178ea4e972fd04c81}\index{mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}!Queue@{Queue}}
+\index{Queue@{Queue}!mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{Queue()}{Queue()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classmpmc_1_1_queue_a6265f1293d225af178ea4e972fd04c81} 
+template$<$typename T, typename Allocator = Aligned\+Allocator$<$\+Slot$<$\+T$>$$>$$>$ \\
+\mbox{\hyperlink{classmpmc_1_1_queue}{mpmc\+::\+Queue}}$<$ T, Allocator $>$\+::\+Queue (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classmpmc_1_1_queue}{Queue}}$<$ T, Allocator $>$ \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+
+
+\label{doc-func-members}
+\Hypertarget{classmpmc_1_1_queue_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classmpmc_1_1_queue_a0863e89ba1a317de12b627d22bbdcec6}\index{mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}!emplace@{emplace}}
+\index{emplace@{emplace}!mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{emplace()}{emplace()}}
+{\footnotesize\ttfamily \label{classmpmc_1_1_queue_a0863e89ba1a317de12b627d22bbdcec6} 
+template$<$typename T, typename Allocator = Aligned\+Allocator$<$\+Slot$<$\+T$>$$>$$>$ \\
+template$<$typename... Args$>$ \\
+void \mbox{\hyperlink{classmpmc_1_1_queue}{mpmc\+::\+Queue}}$<$ T, Allocator $>$\+::emplace (\begin{DoxyParamCaption}\item[{Args \&\&...}]{args}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{classmpmc_1_1_queue_a423dfe0bc53f9fe594c7b4a29dbd697c}\index{mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}!empty@{empty}}
+\index{empty@{empty}!mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{empty()}{empty()}}
+{\footnotesize\ttfamily \label{classmpmc_1_1_queue_a423dfe0bc53f9fe594c7b4a29dbd697c} 
+template$<$typename T, typename Allocator = Aligned\+Allocator$<$\+Slot$<$\+T$>$$>$$>$ \\
+bool \mbox{\hyperlink{classmpmc_1_1_queue}{mpmc\+::\+Queue}}$<$ T, Allocator $>$\+::empty (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+Returns true if the queue is empty. Since this is a concurrent queue this is only a best effort guess until all reader and writer threads have been joined. \Hypertarget{classmpmc_1_1_queue_a8d7d7d5aadb19a016e09fa9041bcd089}\index{mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}!idx@{idx}}
+\index{idx@{idx}!mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{idx()}{idx()}}
+{\footnotesize\ttfamily \label{classmpmc_1_1_queue_a8d7d7d5aadb19a016e09fa9041bcd089} 
+template$<$typename T, typename Allocator = Aligned\+Allocator$<$\+Slot$<$\+T$>$$>$$>$ \\
+size\+\_\+t \mbox{\hyperlink{classmpmc_1_1_queue}{mpmc\+::\+Queue}}$<$ T, Allocator $>$\+::idx (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{i}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{classmpmc_1_1_queue_a4fc2435c6aa9dd50ab29e43c2a470288}\index{mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}}
+{\footnotesize\ttfamily \label{classmpmc_1_1_queue_a4fc2435c6aa9dd50ab29e43c2a470288} 
+template$<$typename T, typename Allocator = Aligned\+Allocator$<$\+Slot$<$\+T$>$$>$$>$ \\
+\mbox{\hyperlink{classmpmc_1_1_queue}{Queue}} \& \mbox{\hyperlink{classmpmc_1_1_queue}{mpmc\+::\+Queue}}$<$ T, Allocator $>$\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classmpmc_1_1_queue}{Queue}}$<$ T, Allocator $>$ \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+\Hypertarget{classmpmc_1_1_queue_ae0dd40976cf0729896dc8cc3e1350e30}\index{mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}!pop@{pop}}
+\index{pop@{pop}!mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{pop()}{pop()}}
+{\footnotesize\ttfamily \label{classmpmc_1_1_queue_ae0dd40976cf0729896dc8cc3e1350e30} 
+template$<$typename T, typename Allocator = Aligned\+Allocator$<$\+Slot$<$\+T$>$$>$$>$ \\
+bool \mbox{\hyperlink{classmpmc_1_1_queue}{mpmc\+::\+Queue}}$<$ T, Allocator $>$\+::pop (\begin{DoxyParamCaption}\item[{T \&}]{v}{, }\item[{const std\+::atomic\+\_\+flag \&}]{exit\+\_\+flag}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+Returns true if a value was popped, or false if the exit flag was set \Hypertarget{classmpmc_1_1_queue_aca5810d037af27002410fc44e3f17f3c}\index{mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}!push@{push}}
+\index{push@{push}!mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{push()}{push()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classmpmc_1_1_queue_aca5810d037af27002410fc44e3f17f3c} 
+template$<$typename T, typename Allocator = Aligned\+Allocator$<$\+Slot$<$\+T$>$$>$$>$ \\
+void \mbox{\hyperlink{classmpmc_1_1_queue}{mpmc\+::\+Queue}}$<$ T, Allocator $>$\+::push (\begin{DoxyParamCaption}\item[{const T \&}]{v}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{classmpmc_1_1_queue_ab7a4b10fa4489f0ee9c42ceff5b3caee}\index{mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}!push@{push}}
+\index{push@{push}!mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{push()}{push()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classmpmc_1_1_queue_ab7a4b10fa4489f0ee9c42ceff5b3caee} 
+template$<$typename T, typename Allocator = Aligned\+Allocator$<$\+Slot$<$\+T$>$$>$$>$ \\
+template$<$typename P, typename = typename std\+::enable\+\_\+if$<$                std\+::is\+\_\+nothrow\+\_\+constructible$<$\+T, P \&\&$>$\+::value$>$\+::type$>$ \\
+void \mbox{\hyperlink{classmpmc_1_1_queue}{mpmc\+::\+Queue}}$<$ T, Allocator $>$\+::push (\begin{DoxyParamCaption}\item[{P \&\&}]{v}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{classmpmc_1_1_queue_aa197444f2b9a7ab04ab688318689a674}\index{mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}!size@{size}}
+\index{size@{size}!mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{size()}{size()}}
+{\footnotesize\ttfamily \label{classmpmc_1_1_queue_aa197444f2b9a7ab04ab688318689a674} 
+template$<$typename T, typename Allocator = Aligned\+Allocator$<$\+Slot$<$\+T$>$$>$$>$ \\
+ptrdiff\+\_\+t \mbox{\hyperlink{classmpmc_1_1_queue}{mpmc\+::\+Queue}}$<$ T, Allocator $>$\+::size (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+Returns the number of elements in the queue. The size can be negative when the queue is empty and there is at least one reader waiting. Since this is a concurrent queue the size is only a best effort guess until all reader and writer threads have been joined. \Hypertarget{classmpmc_1_1_queue_a801460728846f251e4b02ea65db98c5b}\index{mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}!try\_emplace@{try\_emplace}}
+\index{try\_emplace@{try\_emplace}!mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{try\_emplace()}{try\_emplace()}}
+{\footnotesize\ttfamily \label{classmpmc_1_1_queue_a801460728846f251e4b02ea65db98c5b} 
+template$<$typename T, typename Allocator = Aligned\+Allocator$<$\+Slot$<$\+T$>$$>$$>$ \\
+template$<$typename... Args$>$ \\
+bool \mbox{\hyperlink{classmpmc_1_1_queue}{mpmc\+::\+Queue}}$<$ T, Allocator $>$\+::try\+\_\+emplace (\begin{DoxyParamCaption}\item[{Args \&\&...}]{args}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{classmpmc_1_1_queue_a873d762aa52153b2a10bec6729ab4478}\index{mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}!try\_pop@{try\_pop}}
+\index{try\_pop@{try\_pop}!mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{try\_pop()}{try\_pop()}}
+{\footnotesize\ttfamily \label{classmpmc_1_1_queue_a873d762aa52153b2a10bec6729ab4478} 
+template$<$typename T, typename Allocator = Aligned\+Allocator$<$\+Slot$<$\+T$>$$>$$>$ \\
+bool \mbox{\hyperlink{classmpmc_1_1_queue}{mpmc\+::\+Queue}}$<$ T, Allocator $>$\+::try\+\_\+pop (\begin{DoxyParamCaption}\item[{T \&}]{v}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{classmpmc_1_1_queue_a615da9795649c6312f08ec47e11976e8}\index{mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}!try\_push@{try\_push}}
+\index{try\_push@{try\_push}!mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{try\_push()}{try\_push()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classmpmc_1_1_queue_a615da9795649c6312f08ec47e11976e8} 
+template$<$typename T, typename Allocator = Aligned\+Allocator$<$\+Slot$<$\+T$>$$>$$>$ \\
+bool \mbox{\hyperlink{classmpmc_1_1_queue}{mpmc\+::\+Queue}}$<$ T, Allocator $>$\+::try\+\_\+push (\begin{DoxyParamCaption}\item[{const T \&}]{v}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{classmpmc_1_1_queue_abbabe37cedc3539f674b8a5b194f5903}\index{mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}!try\_push@{try\_push}}
+\index{try\_push@{try\_push}!mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{try\_push()}{try\_push()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classmpmc_1_1_queue_abbabe37cedc3539f674b8a5b194f5903} 
+template$<$typename T, typename Allocator = Aligned\+Allocator$<$\+Slot$<$\+T$>$$>$$>$ \\
+template$<$typename P, typename = typename std\+::enable\+\_\+if$<$                std\+::is\+\_\+nothrow\+\_\+constructible$<$\+T, P \&\&$>$\+::value$>$\+::type$>$ \\
+bool \mbox{\hyperlink{classmpmc_1_1_queue}{mpmc\+::\+Queue}}$<$ T, Allocator $>$\+::try\+\_\+push (\begin{DoxyParamCaption}\item[{P \&\&}]{v}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{classmpmc_1_1_queue_accc7ef4ba91c63f524636344de5657de}\index{mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}!turn@{turn}}
+\index{turn@{turn}!mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{turn()}{turn()}}
+{\footnotesize\ttfamily \label{classmpmc_1_1_queue_accc7ef4ba91c63f524636344de5657de} 
+template$<$typename T, typename Allocator = Aligned\+Allocator$<$\+Slot$<$\+T$>$$>$$>$ \\
+size\+\_\+t \mbox{\hyperlink{classmpmc_1_1_queue}{mpmc\+::\+Queue}}$<$ T, Allocator $>$\+::turn (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{i}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+
+
+\label{doc-variable-members}
+\Hypertarget{classmpmc_1_1_queue_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classmpmc_1_1_queue_a4ba20c927e1fb0d04c23a5e1da54a892}\index{mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}!allocator\_@{allocator\_}}
+\index{allocator\_@{allocator\_}!mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{allocator\_}{allocator\_}}
+{\footnotesize\ttfamily \label{classmpmc_1_1_queue_a4ba20c927e1fb0d04c23a5e1da54a892} 
+template$<$typename T, typename Allocator = Aligned\+Allocator$<$\+Slot$<$\+T$>$$>$$>$ \\
+Allocator \mbox{\hyperlink{classmpmc_1_1_queue}{mpmc\+::\+Queue}}$<$ T, Allocator $>$\+::allocator\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classmpmc_1_1_queue_a409d68c336103316814f15a60c88b911}\index{mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}!capacity\_@{capacity\_}}
+\index{capacity\_@{capacity\_}!mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{capacity\_}{capacity\_}}
+{\footnotesize\ttfamily \label{classmpmc_1_1_queue_a409d68c336103316814f15a60c88b911} 
+template$<$typename T, typename Allocator = Aligned\+Allocator$<$\+Slot$<$\+T$>$$>$$>$ \\
+const size\+\_\+t \mbox{\hyperlink{classmpmc_1_1_queue}{mpmc\+::\+Queue}}$<$ T, Allocator $>$\+::capacity\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classmpmc_1_1_queue_a5a58d8b3064af3bc671e7afdedd00352}\index{mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}!head\_@{head\_}}
+\index{head\_@{head\_}!mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{head\_}{head\_}}
+{\footnotesize\ttfamily \label{classmpmc_1_1_queue_a5a58d8b3064af3bc671e7afdedd00352} 
+template$<$typename T, typename Allocator = Aligned\+Allocator$<$\+Slot$<$\+T$>$$>$$>$ \\
+std\+::atomic$<$size\+\_\+t$>$ \mbox{\hyperlink{classmpmc_1_1_queue}{mpmc\+::\+Queue}}$<$ T, Allocator $>$\+::head\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classmpmc_1_1_queue_a3c56d09d178fbb34f59e10f03d0fe3f7}\index{mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}!slots\_@{slots\_}}
+\index{slots\_@{slots\_}!mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{slots\_}{slots\_}}
+{\footnotesize\ttfamily \label{classmpmc_1_1_queue_a3c56d09d178fbb34f59e10f03d0fe3f7} 
+template$<$typename T, typename Allocator = Aligned\+Allocator$<$\+Slot$<$\+T$>$$>$$>$ \\
+\mbox{\hyperlink{structmpmc_1_1_slot}{Slot}}$<$T$>$\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{classmpmc_1_1_queue}{mpmc\+::\+Queue}}$<$ T, Allocator $>$\+::slots\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classmpmc_1_1_queue_a8bd5121ae81d176e1174c75cdeb9a3f4}\index{mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}!tail\_@{tail\_}}
+\index{tail\_@{tail\_}!mpmc::Queue$<$ T, Allocator $>$@{mpmc::Queue$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{tail\_}{tail\_}}
+{\footnotesize\ttfamily \label{classmpmc_1_1_queue_a8bd5121ae81d176e1174c75cdeb9a3f4} 
+template$<$typename T, typename Allocator = Aligned\+Allocator$<$\+Slot$<$\+T$>$$>$$>$ \\
+std\+::atomic$<$size\+\_\+t$>$ \mbox{\hyperlink{classmpmc_1_1_queue}{mpmc\+::\+Queue}}$<$ T, Allocator $>$\+::tail\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/database/\mbox{\hyperlink{_m_p_m_c_queue_8h}{MPMCQueue.\+h}}\end{DoxyCompactItemize}

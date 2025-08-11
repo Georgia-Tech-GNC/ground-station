@@ -1,0 +1,37 @@
+\doxysection{sql\+\_\+database.\+h}
+\hypertarget{sql__database_8h_source}{}\label{sql__database_8h_source}\index{include/database/sql\_database.h@{include/database/sql\_database.h}}
+\mbox{\hyperlink{sql__database_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ SQL\_DATABASE\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ SQL\_DATABASE\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}sqlite3.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{datatypes_8h}{datatypes.h}}"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{config_8h}{config.h}}"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_s_q_l_database_a3a7537d2a6b5a58cf7550ead9c701eb2}{SQLDatabase}}\ \{}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00013\ \ \ \ \ sqlite3\_stmt\ *\mbox{\hyperlink{class_s_q_l_database_ad746ff2457920132f2ce67cacff292f0}{rocket\_kinematics\_data\_insert\_cmd}},\ *\mbox{\hyperlink{class_s_q_l_database_a725ce74af833cc977a56c5a4a2180c65}{rocket\_sensor\_data\_insert\_cmd}};}
+\DoxyCodeLine{00014\ \ \ \ \ sqlite3*\ \mbox{\hyperlink{class_s_q_l_database_aa9974cfc9bb2b010750099df7b3605f8}{db}};}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_s_q_l_database_a3656ab41fde1159b37cf31a09e4abcde}{is\_transaction\_open}};}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_s_q_l_database_aa5992d394832278ad8b4122dbfc65632}{begin\_transaction}}();}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_s_q_l_database_ade905b6658c25b2022ca6abe5155c540}{close\_transaction}}();}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00026\ \ \ \ \ \mbox{\hyperlink{class_s_q_l_database_a3a7537d2a6b5a58cf7550ead9c701eb2}{SQLDatabase}}(\textcolor{keyword}{const}\ std::string\&\ name);}
+\DoxyCodeLine{00027\ \ \ \ \ \mbox{\hyperlink{class_s_q_l_database_ab657b940e617e9ac76d6064f8ac9334b}{SQLDatabase}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_s_q_l_database_a3a7537d2a6b5a58cf7550ead9c701eb2}{SQLDatabase}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00030\ \ \ \ \ \mbox{\hyperlink{class_s_q_l_database_a1cb442f795759c2bd9acfd7841813d71}{\string~SQLDatabase}}();}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_s_q_l_database_a7980d9f0c9fd2e85389451d2245151f1}{insert\_data}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_data_entry}{DataEntry}}\&\ data,\ \mbox{\hyperlink{config_8h_a85d6d3ccace866da37c93e500a2c4147}{timestamp\_t}}\ timestamp);}
+\DoxyCodeLine{00034\ \};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

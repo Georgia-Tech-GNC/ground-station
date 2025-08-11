@@ -5,31 +5,57 @@
 \DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ BUFFERED\_DB}}
 \DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ BUFFERED\_DB}}
 \DoxyCodeLine{00003\ }
-\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{sql__commands_8h}{sql\_commands.h}}"{}}}
-\DoxyCodeLine{00005\ }
-\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <atomic>}}
-\DoxyCodeLine{00007\ }
-\DoxyCodeLine{00015\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_buffered_s_q_l_database_a8d1c8b9260b1c8fb8f7bde87056a17be}{BufferedSQLDatabase}}\ \{}
-\DoxyCodeLine{00016\ }
-\DoxyCodeLine{00017\ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00018\ \ \ \ \ \mbox{\hyperlink{class_s_q_l_database}{SQLDatabase}}\ \mbox{\hyperlink{class_buffered_s_q_l_database_a96ccd1481afa2cde7866a13bfe739392}{db}};}
-\DoxyCodeLine{00019\ \ \ \ \ std::atomic\_flag\ \mbox{\hyperlink{class_buffered_s_q_l_database_a894285bcda8e95fbcab6ba72a18b27fe}{terminate}};}
-\DoxyCodeLine{00020\ }
-\DoxyCodeLine{00021\ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00022\ \ \ \ \ \mbox{\hyperlink{class_buffered_s_q_l_database_a8d1c8b9260b1c8fb8f7bde87056a17be}{BufferedSQLDatabase}}(\textcolor{keyword}{const}\ std::string\&\ name):\ \mbox{\hyperlink{class_buffered_s_q_l_database_a96ccd1481afa2cde7866a13bfe739392}{db}}(name),\ \mbox{\hyperlink{class_buffered_s_q_l_database_a894285bcda8e95fbcab6ba72a18b27fe}{terminate}}(false)\ \{\ \}}
-\DoxyCodeLine{00023\ \ \ \ \ \mbox{\hyperlink{class_buffered_s_q_l_database_a7f894f40d3ecc13ce9c436147c9d89a1}{BufferedSQLDatabase}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_buffered_s_q_l_database_a8d1c8b9260b1c8fb8f7bde87056a17be}{BufferedSQLDatabase}}\&)\ =\ \textcolor{keyword}{delete};}
-\DoxyCodeLine{00024\ }
-\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_buffered_s_q_l_database_accbee4a5111f0ea78cb8cb4b71bc0578}{add\_entry}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_data_entry}{DataEntry}}\&\ data);}
-\DoxyCodeLine{00026\ \ \ \ \ }
-\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_buffered_s_q_l_database_ad3e0f4af4bb8b151e5acf98776a535be}{run\_storage\_loop}}()\ \{}
-\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_buffered_s_q_l_database_a894285bcda8e95fbcab6ba72a18b27fe}{terminate}}.clear();}
-\DoxyCodeLine{00029\ }
-\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (!\mbox{\hyperlink{class_buffered_s_q_l_database_a894285bcda8e95fbcab6ba72a18b27fe}{terminate}}.test())\ \{}
-\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Try\ to\ emplace\ an\ item.}}
-\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00033\ \ \ \ \ \}}
-\DoxyCodeLine{00034\ \};}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{sql__database_8h}{sql\_database.h}}"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{datatypes_8h}{datatypes.h}}"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{config_8h}{config.h}}"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}MPMCQueue.h"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <atomic>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <utility>}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <chrono>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <type\_traits>}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ Verify\ the\ resolution\ of\ steady\_clock}}
+\DoxyCodeLine{00016\ \textcolor{keyword}{static\_assert}(}
+\DoxyCodeLine{00017\ \ \ \ \ std::is\_same<std::chrono::steady\_clock::duration,\ std::chrono::microseconds>::value\ ||}
+\DoxyCodeLine{00018\ \ \ \ \ std::is\_same<std::chrono::steady\_clock::duration,\ std::chrono::nanoseconds>::value,}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{stringliteral}{"{}Steady\ Clock\ resolution\ is\ not\ at\ least\ in\ microseconds"{}}}
+\DoxyCodeLine{00020\ );}
+\DoxyCodeLine{00021\ \textcolor{keyword}{static\_assert}(std::chrono::steady\_clock::is\_steady,\ \textcolor{stringliteral}{"{}Steady\ Clock\ is\ not\ guaranteed\ to\ be\ steady"{}});}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00030\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_buffered_s_q_l_database_a8d1c8b9260b1c8fb8f7bde87056a17be}{BufferedSQLDatabase}}\ \{}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00034\ \ \ \ \ \mbox{\hyperlink{class_s_q_l_database}{SQLDatabase}}\ \mbox{\hyperlink{class_buffered_s_q_l_database_a96ccd1481afa2cde7866a13bfe739392}{db}};}
 \DoxyCodeLine{00035\ }
-\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00037\ \ \ \ \ std::atomic\_flag\ \mbox{\hyperlink{class_buffered_s_q_l_database_a41b899decb8bebf47356fb3ca8c390db}{terminate\_flag}};}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00040\ \ \ \ \ MPMCQueue<std::pair<DataEntry,\ timestamp\_t>>\ \mbox{\hyperlink{class_buffered_s_q_l_database_a9290ab0e828c7ee60726cadaa58cb653}{work\_queue}};}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00043\ \ \ \ \ std::chrono::time\_point<std::chrono::steady\_clock>\ \mbox{\hyperlink{class_buffered_s_q_l_database_a9297af453665a744bdbd4ebaab8181e8}{last\_transaction\_commit}};}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{static}\ uint32\_t\ \mbox{\hyperlink{class_buffered_s_q_l_database_a253252bd2ebe2b4c41008baaa6a602af}{INTERNAL\_WORK\_QUEUE\_SIZE}}\ =\ 4096;}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{static}\ std::chrono::nanoseconds\ \mbox{\hyperlink{class_buffered_s_q_l_database_afa54a3a51294a8792befb2d81850dceb}{transaction\_period}}\ =\ std::chrono::nanoseconds((\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long})1e7);}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_buffered_s_q_l_database_a6ce2b75c5d30e041d438b2c66da94d46}{complete\_transaction}}();}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00055\ \ \ \ \ \mbox{\hyperlink{class_buffered_s_q_l_database_a8d1c8b9260b1c8fb8f7bde87056a17be}{BufferedSQLDatabase}}(\textcolor{keyword}{const}\ std::string\&\ name);}
+\DoxyCodeLine{00056\ \ \ \ \ \mbox{\hyperlink{class_buffered_s_q_l_database_a7f894f40d3ecc13ce9c436147c9d89a1}{BufferedSQLDatabase}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_buffered_s_q_l_database_a8d1c8b9260b1c8fb8f7bde87056a17be}{BufferedSQLDatabase}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_buffered_s_q_l_database_a13d035ad75a2646761b0f01ed2b2ce51}{add\_entry}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_data_entry}{DataEntry}}\&\ data,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{config_8h_a85d6d3ccace866da37c93e500a2c4147}{timestamp\_t}}\ timestamp);}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_buffered_s_q_l_database_a6a14258bb6ee256f023771fbc8fa983c}{terminate\_storage\_loop}}()\ \{}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We\ use\ relaxed\ memory\ ordering\ because\ the\ termination\ signal\ has\ no\ }}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ bearing\ on\ anything\ else\ in\ memory.}}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_buffered_s_q_l_database_a41b899decb8bebf47356fb3ca8c390db}{terminate\_flag}}.test\_and\_set(std::memory\_order\_relaxed);\ }
+\DoxyCodeLine{00070\ \ \ \ \ \}}
+\DoxyCodeLine{00071\ \ \ \ \ }
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_buffered_s_q_l_database_ad3e0f4af4bb8b151e5acf98776a535be}{run\_storage\_loop}}();}
+\DoxyCodeLine{00078\ \};}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#endif}}
 
 \end{DoxyCode}

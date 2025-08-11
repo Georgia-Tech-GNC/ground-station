@@ -1,7 +1,7 @@
 #ifndef BUFFERED_DB
 #define BUFFERED_DB
 
-#include "sql_commands.h"
+#include "sql_database.h"
 #include "datatypes.h"
 #include "config.h"
 #include "MPMCQueue.h"

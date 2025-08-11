@@ -2,10 +2,14 @@
 \hypertarget{class_s_q_l_database}{}\label{class_s_q_l_database}\index{SQLDatabase@{SQLDatabase}}
 
 
-{\ttfamily \#include $<$sql\+\_\+commands.\+h$>$}
+{\ttfamily \#include $<$sql\+\_\+database.\+h$>$}
 
 \doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_s_q_l_database_aa5992d394832278ad8b4122dbfc65632}{begin\+\_\+transaction}} ()
+\item 
+void \mbox{\hyperlink{class_s_q_l_database_ade905b6658c25b2022ca6abe5155c540}{close\+\_\+transaction}} ()
 \item 
 \mbox{\hyperlink{class_s_q_l_database_a3a7537d2a6b5a58cf7550ead9c701eb2}{SQLDatabase}} (const std\+::string \&name)
 \item 
@@ -14,13 +18,6 @@
 \mbox{\hyperlink{class_s_q_l_database_a1cb442f795759c2bd9acfd7841813d71}{\texorpdfstring{$\sim$}{\string~}\+SQLDatabase}} ()
 \item 
 void \mbox{\hyperlink{class_s_q_l_database_a7980d9f0c9fd2e85389451d2245151f1}{insert\+\_\+data}} (const \mbox{\hyperlink{struct_data_entry}{Data\+Entry}} \&data, \mbox{\hyperlink{config_8h_a85d6d3ccace866da37c93e500a2c4147}{timestamp\+\_\+t}} timestamp)
-\end{DoxyCompactItemize}
-\doxysubsubsection*{Private Member Functions}
-\begin{DoxyCompactItemize}
-\item 
-void \mbox{\hyperlink{class_s_q_l_database_aa5992d394832278ad8b4122dbfc65632}{begin\+\_\+transaction}} ()
-\item 
-void \mbox{\hyperlink{class_s_q_l_database_ade905b6658c25b2022ca6abe5155c540}{close\+\_\+transaction}} ()
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Private Attributes}
 \begin{DoxyCompactItemize}
@@ -69,13 +66,13 @@ Deallocates the SQL database object This method should be called once at the end
 \index{begin\_transaction@{begin\_transaction}!SQLDatabase@{SQLDatabase}}
 \doxysubsubsection{\texorpdfstring{begin\_transaction()}{begin\_transaction()}}
 {\footnotesize\ttfamily \label{class_s_q_l_database_aa5992d394832278ad8b4122dbfc65632} 
-void SQLDatabase\+::begin\+\_\+transaction (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+void SQLDatabase\+::begin\+\_\+transaction (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
 
 Starts a SQL transaction \Hypertarget{class_s_q_l_database_ade905b6658c25b2022ca6abe5155c540}\index{SQLDatabase@{SQLDatabase}!close\_transaction@{close\_transaction}}
 \index{close\_transaction@{close\_transaction}!SQLDatabase@{SQLDatabase}}
 \doxysubsubsection{\texorpdfstring{close\_transaction()}{close\_transaction()}}
 {\footnotesize\ttfamily \label{class_s_q_l_database_ade905b6658c25b2022ca6abe5155c540} 
-void SQLDatabase\+::close\+\_\+transaction (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+void SQLDatabase\+::close\+\_\+transaction (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
 
 Ends an SQL transaction and commits all changes \Hypertarget{class_s_q_l_database_a7980d9f0c9fd2e85389451d2245151f1}\index{SQLDatabase@{SQLDatabase}!insert\_data@{insert\_data}}
 \index{insert\_data@{insert\_data}!SQLDatabase@{SQLDatabase}}
@@ -116,5 +113,5 @@ sqlite3\+\_\+stmt \texorpdfstring{$\ast$}{*} SQLDatabase\+::rocket\+\_\+sensor\+
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-include/database/\mbox{\hyperlink{sql__commands_8h}{sql\+\_\+commands.\+h}}\item 
-source/database/\mbox{\hyperlink{sql__commands_8cpp}{sql\+\_\+commands.\+cpp}}\end{DoxyCompactItemize}
+include/database/\mbox{\hyperlink{sql__database_8h}{sql\+\_\+database.\+h}}\item 
+source/database/\mbox{\hyperlink{sql__database_8cpp}{sql\+\_\+database.\+cpp}}\end{DoxyCompactItemize}

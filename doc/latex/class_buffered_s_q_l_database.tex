@@ -11,16 +11,34 @@
 \item 
 \mbox{\hyperlink{class_buffered_s_q_l_database_a7f894f40d3ecc13ce9c436147c9d89a1}{Buffered\+SQLDatabase}} (const \mbox{\hyperlink{class_buffered_s_q_l_database}{Buffered\+SQLDatabase}} \&)=delete
 \item 
-void \mbox{\hyperlink{class_buffered_s_q_l_database_accbee4a5111f0ea78cb8cb4b71bc0578}{add\+\_\+entry}} (const \mbox{\hyperlink{struct_data_entry}{Data\+Entry}} \&data)
+void \mbox{\hyperlink{class_buffered_s_q_l_database_a13d035ad75a2646761b0f01ed2b2ce51}{add\+\_\+entry}} (const \mbox{\hyperlink{struct_data_entry}{Data\+Entry}} \&data, const \mbox{\hyperlink{config_8h_a85d6d3ccace866da37c93e500a2c4147}{timestamp\+\_\+t}} timestamp)
+\item 
+void \mbox{\hyperlink{class_buffered_s_q_l_database_a6a14258bb6ee256f023771fbc8fa983c}{terminate\+\_\+storage\+\_\+loop}} ()
 \item 
 void \mbox{\hyperlink{class_buffered_s_q_l_database_ad3e0f4af4bb8b151e5acf98776a535be}{run\+\_\+storage\+\_\+loop}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_buffered_s_q_l_database_a6ce2b75c5d30e041d438b2c66da94d46}{complete\+\_\+transaction}} ()
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\hyperlink{class_s_q_l_database}{SQLDatabase}} \mbox{\hyperlink{class_buffered_s_q_l_database_a96ccd1481afa2cde7866a13bfe739392}{db}}
 \item 
-std\+::atomic\+\_\+flag \mbox{\hyperlink{class_buffered_s_q_l_database_a894285bcda8e95fbcab6ba72a18b27fe}{terminate}}
+std\+::atomic\+\_\+flag \mbox{\hyperlink{class_buffered_s_q_l_database_a41b899decb8bebf47356fb3ca8c390db}{terminate\+\_\+flag}}
+\item 
+MPMCQueue$<$ std\+::pair$<$ \mbox{\hyperlink{struct_data_entry}{Data\+Entry}}, \mbox{\hyperlink{config_8h_a85d6d3ccace866da37c93e500a2c4147}{timestamp\+\_\+t}} $>$ $>$ \mbox{\hyperlink{class_buffered_s_q_l_database_a9290ab0e828c7ee60726cadaa58cb653}{work\+\_\+queue}}
+\item 
+std\+::chrono\+::time\+\_\+point$<$ std\+::chrono\+::steady\+\_\+clock $>$ \mbox{\hyperlink{class_buffered_s_q_l_database_a9297af453665a744bdbd4ebaab8181e8}{last\+\_\+transaction\+\_\+commit}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static constexpr uint32\+\_\+t \mbox{\hyperlink{class_buffered_s_q_l_database_a253252bd2ebe2b4c41008baaa6a602af}{INTERNAL\+\_\+\+WORK\+\_\+\+QUEUE\+\_\+\+SIZE}} = 4096
+\item 
+static constexpr std\+::chrono\+::nanoseconds \mbox{\hyperlink{class_buffered_s_q_l_database_afa54a3a51294a8792befb2d81850dceb}{transaction\+\_\+period}} = std\+::chrono\+::nanoseconds((long long)1e7)
 \end{DoxyCompactItemize}
 
 
@@ -36,7 +54,7 @@ Inserts are handled in batches via the \doxylink{class_buffered_s_q_l_database_a
 \index{BufferedSQLDatabase@{BufferedSQLDatabase}!BufferedSQLDatabase@{BufferedSQLDatabase}}
 \doxysubsubsection{\texorpdfstring{BufferedSQLDatabase()}{BufferedSQLDatabase()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
 {\footnotesize\ttfamily \label{class_buffered_s_q_l_database_a8d1c8b9260b1c8fb8f7bde87056a17be} 
-Buffered\+SQLDatabase\+::\+Buffered\+SQLDatabase (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+Buffered\+SQLDatabase\+::\+Buffered\+SQLDatabase (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name}{}\end{DoxyParamCaption})}
 
 \Hypertarget{class_buffered_s_q_l_database_a7f894f40d3ecc13ce9c436147c9d89a1}\index{BufferedSQLDatabase@{BufferedSQLDatabase}!BufferedSQLDatabase@{BufferedSQLDatabase}}
 \index{BufferedSQLDatabase@{BufferedSQLDatabase}!BufferedSQLDatabase@{BufferedSQLDatabase}}
@@ -49,19 +67,35 @@ Buffered\+SQLDatabase\+::\+Buffered\+SQLDatabase (\begin{DoxyParamCaption}\item[
 \label{doc-func-members}
 \Hypertarget{class_buffered_s_q_l_database_doc-func-members}
 \doxysubsection{Member Function Documentation}
-\Hypertarget{class_buffered_s_q_l_database_accbee4a5111f0ea78cb8cb4b71bc0578}\index{BufferedSQLDatabase@{BufferedSQLDatabase}!add\_entry@{add\_entry}}
+\Hypertarget{class_buffered_s_q_l_database_a13d035ad75a2646761b0f01ed2b2ce51}\index{BufferedSQLDatabase@{BufferedSQLDatabase}!add\_entry@{add\_entry}}
 \index{add\_entry@{add\_entry}!BufferedSQLDatabase@{BufferedSQLDatabase}}
 \doxysubsubsection{\texorpdfstring{add\_entry()}{add\_entry()}}
-{\footnotesize\ttfamily \label{class_buffered_s_q_l_database_accbee4a5111f0ea78cb8cb4b71bc0578} 
-void Buffered\+SQLDatabase\+::add\+\_\+entry (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_data_entry}{Data\+Entry}} \&}]{data}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{class_buffered_s_q_l_database_a13d035ad75a2646761b0f01ed2b2ce51} 
+void Buffered\+SQLDatabase\+::add\+\_\+entry (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_data_entry}{Data\+Entry}} \&}]{data}{, }\item[{const \mbox{\hyperlink{config_8h_a85d6d3ccace866da37c93e500a2c4147}{timestamp\+\_\+t}}}]{timestamp}{}\end{DoxyParamCaption})}
 
-\Hypertarget{class_buffered_s_q_l_database_ad3e0f4af4bb8b151e5acf98776a535be}\index{BufferedSQLDatabase@{BufferedSQLDatabase}!run\_storage\_loop@{run\_storage\_loop}}
+Adds an entry to the queue of insert operations.
+
+This method is thread-\/safe and can be run from any number of threads. This method will never block unless the queue is full. \Hypertarget{class_buffered_s_q_l_database_a6ce2b75c5d30e041d438b2c66da94d46}\index{BufferedSQLDatabase@{BufferedSQLDatabase}!complete\_transaction@{complete\_transaction}}
+\index{complete\_transaction@{complete\_transaction}!BufferedSQLDatabase@{BufferedSQLDatabase}}
+\doxysubsubsection{\texorpdfstring{complete\_transaction()}{complete\_transaction()}}
+{\footnotesize\ttfamily \label{class_buffered_s_q_l_database_a6ce2b75c5d30e041d438b2c66da94d46} 
+void Buffered\+SQLDatabase\+::complete\+\_\+transaction (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+Commits all changes in this transaction and begins a new one \Hypertarget{class_buffered_s_q_l_database_ad3e0f4af4bb8b151e5acf98776a535be}\index{BufferedSQLDatabase@{BufferedSQLDatabase}!run\_storage\_loop@{run\_storage\_loop}}
 \index{run\_storage\_loop@{run\_storage\_loop}!BufferedSQLDatabase@{BufferedSQLDatabase}}
 \doxysubsubsection{\texorpdfstring{run\_storage\_loop()}{run\_storage\_loop()}}
 {\footnotesize\ttfamily \label{class_buffered_s_q_l_database_ad3e0f4af4bb8b151e5acf98776a535be} 
-void Buffered\+SQLDatabase\+::run\+\_\+storage\+\_\+loop (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+void Buffered\+SQLDatabase\+::run\+\_\+storage\+\_\+loop (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
 
+Runs the storage loop.
 
+This method should run in its own thread. Once started, it will loop infinitely until the \doxylink{class_buffered_s_q_l_database_a6a14258bb6ee256f023771fbc8fa983c}{Buffered\+SQLDatabase\+::terminate\+\_\+storage\+\_\+loop} method is called in another thread. \Hypertarget{class_buffered_s_q_l_database_a6a14258bb6ee256f023771fbc8fa983c}\index{BufferedSQLDatabase@{BufferedSQLDatabase}!terminate\_storage\_loop@{terminate\_storage\_loop}}
+\index{terminate\_storage\_loop@{terminate\_storage\_loop}!BufferedSQLDatabase@{BufferedSQLDatabase}}
+\doxysubsubsection{\texorpdfstring{terminate\_storage\_loop()}{terminate\_storage\_loop()}}
+{\footnotesize\ttfamily \label{class_buffered_s_q_l_database_a6a14258bb6ee256f023771fbc8fa983c} 
+void Buffered\+SQLDatabase\+::terminate\+\_\+storage\+\_\+loop (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Signals that the storage loop should commit any pending changes and gracefully exit. 
 
 \label{doc-variable-members}
 \Hypertarget{class_buffered_s_q_l_database_doc-variable-members}
@@ -72,14 +106,39 @@ void Buffered\+SQLDatabase\+::run\+\_\+storage\+\_\+loop (\begin{DoxyParamCaptio
 {\footnotesize\ttfamily \label{class_buffered_s_q_l_database_a96ccd1481afa2cde7866a13bfe739392} 
 \mbox{\hyperlink{class_s_q_l_database}{SQLDatabase}} Buffered\+SQLDatabase\+::db\hspace{0.3cm}{\ttfamily [private]}}
 
-\Hypertarget{class_buffered_s_q_l_database_a894285bcda8e95fbcab6ba72a18b27fe}\index{BufferedSQLDatabase@{BufferedSQLDatabase}!terminate@{terminate}}
-\index{terminate@{terminate}!BufferedSQLDatabase@{BufferedSQLDatabase}}
-\doxysubsubsection{\texorpdfstring{terminate}{terminate}}
-{\footnotesize\ttfamily \label{class_buffered_s_q_l_database_a894285bcda8e95fbcab6ba72a18b27fe} 
-std\+::atomic\+\_\+flag Buffered\+SQLDatabase\+::terminate\hspace{0.3cm}{\ttfamily [private]}}
+Internal SQL Database Handler \Hypertarget{class_buffered_s_q_l_database_a253252bd2ebe2b4c41008baaa6a602af}\index{BufferedSQLDatabase@{BufferedSQLDatabase}!INTERNAL\_WORK\_QUEUE\_SIZE@{INTERNAL\_WORK\_QUEUE\_SIZE}}
+\index{INTERNAL\_WORK\_QUEUE\_SIZE@{INTERNAL\_WORK\_QUEUE\_SIZE}!BufferedSQLDatabase@{BufferedSQLDatabase}}
+\doxysubsubsection{\texorpdfstring{INTERNAL\_WORK\_QUEUE\_SIZE}{INTERNAL\_WORK\_QUEUE\_SIZE}}
+{\footnotesize\ttfamily \label{class_buffered_s_q_l_database_a253252bd2ebe2b4c41008baaa6a602af} 
+uint32\+\_\+t Buffered\+SQLDatabase\+::\+INTERNAL\+\_\+\+WORK\+\_\+\+QUEUE\+\_\+\+SIZE = 4096\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}, {\ttfamily [private]}}
 
+The number of slots in the work queue used to hold pending insert operations \Hypertarget{class_buffered_s_q_l_database_a9297af453665a744bdbd4ebaab8181e8}\index{BufferedSQLDatabase@{BufferedSQLDatabase}!last\_transaction\_commit@{last\_transaction\_commit}}
+\index{last\_transaction\_commit@{last\_transaction\_commit}!BufferedSQLDatabase@{BufferedSQLDatabase}}
+\doxysubsubsection{\texorpdfstring{last\_transaction\_commit}{last\_transaction\_commit}}
+{\footnotesize\ttfamily \label{class_buffered_s_q_l_database_a9297af453665a744bdbd4ebaab8181e8} 
+std\+::chrono\+::time\+\_\+point$<$std\+::chrono\+::steady\+\_\+clock$>$ Buffered\+SQLDatabase\+::last\+\_\+transaction\+\_\+commit\hspace{0.3cm}{\ttfamily [private]}}
 
+Last timestamp when a transaction commit occurred \Hypertarget{class_buffered_s_q_l_database_a41b899decb8bebf47356fb3ca8c390db}\index{BufferedSQLDatabase@{BufferedSQLDatabase}!terminate\_flag@{terminate\_flag}}
+\index{terminate\_flag@{terminate\_flag}!BufferedSQLDatabase@{BufferedSQLDatabase}}
+\doxysubsubsection{\texorpdfstring{terminate\_flag}{terminate\_flag}}
+{\footnotesize\ttfamily \label{class_buffered_s_q_l_database_a41b899decb8bebf47356fb3ca8c390db} 
+std\+::atomic\+\_\+flag Buffered\+SQLDatabase\+::terminate\+\_\+flag\hspace{0.3cm}{\ttfamily [private]}}
 
-The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+Flag to indicate when the update loop should terminate. \Hypertarget{class_buffered_s_q_l_database_afa54a3a51294a8792befb2d81850dceb}\index{BufferedSQLDatabase@{BufferedSQLDatabase}!transaction\_period@{transaction\_period}}
+\index{transaction\_period@{transaction\_period}!BufferedSQLDatabase@{BufferedSQLDatabase}}
+\doxysubsubsection{\texorpdfstring{transaction\_period}{transaction\_period}}
+{\footnotesize\ttfamily \label{class_buffered_s_q_l_database_afa54a3a51294a8792befb2d81850dceb} 
+std\+::chrono\+::nanoseconds Buffered\+SQLDatabase\+::transaction\+\_\+period = std\+::chrono\+::nanoseconds((long long)1e7)\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}, {\ttfamily [private]}}
+
+The maximum period between transaction commits \Hypertarget{class_buffered_s_q_l_database_a9290ab0e828c7ee60726cadaa58cb653}\index{BufferedSQLDatabase@{BufferedSQLDatabase}!work\_queue@{work\_queue}}
+\index{work\_queue@{work\_queue}!BufferedSQLDatabase@{BufferedSQLDatabase}}
+\doxysubsubsection{\texorpdfstring{work\_queue}{work\_queue}}
+{\footnotesize\ttfamily \label{class_buffered_s_q_l_database_a9290ab0e828c7ee60726cadaa58cb653} 
+MPMCQueue$<$std\+::pair$<$\mbox{\hyperlink{struct_data_entry}{Data\+Entry}}, \mbox{\hyperlink{config_8h_a85d6d3ccace866da37c93e500a2c4147}{timestamp\+\_\+t}}$>$ $>$ Buffered\+SQLDatabase\+::work\+\_\+queue\hspace{0.3cm}{\ttfamily [private]}}
+
+MPMC task queue to handle SQL insert operations 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-include/database/\mbox{\hyperlink{buffered__db_8h}{buffered\+\_\+db.\+h}}\end{DoxyCompactItemize}
+include/database/\mbox{\hyperlink{buffered__db_8h}{buffered\+\_\+db.\+h}}\item 
+source/database/\mbox{\hyperlink{buffered__db_8cpp}{buffered\+\_\+db.\+cpp}}\end{DoxyCompactItemize}

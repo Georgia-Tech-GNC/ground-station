@@ -1,0 +1,281 @@
+\doxysection{MPMCQueue.\+h}
+\hypertarget{_m_p_m_c_queue_8h_source}{}\label{_m_p_m_c_queue_8h_source}\index{include/database/MPMCQueue.h@{include/database/MPMCQueue.h}}
+\mbox{\hyperlink{_m_p_m_c_queue_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{Copyright\ (c)\ 2020\ Erik\ Rigtorp\ <erik@rigtorp.se>}}
+\DoxyCodeLine{00003\ \textcolor{comment}{}}
+\DoxyCodeLine{00004\ \textcolor{comment}{See\ https://github.com/rigtorp/MPMCQueue\ for\ original}}
+\DoxyCodeLine{00005\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#ifndef\ MPMCQUEUE\_H}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#define\ MPMCQUEUE\_H}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <atomic>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <cassert>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <cstddef>}\ \textcolor{comment}{//\ offsetof}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <limits>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <new>}\ \textcolor{comment}{//\ std::hardware\_destructive\_interference\_size}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <stdexcept>}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#ifndef\ \_\_cpp\_aligned\_new}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#ifdef\ \_WIN32}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <malloc.h>}\ \textcolor{comment}{//\ \_aligned\_malloc}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <stdlib.h>}\ \textcolor{comment}{//\ posix\_memalign}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacempmc}{mpmc}}\ \{}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#if\ defined(\_\_cpp\_lib\_hardware\_interference\_size)\ \&\&\ !defined(\_\_APPLE\_\_)}}
+\DoxyCodeLine{00028\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{namespacempmc_ad416435dbcadb56065a08daad16a054c}{hardwareInterferenceSize}}\ =}
+\DoxyCodeLine{00029\ \ \ \ \ std::hardware\_destructive\_interference\_size;}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00031\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{namespacempmc_ad416435dbcadb56065a08daad16a054c}{hardwareInterferenceSize}}\ =\ 64;}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#if\ defined(\_\_cpp\_aligned\_new)}}
+\DoxyCodeLine{00035\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>\ \textcolor{keyword}{using\ }\mbox{\hyperlink{structmpmc_1_1_aligned_allocator}{AlignedAllocator}}\ =\ std::allocator<T>;}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00037\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structmpmc_1_1_aligned_allocator}{AlignedAllocator}}\ \{}
+\DoxyCodeLine{00038\ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{structmpmc_1_1_aligned_allocator_aa4692be47bc2558cdb0f1844b88b8f8b}{value\_type}}\ =\ T;}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ T\ *\mbox{\hyperlink{structmpmc_1_1_aligned_allocator_a52e638bc7ba4bbcfacf16a087704a7c5}{allocate}}(std::size\_t\ n)\ \{}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordflow}{if}\ (n\ >\ std::numeric\_limits<std::size\_t>::max()\ /\ \textcolor{keyword}{sizeof}(T))\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::bad\_array\_new\_length();}
+\DoxyCodeLine{00043\ \ \ \ \ \}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#ifdef\ \_WIN32}}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keyword}{auto}\ *p\ =\ \textcolor{keyword}{static\_cast<}T\ *\textcolor{keyword}{>}(\_aligned\_malloc(\textcolor{keyword}{sizeof}(T)\ *\ n,\ \textcolor{keyword}{alignof}(T)));}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordflow}{if}\ (p\ ==\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::bad\_alloc();}
+\DoxyCodeLine{00048\ \ \ \ \ \}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00050\ \ \ \ \ T\ *p;}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordflow}{if}\ (posix\_memalign(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{void}\ **\textcolor{keyword}{>}(\&p),\ \textcolor{keyword}{alignof}(T),}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{sizeof}(T)\ *\ n)\ !=\ 0)\ \{}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::bad\_alloc();}
+\DoxyCodeLine{00054\ \ \ \ \ \}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordflow}{return}\ p;}
+\DoxyCodeLine{00057\ \ \ \}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structmpmc_1_1_aligned_allocator_a8f47beef2262c4127a3468d884029d84}{deallocate}}(T\ *p,\ std::size\_t)\ \{}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#ifdef\ \_WIN32}}
+\DoxyCodeLine{00061\ \ \ \ \ \_aligned\_free(p);}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00063\ \ \ \ \ free(p);}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00065\ \ \ \}}
+\DoxyCodeLine{00066\ \};}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structmpmc_1_1_slot}{Slot}}\ \{}
+\DoxyCodeLine{00070\ \ \ \mbox{\hyperlink{structmpmc_1_1_slot_a36ef79bcbe89b233ef0279d0772440a7}{\string~Slot}}()\ noexcept\ \{}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{structmpmc_1_1_slot_a6b1e027eee2c777489ef96cfdb70cb38}{turn}}\ \&\ 1)\ \{}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \mbox{\hyperlink{structmpmc_1_1_slot_a5fa68e09ced6b8f66037576b08954c67}{destroy}}();}
+\DoxyCodeLine{00073\ \ \ \ \ \}}
+\DoxyCodeLine{00074\ \ \ \}}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}...\ Args>\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structmpmc_1_1_slot_a8e2b67799689aa54baa48d9d360dd4e2}{construct}}(Args\ \&\&...args)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_nothrow\_constructible<T,\ Args\ \&\&...>::value,}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}T\ must\ be\ nothrow\ constructible\ with\ Args\&\&..."{}});}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keyword}{new}\ (\&\mbox{\hyperlink{structmpmc_1_1_slot_aa1418edb5f806f21e76ed413f97ad6a6}{storage}})\ T(std::forward<Args>(args)...);}
+\DoxyCodeLine{00080\ \ \ \}}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structmpmc_1_1_slot_a5fa68e09ced6b8f66037576b08954c67}{destroy}}()\ noexcept\ \{}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_nothrow\_destructible<T>::value,}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}T\ must\ be\ nothrow\ destructible"{}});}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keyword}{reinterpret\_cast<}T\ *\textcolor{keyword}{>}(\&\mbox{\hyperlink{structmpmc_1_1_slot_aa1418edb5f806f21e76ed413f97ad6a6}{storage}})-\/>\string~T();}
+\DoxyCodeLine{00086\ \ \ \}}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \ \ T\ \&\&\mbox{\hyperlink{structmpmc_1_1_slot_ad40ed23b51a76a605db714300f0e2bf9}{move}}()\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{reinterpret\_cast<}T\ \&\&\textcolor{keyword}{>}(\mbox{\hyperlink{structmpmc_1_1_slot_aa1418edb5f806f21e76ed413f97ad6a6}{storage}});\ \}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \textcolor{comment}{//\ Align\ to\ avoid\ false\ sharing\ between\ adjacent\ slots}}
+\DoxyCodeLine{00091\ \ \ \textcolor{keyword}{alignas}(\mbox{\hyperlink{namespacempmc_ad416435dbcadb56065a08daad16a054c}{hardwareInterferenceSize}})\ std::atomic<size\_t>\ \mbox{\hyperlink{structmpmc_1_1_slot_a6b1e027eee2c777489ef96cfdb70cb38}{turn}}\ =\ \{0\};}
+\DoxyCodeLine{00092\ \ \ \textcolor{keyword}{typename}\ std::aligned\_storage<\textcolor{keyword}{sizeof}(T),\ \textcolor{keyword}{alignof}(T)>::type\ \mbox{\hyperlink{structmpmc_1_1_slot_aa1418edb5f806f21e76ed413f97ad6a6}{storage}};}
+\DoxyCodeLine{00093\ \};}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ Allocator\ =\ AlignedAllocator<Slot<T>>>}
+\DoxyCodeLine{00096\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classmpmc_1_1_queue_a8892008b353ebab72e9c1917c6637011}{Queue}}\ \{}
+\DoxyCodeLine{00097\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00098\ \ \ \textcolor{keyword}{static\_assert}(std::is\_nothrow\_copy\_assignable<T>::value\ ||}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::is\_nothrow\_move\_assignable<T>::value,}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}T\ must\ be\ nothrow\ copy\ or\ move\ assignable"{}});}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ \ \textcolor{keyword}{static\_assert}(std::is\_nothrow\_destructible<T>::value,}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}T\ must\ be\ nothrow\ destructible"{}});}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00106\ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{classmpmc_1_1_queue_a8892008b353ebab72e9c1917c6637011}{Queue}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ capacity,}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Allocator\ \&allocator\ =\ Allocator())}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ :\ \mbox{\hyperlink{classmpmc_1_1_queue_a409d68c336103316814f15a60c88b911}{capacity\_}}(capacity),\ \mbox{\hyperlink{classmpmc_1_1_queue_a4ba20c927e1fb0d04c23a5e1da54a892}{allocator\_}}(allocator),\ \mbox{\hyperlink{classmpmc_1_1_queue_a5a58d8b3064af3bc671e7afdedd00352}{head\_}}(0),\ \mbox{\hyperlink{classmpmc_1_1_queue_a8bd5121ae81d176e1174c75cdeb9a3f4}{tail\_}}(0)\ \{}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classmpmc_1_1_queue_a409d68c336103316814f15a60c88b911}{capacity\_}}\ <\ 1)\ \{}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::invalid\_argument(\textcolor{stringliteral}{"{}capacity\ <\ 1"{}});}
+\DoxyCodeLine{00111\ \ \ \ \ \}}
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{comment}{//\ Allocate\ one\ extra\ slot\ to\ prevent\ false\ sharing\ on\ the\ last\ slot}}
+\DoxyCodeLine{00113\ \ \ \ \ \mbox{\hyperlink{classmpmc_1_1_queue_a3c56d09d178fbb34f59e10f03d0fe3f7}{slots\_}}\ =\ \mbox{\hyperlink{classmpmc_1_1_queue_a4ba20c927e1fb0d04c23a5e1da54a892}{allocator\_}}.allocate(\mbox{\hyperlink{classmpmc_1_1_queue_a409d68c336103316814f15a60c88b911}{capacity\_}}\ +\ 1);}
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{comment}{//\ Allocators\ are\ not\ required\ to\ honor\ alignment\ for\ over-\/aligned\ types}}
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{comment}{//\ (see\ http://eel.is/c++draft/allocator.requirements\#10)\ so\ we\ verify}}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{comment}{//\ alignment\ here}}
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(\mbox{\hyperlink{classmpmc_1_1_queue_a3c56d09d178fbb34f59e10f03d0fe3f7}{slots\_}})\ \%\ \textcolor{keyword}{alignof}(\mbox{\hyperlink{structmpmc_1_1_slot}{Slot<T>}})\ !=\ 0)\ \{}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \mbox{\hyperlink{classmpmc_1_1_queue_a4ba20c927e1fb0d04c23a5e1da54a892}{allocator\_}}.deallocate(\mbox{\hyperlink{classmpmc_1_1_queue_a3c56d09d178fbb34f59e10f03d0fe3f7}{slots\_}},\ \mbox{\hyperlink{classmpmc_1_1_queue_a409d68c336103316814f15a60c88b911}{capacity\_}}\ +\ 1);}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::bad\_alloc();}
+\DoxyCodeLine{00120\ \ \ \ \ \}}
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0;\ i\ <\ \mbox{\hyperlink{classmpmc_1_1_queue_a409d68c336103316814f15a60c88b911}{capacity\_}};\ ++i)\ \{}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \textcolor{keyword}{new}\ (\&\mbox{\hyperlink{classmpmc_1_1_queue_a3c56d09d178fbb34f59e10f03d0fe3f7}{slots\_}}[i])\ \mbox{\hyperlink{structmpmc_1_1_slot}{Slot<T>}}();}
+\DoxyCodeLine{00123\ \ \ \ \ \}}
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keyword}{static\_assert}(}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \textcolor{keyword}{alignof}(\mbox{\hyperlink{structmpmc_1_1_slot}{Slot<T>}})\ ==\ \mbox{\hyperlink{namespacempmc_ad416435dbcadb56065a08daad16a054c}{hardwareInterferenceSize}},}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Slot\ must\ be\ aligned\ to\ cache\ line\ boundary\ to\ prevent\ false\ sharing"{}});}
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{keyword}{static\_assert}(\textcolor{keyword}{sizeof}(\mbox{\hyperlink{structmpmc_1_1_slot}{Slot<T>}})\ \%\ \mbox{\hyperlink{namespacempmc_ad416435dbcadb56065a08daad16a054c}{hardwareInterferenceSize}}\ ==\ 0,}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Slot\ size\ must\ be\ a\ multiple\ of\ cache\ line\ size\ to\ prevent\ "{}}}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}false\ sharing\ between\ adjacent\ slots"{}});}
+\DoxyCodeLine{00130\ \ \ \ \ \textcolor{keyword}{static\_assert}(\textcolor{keyword}{sizeof}(\mbox{\hyperlink{classmpmc_1_1_queue_a8892008b353ebab72e9c1917c6637011}{Queue}})\ \%\ \mbox{\hyperlink{namespacempmc_ad416435dbcadb56065a08daad16a054c}{hardwareInterferenceSize}}\ ==\ 0,}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Queue\ size\ must\ be\ a\ multiple\ of\ cache\ line\ size\ to\ "{}}}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}prevent\ false\ sharing\ between\ adjacent\ queues"{}});}
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keyword}{static\_assert}(}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ offsetof(\mbox{\hyperlink{classmpmc_1_1_queue_a8892008b353ebab72e9c1917c6637011}{Queue}},\ \mbox{\hyperlink{classmpmc_1_1_queue_a8bd5121ae81d176e1174c75cdeb9a3f4}{tail\_}})\ -\/\ offsetof(\mbox{\hyperlink{classmpmc_1_1_queue_a8892008b353ebab72e9c1917c6637011}{Queue}},\ \mbox{\hyperlink{classmpmc_1_1_queue_a5a58d8b3064af3bc671e7afdedd00352}{head\_}})\ ==}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}std::ptrdiff\_t\textcolor{keyword}{>}(\mbox{\hyperlink{namespacempmc_ad416435dbcadb56065a08daad16a054c}{hardwareInterferenceSize}}),}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}head\ and\ tail\ must\ be\ a\ cache\ line\ apart\ to\ prevent\ false\ sharing"{}});}
+\DoxyCodeLine{00137\ \ \ \}}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \ \ \mbox{\hyperlink{classmpmc_1_1_queue_a5430e7a3a55afabfe19d5d3690b53ef3}{\string~Queue}}()\ noexcept\ \{}
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0;\ i\ <\ \mbox{\hyperlink{classmpmc_1_1_queue_a409d68c336103316814f15a60c88b911}{capacity\_}};\ ++i)\ \{}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \mbox{\hyperlink{classmpmc_1_1_queue_a3c56d09d178fbb34f59e10f03d0fe3f7}{slots\_}}[i].\string~Slot();}
+\DoxyCodeLine{00142\ \ \ \ \ \}}
+\DoxyCodeLine{00143\ \ \ \ \ \mbox{\hyperlink{classmpmc_1_1_queue_a4ba20c927e1fb0d04c23a5e1da54a892}{allocator\_}}.deallocate(\mbox{\hyperlink{classmpmc_1_1_queue_a3c56d09d178fbb34f59e10f03d0fe3f7}{slots\_}},\ \mbox{\hyperlink{classmpmc_1_1_queue_a409d68c336103316814f15a60c88b911}{capacity\_}}\ +\ 1);}
+\DoxyCodeLine{00144\ \ \ \}}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \ \ \textcolor{comment}{//\ non-\/copyable\ and\ non-\/movable}}
+\DoxyCodeLine{00147\ \ \ \mbox{\hyperlink{classmpmc_1_1_queue_a6265f1293d225af178ea4e972fd04c81}{Queue}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classmpmc_1_1_queue_a8892008b353ebab72e9c1917c6637011}{Queue}}\ \&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00148\ \ \ \mbox{\hyperlink{classmpmc_1_1_queue_a8892008b353ebab72e9c1917c6637011}{Queue}}\ \&\mbox{\hyperlink{classmpmc_1_1_queue_a4fc2435c6aa9dd50ab29e43c2a470288}{operator=}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classmpmc_1_1_queue_a8892008b353ebab72e9c1917c6637011}{Queue}}\ \&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}...\ Args>\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classmpmc_1_1_queue_a0863e89ba1a317de12b627d22bbdcec6}{emplace}}(Args\ \&\&...args)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_nothrow\_constructible<T,\ Args\ \&\&...>::value,}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}T\ must\ be\ nothrow\ constructible\ with\ Args\&\&..."{}});}
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{keyword}{auto}\ \textcolor{keyword}{const}\ head\ =\ \mbox{\hyperlink{classmpmc_1_1_queue_a5a58d8b3064af3bc671e7afdedd00352}{head\_}}.fetch\_add(1);}
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keyword}{auto}\ \&slot\ =\ \mbox{\hyperlink{classmpmc_1_1_queue_a3c56d09d178fbb34f59e10f03d0fe3f7}{slots\_}}[\mbox{\hyperlink{classmpmc_1_1_queue_a8d7d7d5aadb19a016e09fa9041bcd089}{idx}}(head)];}
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{keywordflow}{while}\ (\mbox{\hyperlink{classmpmc_1_1_queue_accc7ef4ba91c63f524636344de5657de}{turn}}(head)\ *\ 2\ !=\ slot.turn.load(std::memory\_order\_acquire))}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ ;}
+\DoxyCodeLine{00157\ \ \ \ \ slot.construct(std::forward<Args>(args)...);}
+\DoxyCodeLine{00158\ \ \ \ \ slot.turn.store(\mbox{\hyperlink{classmpmc_1_1_queue_accc7ef4ba91c63f524636344de5657de}{turn}}(head)\ *\ 2\ +\ 1,\ std::memory\_order\_release);}
+\DoxyCodeLine{00159\ \ \ \}}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}...\ Args>\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classmpmc_1_1_queue_a801460728846f251e4b02ea65db98c5b}{try\_emplace}}(Args\ \&\&...args)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_nothrow\_constructible<T,\ Args\ \&\&...>::value,}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}T\ must\ be\ nothrow\ constructible\ with\ Args\&\&..."{}});}
+\DoxyCodeLine{00164\ \ \ \ \ \textcolor{keyword}{auto}\ head\ =\ \mbox{\hyperlink{classmpmc_1_1_queue_a5a58d8b3064af3bc671e7afdedd00352}{head\_}}.load(std::memory\_order\_acquire);}
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{keywordflow}{for}\ (;;)\ \{}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \textcolor{keyword}{auto}\ \&slot\ =\ \mbox{\hyperlink{classmpmc_1_1_queue_a3c56d09d178fbb34f59e10f03d0fe3f7}{slots\_}}[\mbox{\hyperlink{classmpmc_1_1_queue_a8d7d7d5aadb19a016e09fa9041bcd089}{idx}}(head)];}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classmpmc_1_1_queue_accc7ef4ba91c63f524636344de5657de}{turn}}(head)\ *\ 2\ ==\ slot.turn.load(std::memory\_order\_acquire))\ \{}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classmpmc_1_1_queue_a5a58d8b3064af3bc671e7afdedd00352}{head\_}}.compare\_exchange\_strong(head,\ head\ +\ 1))\ \{}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \ \ slot.construct(std::forward<Args>(args)...);}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \ \ slot.turn.store(\mbox{\hyperlink{classmpmc_1_1_queue_accc7ef4ba91c63f524636344de5657de}{turn}}(head)\ *\ 2\ +\ 1,\ std::memory\_order\_release);}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ \textcolor{keyword}{const}\ prevHead\ =\ head;}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ head\ =\ \mbox{\hyperlink{classmpmc_1_1_queue_a5a58d8b3064af3bc671e7afdedd00352}{head\_}}.load(std::memory\_order\_acquire);}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (head\ ==\ prevHead)\ \{}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00180\ \ \ \ \ \}}
+\DoxyCodeLine{00181\ \ \ \}}
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00183\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classmpmc_1_1_queue_aca5810d037af27002410fc44e3f17f3c}{push}}(\textcolor{keyword}{const}\ T\ \&v)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00184\ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_nothrow\_copy\_constructible<T>::value,}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}T\ must\ be\ nothrow\ copy\ constructible"{}});}
+\DoxyCodeLine{00186\ \ \ \ \ \mbox{\hyperlink{classmpmc_1_1_queue_a0863e89ba1a317de12b627d22bbdcec6}{emplace}}(v);}
+\DoxyCodeLine{00187\ \ \ \}}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ P,}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ =\ \textcolor{keyword}{typename}\ std::enable\_if<}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::is\_nothrow\_constructible<T,\ P\ \&\&>::value>::type>}
+\DoxyCodeLine{00192\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classmpmc_1_1_queue_ab7a4b10fa4489f0ee9c42ceff5b3caee}{push}}(P\ \&\&v)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00193\ \ \ \ \ \mbox{\hyperlink{classmpmc_1_1_queue_a0863e89ba1a317de12b627d22bbdcec6}{emplace}}(std::forward<P>(v));}
+\DoxyCodeLine{00194\ \ \ \}}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classmpmc_1_1_queue_a615da9795649c6312f08ec47e11976e8}{try\_push}}(\textcolor{keyword}{const}\ T\ \&v)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00197\ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_nothrow\_copy\_constructible<T>::value,}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}T\ must\ be\ nothrow\ copy\ constructible"{}});}
+\DoxyCodeLine{00199\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classmpmc_1_1_queue_a801460728846f251e4b02ea65db98c5b}{try\_emplace}}(v);}
+\DoxyCodeLine{00200\ \ \ \}}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ P,}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ =\ \textcolor{keyword}{typename}\ std::enable\_if<}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::is\_nothrow\_constructible<T,\ P\ \&\&>::value>::type>}
+\DoxyCodeLine{00205\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classmpmc_1_1_queue_abbabe37cedc3539f674b8a5b194f5903}{try\_push}}(P\ \&\&v)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00206\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classmpmc_1_1_queue_a801460728846f251e4b02ea65db98c5b}{try\_emplace}}(std::forward<P>(v));}
+\DoxyCodeLine{00207\ \ \ \}}
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00210\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classmpmc_1_1_queue_ae0dd40976cf0729896dc8cc3e1350e30}{pop}}(T\ \&v,\ \textcolor{keyword}{const}\ std::atomic\_flag\&\ exit\_flag)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00211\ \ \ \ \ \textcolor{keyword}{auto}\ \textcolor{keyword}{const}\ tail\ =\ \mbox{\hyperlink{classmpmc_1_1_queue_a8bd5121ae81d176e1174c75cdeb9a3f4}{tail\_}}.fetch\_add(1);}
+\DoxyCodeLine{00212\ \ \ \ \ \textcolor{keyword}{auto}\ \&slot\ =\ \mbox{\hyperlink{classmpmc_1_1_queue_a3c56d09d178fbb34f59e10f03d0fe3f7}{slots\_}}[\mbox{\hyperlink{classmpmc_1_1_queue_a8d7d7d5aadb19a016e09fa9041bcd089}{idx}}(tail)];}
+\DoxyCodeLine{00213\ \ \ \ \ \textcolor{keywordtype}{bool}\ exited\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00214\ \ \ \ \ \textcolor{keywordflow}{while}\ (\mbox{\hyperlink{classmpmc_1_1_queue_accc7ef4ba91c63f524636344de5657de}{turn}}(tail)\ *\ 2\ +\ 1\ !=\ slot.turn.load(std::memory\_order\_acquire)\ \&\&\ !(exited\ =\ exit\_flag.test(std::memory\_order\_relaxed)))}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ ;}
+\DoxyCodeLine{00216\ \ \ \ \ \textcolor{keywordflow}{if}\ (exited)\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00217\ \ \ \ \ v\ =\ slot.move();}
+\DoxyCodeLine{00218\ \ \ \ \ slot.destroy();}
+\DoxyCodeLine{00219\ \ \ \ \ slot.turn.store(\mbox{\hyperlink{classmpmc_1_1_queue_accc7ef4ba91c63f524636344de5657de}{turn}}(tail)\ *\ 2\ +\ 2,\ std::memory\_order\_release);}
+\DoxyCodeLine{00220\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00221\ \ \ \}}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00223\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classmpmc_1_1_queue_a873d762aa52153b2a10bec6729ab4478}{try\_pop}}(T\ \&v)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00224\ \ \ \ \ \textcolor{keyword}{auto}\ tail\ =\ \mbox{\hyperlink{classmpmc_1_1_queue_a8bd5121ae81d176e1174c75cdeb9a3f4}{tail\_}}.load(std::memory\_order\_acquire);}
+\DoxyCodeLine{00225\ \ \ \ \ \textcolor{keywordflow}{for}\ (;;)\ \{}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \textcolor{keyword}{auto}\ \&slot\ =\ \mbox{\hyperlink{classmpmc_1_1_queue_a3c56d09d178fbb34f59e10f03d0fe3f7}{slots\_}}[\mbox{\hyperlink{classmpmc_1_1_queue_a8d7d7d5aadb19a016e09fa9041bcd089}{idx}}(tail)];}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classmpmc_1_1_queue_accc7ef4ba91c63f524636344de5657de}{turn}}(tail)\ *\ 2\ +\ 1\ ==\ slot.turn.load(std::memory\_order\_acquire))\ \{}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{classmpmc_1_1_queue_a8bd5121ae81d176e1174c75cdeb9a3f4}{tail\_}}.compare\_exchange\_strong(tail,\ tail\ +\ 1))\ \{}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \ \ v\ =\ slot.move();}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \ \ slot.destroy();}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \ \ slot.turn.store(\mbox{\hyperlink{classmpmc_1_1_queue_accc7ef4ba91c63f524636344de5657de}{turn}}(tail)\ *\ 2\ +\ 2,\ std::memory\_order\_release);}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ \textcolor{keyword}{const}\ prevTail\ =\ tail;}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ tail\ =\ \mbox{\hyperlink{classmpmc_1_1_queue_a8bd5121ae81d176e1174c75cdeb9a3f4}{tail\_}}.load(std::memory\_order\_acquire);}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tail\ ==\ prevTail)\ \{}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00241\ \ \ \ \ \}}
+\DoxyCodeLine{00242\ \ \ \}}
+\DoxyCodeLine{00243\ }
+\DoxyCodeLine{00248\ \ \ ptrdiff\_t\ \mbox{\hyperlink{classmpmc_1_1_queue_aa197444f2b9a7ab04ab688318689a674}{size}}()\ const\ noexcept\ \{}
+\DoxyCodeLine{00249\ \ \ \ \ \textcolor{comment}{//\ TODO:\ How\ can\ we\ deal\ with\ wrapped\ queue\ on\ 32bit?}}
+\DoxyCodeLine{00250\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}ptrdiff\_t\textcolor{keyword}{>}(\mbox{\hyperlink{classmpmc_1_1_queue_a5a58d8b3064af3bc671e7afdedd00352}{head\_}}.load(std::memory\_order\_relaxed)\ -\/}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classmpmc_1_1_queue_a8bd5121ae81d176e1174c75cdeb9a3f4}{tail\_}}.load(std::memory\_order\_relaxed));}
+\DoxyCodeLine{00252\ \ \ \}}
+\DoxyCodeLine{00253\ }
+\DoxyCodeLine{00257\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classmpmc_1_1_queue_a423dfe0bc53f9fe594c7b4a29dbd697c}{empty}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classmpmc_1_1_queue_aa197444f2b9a7ab04ab688318689a674}{size}}()\ <=\ 0;\ \}}
+\DoxyCodeLine{00258\ }
+\DoxyCodeLine{00259\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00260\ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{classmpmc_1_1_queue_a8d7d7d5aadb19a016e09fa9041bcd089}{idx}}(\textcolor{keywordtype}{size\_t}\ i)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{\ \textcolor{keywordflow}{return}\ i\ \%\ \mbox{\hyperlink{classmpmc_1_1_queue_a409d68c336103316814f15a60c88b911}{capacity\_}};\ \}}
+\DoxyCodeLine{00261\ }
+\DoxyCodeLine{00262\ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{classmpmc_1_1_queue_accc7ef4ba91c63f524636344de5657de}{turn}}(\textcolor{keywordtype}{size\_t}\ i)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{\ \textcolor{keywordflow}{return}\ i\ /\ \mbox{\hyperlink{classmpmc_1_1_queue_a409d68c336103316814f15a60c88b911}{capacity\_}};\ \}}
+\DoxyCodeLine{00263\ }
+\DoxyCodeLine{00264\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00265\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{classmpmc_1_1_queue_a409d68c336103316814f15a60c88b911}{capacity\_}};}
+\DoxyCodeLine{00266\ \ \ \mbox{\hyperlink{structmpmc_1_1_slot}{Slot<T>}}\ *\mbox{\hyperlink{classmpmc_1_1_queue_a3c56d09d178fbb34f59e10f03d0fe3f7}{slots\_}};}
+\DoxyCodeLine{00267\ \textcolor{preprocessor}{\#if\ defined(\_\_has\_cpp\_attribute)\ \&\&\ \_\_has\_cpp\_attribute(no\_unique\_address)}}
+\DoxyCodeLine{00268\ \ \ Allocator\ \mbox{\hyperlink{classmpmc_1_1_queue_a4ba20c927e1fb0d04c23a5e1da54a892}{allocator\_}}\ [[no\_unique\_address]];}
+\DoxyCodeLine{00269\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00270\ \ \ Allocator\ \mbox{\hyperlink{classmpmc_1_1_queue_a4ba20c927e1fb0d04c23a5e1da54a892}{allocator\_}};}
+\DoxyCodeLine{00271\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00272\ }
+\DoxyCodeLine{00273\ \ \ \textcolor{comment}{//\ Align\ to\ avoid\ false\ sharing\ between\ head\_\ and\ tail\_}}
+\DoxyCodeLine{00274\ \ \ \textcolor{keyword}{alignas}(\mbox{\hyperlink{namespacempmc_ad416435dbcadb56065a08daad16a054c}{hardwareInterferenceSize}})\ std::atomic<size\_t>\ \mbox{\hyperlink{classmpmc_1_1_queue_a5a58d8b3064af3bc671e7afdedd00352}{head\_}};}
+\DoxyCodeLine{00275\ \ \ \textcolor{keyword}{alignas}(\mbox{\hyperlink{namespacempmc_ad416435dbcadb56065a08daad16a054c}{hardwareInterferenceSize}})\ std::atomic<size\_t>\ \mbox{\hyperlink{classmpmc_1_1_queue_a8bd5121ae81d176e1174c75cdeb9a3f4}{tail\_}};}
+\DoxyCodeLine{00276\ \};}
+\DoxyCodeLine{00277\ \}\ \textcolor{comment}{//\ namespace\ mpmc}}
+\DoxyCodeLine{00278\ }
+\DoxyCodeLine{00279\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ Allocator\ =\ \mbox{\hyperlink{structmpmc_1_1_aligned_allocator}{mpmc::AlignedAllocator<mpmc::Slot<T>}}>>}
+\DoxyCodeLine{00281\ \textcolor{keyword}{using\ }\mbox{\hyperlink{_m_p_m_c_queue_8h_aebba082b05b25f8dc1ca5210ee360697}{MPMCQueue}}\ =\ \mbox{\hyperlink{classmpmc_1_1_queue}{mpmc::Queue<T,\ Allocator>}};}
+\DoxyCodeLine{00282\ }
+\DoxyCodeLine{00283\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

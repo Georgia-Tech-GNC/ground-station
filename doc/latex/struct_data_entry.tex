@@ -12,6 +12,10 @@ union \mbox{\hyperlink{union_data_entry_1_1_data_entry_union_type}{Data\+Entry\+
 \doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
+\mbox{\hyperlink{struct_data_entry_a1062e8854125b910c8e9b565fd554d1d}{Data\+Entry}} ()
+\item 
+\mbox{\hyperlink{struct_data_entry_a13090df8b43d1006164207b17c59ce75}{Data\+Entry}} (const \mbox{\hyperlink{struct_data_entry}{Data\+Entry}} \&other) noexcept(true)
+\item 
 \mbox{\hyperlink{struct_data_entry_af350797a9abba9d96854267f32b585a1}{Data\+Entry}} (\mbox{\hyperlink{struct_rocket_kinematics_data}{Rocket\+Kinematics\+Data}} \+\_\+rocket\+\_\+kinematics\+\_\+data)
 \item 
 \mbox{\hyperlink{struct_data_entry_a93e70cd3f9224c46f22acda1a90aa477}{Data\+Entry}} (\mbox{\hyperlink{struct_rocket_sensor_data}{Rocket\+Sensor\+Data}} \+\_\+rocket\+\_\+sensor\+\_\+data)
@@ -28,19 +32,31 @@ union \mbox{\hyperlink{union_data_entry_1_1_data_entry_union_type}{Data\+Entry\+
 \label{doc-constructors}
 \Hypertarget{struct_data_entry_doc-constructors}
 \doxysubsection{Constructor \& Destructor Documentation}
-\Hypertarget{struct_data_entry_af350797a9abba9d96854267f32b585a1}\index{DataEntry@{DataEntry}!DataEntry@{DataEntry}}
+\Hypertarget{struct_data_entry_a1062e8854125b910c8e9b565fd554d1d}\index{DataEntry@{DataEntry}!DataEntry@{DataEntry}}
 \index{DataEntry@{DataEntry}!DataEntry@{DataEntry}}
-\doxysubsubsection{\texorpdfstring{DataEntry()}{DataEntry()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+\doxysubsubsection{\texorpdfstring{DataEntry()}{DataEntry()}\hspace{0.1cm}{\footnotesize\ttfamily [1/4]}}
+{\footnotesize\ttfamily \label{struct_data_entry_a1062e8854125b910c8e9b565fd554d1d} 
+Data\+Entry\+::\+Data\+Entry (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Default (empty) constructor \Hypertarget{struct_data_entry_a13090df8b43d1006164207b17c59ce75}\index{DataEntry@{DataEntry}!DataEntry@{DataEntry}}
+\index{DataEntry@{DataEntry}!DataEntry@{DataEntry}}
+\doxysubsubsection{\texorpdfstring{DataEntry()}{DataEntry()}\hspace{0.1cm}{\footnotesize\ttfamily [2/4]}}
+{\footnotesize\ttfamily \label{struct_data_entry_a13090df8b43d1006164207b17c59ce75} 
+Data\+Entry\+::\+Data\+Entry (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_data_entry}{Data\+Entry}} \&}]{other}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+Copy constructor \Hypertarget{struct_data_entry_af350797a9abba9d96854267f32b585a1}\index{DataEntry@{DataEntry}!DataEntry@{DataEntry}}
+\index{DataEntry@{DataEntry}!DataEntry@{DataEntry}}
+\doxysubsubsection{\texorpdfstring{DataEntry()}{DataEntry()}\hspace{0.1cm}{\footnotesize\ttfamily [3/4]}}
 {\footnotesize\ttfamily \label{struct_data_entry_af350797a9abba9d96854267f32b585a1} 
 Data\+Entry\+::\+Data\+Entry (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_rocket_kinematics_data}{Rocket\+Kinematics\+Data}}}]{\+\_\+rocket\+\_\+kinematics\+\_\+data}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-\Hypertarget{struct_data_entry_a93e70cd3f9224c46f22acda1a90aa477}\index{DataEntry@{DataEntry}!DataEntry@{DataEntry}}
+Constructor for \doxylink{struct_data_entry}{Data\+Entry} that initializes to hold a \doxylink{struct_rocket_kinematics_data}{Rocket\+Kinematics\+Data} \Hypertarget{struct_data_entry_a93e70cd3f9224c46f22acda1a90aa477}\index{DataEntry@{DataEntry}!DataEntry@{DataEntry}}
 \index{DataEntry@{DataEntry}!DataEntry@{DataEntry}}
-\doxysubsubsection{\texorpdfstring{DataEntry()}{DataEntry()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+\doxysubsubsection{\texorpdfstring{DataEntry()}{DataEntry()}\hspace{0.1cm}{\footnotesize\ttfamily [4/4]}}
 {\footnotesize\ttfamily \label{struct_data_entry_a93e70cd3f9224c46f22acda1a90aa477} 
 Data\+Entry\+::\+Data\+Entry (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_rocket_sensor_data}{Rocket\+Sensor\+Data}}}]{\+\_\+rocket\+\_\+sensor\+\_\+data}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-
+Constructor for \doxylink{struct_data_entry}{Data\+Entry} that initializes to hold a \doxylink{struct_rocket_sensor_data}{Rocket\+Sensor\+Data} 
 
 \label{doc-variable-members}
 \Hypertarget{struct_data_entry_doc-variable-members}
@@ -59,6 +75,7 @@ union \mbox{\hyperlink{union_data_entry_1_1_data_entry_union_type}{Data\+Entry\+
 
 
 
-The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+The documentation for this struct was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-include/globals/\mbox{\hyperlink{datatypes_8h}{datatypes.\+h}}\end{DoxyCompactItemize}
+include/globals/\mbox{\hyperlink{datatypes_8h}{datatypes.\+h}}\item 
+source/globals/\mbox{\hyperlink{datatypes_8cpp}{datatypes.\+cpp}}\end{DoxyCompactItemize}

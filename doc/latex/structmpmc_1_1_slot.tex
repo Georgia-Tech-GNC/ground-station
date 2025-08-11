@@ -1,0 +1,87 @@
+\doxysection{mpmc\+::Slot\texorpdfstring{$<$}{<} T \texorpdfstring{$>$}{>} Struct Template Reference}
+\hypertarget{structmpmc_1_1_slot}{}\label{structmpmc_1_1_slot}\index{mpmc::Slot$<$ T $>$@{mpmc::Slot$<$ T $>$}}
+
+
+{\ttfamily \#include $<$MPMCQueue.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structmpmc_1_1_slot_a36ef79bcbe89b233ef0279d0772440a7}{\texorpdfstring{$\sim$}{\string~}\+Slot}} () noexcept
+\item 
+{\footnotesize template$<$typename... Args$>$ }\\void \mbox{\hyperlink{structmpmc_1_1_slot_a8e2b67799689aa54baa48d9d360dd4e2}{construct}} (Args \&\&...args) noexcept
+\item 
+void \mbox{\hyperlink{structmpmc_1_1_slot_a5fa68e09ced6b8f66037576b08954c67}{destroy}} () noexcept
+\item 
+T \&\& \mbox{\hyperlink{structmpmc_1_1_slot_ad40ed23b51a76a605db714300f0e2bf9}{move}} () noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::atomic$<$ size\+\_\+t $>$ \mbox{\hyperlink{structmpmc_1_1_slot_a6b1e027eee2c777489ef96cfdb70cb38}{turn}} = \{0\}
+\item 
+std\+::aligned\+\_\+storage$<$ sizeof(T), alignof(T)$>$\+::type \mbox{\hyperlink{structmpmc_1_1_slot_aa1418edb5f806f21e76ed413f97ad6a6}{storage}}
+\end{DoxyCompactItemize}
+
+
+\label{doc-constructors}
+\Hypertarget{structmpmc_1_1_slot_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{structmpmc_1_1_slot_a36ef79bcbe89b233ef0279d0772440a7}\index{mpmc::Slot$<$ T $>$@{mpmc::Slot$<$ T $>$}!````~Slot@{\texorpdfstring{$\sim$}{\string~}Slot}}
+\index{````~Slot@{\texorpdfstring{$\sim$}{\string~}Slot}!mpmc::Slot$<$ T $>$@{mpmc::Slot$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}Slot()}{\string~Slot()}}
+{\footnotesize\ttfamily \label{structmpmc_1_1_slot_a36ef79bcbe89b233ef0279d0772440a7} 
+template$<$typename T$>$ \\
+\mbox{\hyperlink{structmpmc_1_1_slot}{mpmc\+::\+Slot}}$<$ T $>$\+::\texorpdfstring{$\sim$}{\string~}\mbox{\hyperlink{structmpmc_1_1_slot}{Slot}} (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+\label{doc-func-members}
+\Hypertarget{structmpmc_1_1_slot_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{structmpmc_1_1_slot_a8e2b67799689aa54baa48d9d360dd4e2}\index{mpmc::Slot$<$ T $>$@{mpmc::Slot$<$ T $>$}!construct@{construct}}
+\index{construct@{construct}!mpmc::Slot$<$ T $>$@{mpmc::Slot$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{construct()}{construct()}}
+{\footnotesize\ttfamily \label{structmpmc_1_1_slot_a8e2b67799689aa54baa48d9d360dd4e2} 
+template$<$typename T$>$ \\
+template$<$typename... Args$>$ \\
+void \mbox{\hyperlink{structmpmc_1_1_slot}{mpmc\+::\+Slot}}$<$ T $>$\+::construct (\begin{DoxyParamCaption}\item[{Args \&\&...}]{args}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{structmpmc_1_1_slot_a5fa68e09ced6b8f66037576b08954c67}\index{mpmc::Slot$<$ T $>$@{mpmc::Slot$<$ T $>$}!destroy@{destroy}}
+\index{destroy@{destroy}!mpmc::Slot$<$ T $>$@{mpmc::Slot$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{destroy()}{destroy()}}
+{\footnotesize\ttfamily \label{structmpmc_1_1_slot_a5fa68e09ced6b8f66037576b08954c67} 
+template$<$typename T$>$ \\
+void \mbox{\hyperlink{structmpmc_1_1_slot}{mpmc\+::\+Slot}}$<$ T $>$\+::destroy (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{structmpmc_1_1_slot_ad40ed23b51a76a605db714300f0e2bf9}\index{mpmc::Slot$<$ T $>$@{mpmc::Slot$<$ T $>$}!move@{move}}
+\index{move@{move}!mpmc::Slot$<$ T $>$@{mpmc::Slot$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{move()}{move()}}
+{\footnotesize\ttfamily \label{structmpmc_1_1_slot_ad40ed23b51a76a605db714300f0e2bf9} 
+template$<$typename T$>$ \\
+T \&\& \mbox{\hyperlink{structmpmc_1_1_slot}{mpmc\+::\+Slot}}$<$ T $>$\+::move (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+\label{doc-variable-members}
+\Hypertarget{structmpmc_1_1_slot_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structmpmc_1_1_slot_aa1418edb5f806f21e76ed413f97ad6a6}\index{mpmc::Slot$<$ T $>$@{mpmc::Slot$<$ T $>$}!storage@{storage}}
+\index{storage@{storage}!mpmc::Slot$<$ T $>$@{mpmc::Slot$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{storage}{storage}}
+{\footnotesize\ttfamily \label{structmpmc_1_1_slot_aa1418edb5f806f21e76ed413f97ad6a6} 
+template$<$typename T$>$ \\
+std\+::aligned\+\_\+storage$<$sizeof(T),alignof(T)$>$\+::type \mbox{\hyperlink{structmpmc_1_1_slot}{mpmc\+::\+Slot}}$<$ T $>$\+::storage}
+
+\Hypertarget{structmpmc_1_1_slot_a6b1e027eee2c777489ef96cfdb70cb38}\index{mpmc::Slot$<$ T $>$@{mpmc::Slot$<$ T $>$}!turn@{turn}}
+\index{turn@{turn}!mpmc::Slot$<$ T $>$@{mpmc::Slot$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{turn}{turn}}
+{\footnotesize\ttfamily \label{structmpmc_1_1_slot_a6b1e027eee2c777489ef96cfdb70cb38} 
+template$<$typename T$>$ \\
+std\+::atomic$<$size\+\_\+t$>$ \mbox{\hyperlink{structmpmc_1_1_slot}{mpmc\+::\+Slot}}$<$ T $>$\+::turn = \{0\}}
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/database/\mbox{\hyperlink{_m_p_m_c_queue_8h}{MPMCQueue.\+h}}\end{DoxyCompactItemize}
