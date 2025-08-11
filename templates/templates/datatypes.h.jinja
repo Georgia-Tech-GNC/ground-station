@@ -34,12 +34,21 @@ struct DataEntry {
         {{data_packet.title_name}} {{data_packet.variable_name}};
         {% endfor %}
 
+        /** Default (empty) constructor */
+        DataEntryUnionType() { }
         {% for data_packet in all_data_packets%}
         DataEntryUnionType({{data_packet.title_name}} _{{data_packet.variable_name}}): {{data_packet.variable_name}}(_{{data_packet.variable_name}}) { }
         {% endfor %}
     } data;
 
-    {% for data_packet in all_data_packets%}
+    /** Default (empty) constructor */
+    DataEntry() { }
+
+    /** Copy constructor */
+    DataEntry(const DataEntry& other) noexcept(true);
+    {% for data_packet in all_data_packets %}
+
+    /** Constructor for DataEntry that initializes to hold a {{data_packet.title_name}} */
     DataEntry({{data_packet.title_name}} _{{data_packet.variable_name}}): 
         type(DataPacketType::{{data_packet.variable_name | upper}}), data(_{{data_packet.variable_name}}) { }
     {% endfor %}

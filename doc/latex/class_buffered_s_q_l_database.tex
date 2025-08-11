@@ -13,7 +13,7 @@
 \item 
 void \mbox{\hyperlink{class_buffered_s_q_l_database_accbee4a5111f0ea78cb8cb4b71bc0578}{add\+\_\+entry}} (const \mbox{\hyperlink{struct_data_entry}{Data\+Entry}} \&data)
 \item 
-void \mbox{\hyperlink{class_buffered_s_q_l_database_a27ec1ca3ca19d0f738bf1ff595a8bca5}{buffered\+\_\+storage\+\_\+loop}} ()
+void \mbox{\hyperlink{class_buffered_s_q_l_database_ad3e0f4af4bb8b151e5acf98776a535be}{run\+\_\+storage\+\_\+loop}} ()
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Private Attributes}
 \begin{DoxyCompactItemize}
@@ -23,6 +23,11 @@ void \mbox{\hyperlink{class_buffered_s_q_l_database_a27ec1ca3ca19d0f738bf1ff595a
 std\+::atomic\+\_\+flag \mbox{\hyperlink{class_buffered_s_q_l_database_a894285bcda8e95fbcab6ba72a18b27fe}{terminate}}
 \end{DoxyCompactItemize}
 
+
+\doxysubsection{Detailed Description}
+A threadsafe wrapper over \doxylink{class_s_q_l_database}{SQLDatabase} which adds inserts to a bounded length queue instead of inserting them immediately.
+
+Inserts are handled in batches via the \doxylink{class_buffered_s_q_l_database_ad3e0f4af4bb8b151e5acf98776a535be}{Buffered\+SQLDatabase\+::run\+\_\+storage\+\_\+loop} method, which should be ran in it\textquotesingle{}s own thread. 
 
 \label{doc-constructors}
 \Hypertarget{class_buffered_s_q_l_database_doc-constructors}
@@ -50,11 +55,11 @@ Buffered\+SQLDatabase\+::\+Buffered\+SQLDatabase (\begin{DoxyParamCaption}\item[
 {\footnotesize\ttfamily \label{class_buffered_s_q_l_database_accbee4a5111f0ea78cb8cb4b71bc0578} 
 void Buffered\+SQLDatabase\+::add\+\_\+entry (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_data_entry}{Data\+Entry}} \&}]{data}{}\end{DoxyParamCaption})}
 
-\Hypertarget{class_buffered_s_q_l_database_a27ec1ca3ca19d0f738bf1ff595a8bca5}\index{BufferedSQLDatabase@{BufferedSQLDatabase}!buffered\_storage\_loop@{buffered\_storage\_loop}}
-\index{buffered\_storage\_loop@{buffered\_storage\_loop}!BufferedSQLDatabase@{BufferedSQLDatabase}}
-\doxysubsubsection{\texorpdfstring{buffered\_storage\_loop()}{buffered\_storage\_loop()}}
-{\footnotesize\ttfamily \label{class_buffered_s_q_l_database_a27ec1ca3ca19d0f738bf1ff595a8bca5} 
-void Buffered\+SQLDatabase\+::buffered\+\_\+storage\+\_\+loop (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+\Hypertarget{class_buffered_s_q_l_database_ad3e0f4af4bb8b151e5acf98776a535be}\index{BufferedSQLDatabase@{BufferedSQLDatabase}!run\_storage\_loop@{run\_storage\_loop}}
+\index{run\_storage\_loop@{run\_storage\_loop}!BufferedSQLDatabase@{BufferedSQLDatabase}}
+\doxysubsubsection{\texorpdfstring{run\_storage\_loop()}{run\_storage\_loop()}}
+{\footnotesize\ttfamily \label{class_buffered_s_q_l_database_ad3e0f4af4bb8b151e5acf98776a535be} 
+void Buffered\+SQLDatabase\+::run\+\_\+storage\+\_\+loop (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 

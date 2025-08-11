@@ -9,27 +9,27 @@
 \DoxyCodeLine{00005\ }
 \DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <atomic>}}
 \DoxyCodeLine{00007\ }
-\DoxyCodeLine{00008\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_buffered_s_q_l_database_a8d1c8b9260b1c8fb8f7bde87056a17be}{BufferedSQLDatabase}}\ \{}
-\DoxyCodeLine{00009\ }
-\DoxyCodeLine{00010\ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00011\ \ \ \ \ \mbox{\hyperlink{class_s_q_l_database}{SQLDatabase}}\ \mbox{\hyperlink{class_buffered_s_q_l_database_a96ccd1481afa2cde7866a13bfe739392}{db}};}
-\DoxyCodeLine{00012\ \ \ \ \ std::atomic\_flag\ \mbox{\hyperlink{class_buffered_s_q_l_database_a894285bcda8e95fbcab6ba72a18b27fe}{terminate}};}
-\DoxyCodeLine{00013\ }
-\DoxyCodeLine{00014\ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00015\ \ \ \ \ \mbox{\hyperlink{class_buffered_s_q_l_database_a8d1c8b9260b1c8fb8f7bde87056a17be}{BufferedSQLDatabase}}(\textcolor{keyword}{const}\ std::string\&\ name):\ \mbox{\hyperlink{class_buffered_s_q_l_database_a96ccd1481afa2cde7866a13bfe739392}{db}}(name),\ \mbox{\hyperlink{class_buffered_s_q_l_database_a894285bcda8e95fbcab6ba72a18b27fe}{terminate}}(false)\ \{\ \}}
-\DoxyCodeLine{00016\ \ \ \ \ \mbox{\hyperlink{class_buffered_s_q_l_database_a7f894f40d3ecc13ce9c436147c9d89a1}{BufferedSQLDatabase}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_buffered_s_q_l_database_a8d1c8b9260b1c8fb8f7bde87056a17be}{BufferedSQLDatabase}}\&)\ =\ \textcolor{keyword}{delete};}
-\DoxyCodeLine{00017\ }
-\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_buffered_s_q_l_database_accbee4a5111f0ea78cb8cb4b71bc0578}{add\_entry}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_data_entry}{DataEntry}}\&\ data);}
-\DoxyCodeLine{00019\ \ \ \ \ }
-\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_buffered_s_q_l_database_a27ec1ca3ca19d0f738bf1ff595a8bca5}{buffered\_storage\_loop}}()\ \{}
-\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_buffered_s_q_l_database_a894285bcda8e95fbcab6ba72a18b27fe}{terminate}}.clear();}
-\DoxyCodeLine{00022\ }
-\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (!\mbox{\hyperlink{class_buffered_s_q_l_database_a894285bcda8e95fbcab6ba72a18b27fe}{terminate}}.test())\ \{}
-\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Try\ to\ emplace\ an\ item.}}
-\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00026\ \ \ \ \ \}}
-\DoxyCodeLine{00027\ \};}
-\DoxyCodeLine{00028\ }
-\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00015\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_buffered_s_q_l_database_a8d1c8b9260b1c8fb8f7bde87056a17be}{BufferedSQLDatabase}}\ \{}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00018\ \ \ \ \ \mbox{\hyperlink{class_s_q_l_database}{SQLDatabase}}\ \mbox{\hyperlink{class_buffered_s_q_l_database_a96ccd1481afa2cde7866a13bfe739392}{db}};}
+\DoxyCodeLine{00019\ \ \ \ \ std::atomic\_flag\ \mbox{\hyperlink{class_buffered_s_q_l_database_a894285bcda8e95fbcab6ba72a18b27fe}{terminate}};}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00022\ \ \ \ \ \mbox{\hyperlink{class_buffered_s_q_l_database_a8d1c8b9260b1c8fb8f7bde87056a17be}{BufferedSQLDatabase}}(\textcolor{keyword}{const}\ std::string\&\ name):\ \mbox{\hyperlink{class_buffered_s_q_l_database_a96ccd1481afa2cde7866a13bfe739392}{db}}(name),\ \mbox{\hyperlink{class_buffered_s_q_l_database_a894285bcda8e95fbcab6ba72a18b27fe}{terminate}}(false)\ \{\ \}}
+\DoxyCodeLine{00023\ \ \ \ \ \mbox{\hyperlink{class_buffered_s_q_l_database_a7f894f40d3ecc13ce9c436147c9d89a1}{BufferedSQLDatabase}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_buffered_s_q_l_database_a8d1c8b9260b1c8fb8f7bde87056a17be}{BufferedSQLDatabase}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_buffered_s_q_l_database_accbee4a5111f0ea78cb8cb4b71bc0578}{add\_entry}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_data_entry}{DataEntry}}\&\ data);}
+\DoxyCodeLine{00026\ \ \ \ \ }
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_buffered_s_q_l_database_ad3e0f4af4bb8b151e5acf98776a535be}{run\_storage\_loop}}()\ \{}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_buffered_s_q_l_database_a894285bcda8e95fbcab6ba72a18b27fe}{terminate}}.clear();}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (!\mbox{\hyperlink{class_buffered_s_q_l_database_a894285bcda8e95fbcab6ba72a18b27fe}{terminate}}.test())\ \{}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Try\ to\ emplace\ an\ item.}}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00033\ \ \ \ \ \}}
+\DoxyCodeLine{00034\ \};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#endif}}
 
 \end{DoxyCode}

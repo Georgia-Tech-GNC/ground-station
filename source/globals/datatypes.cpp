@@ -14,3 +14,14 @@ RocketSensorData::RocketSensorData(const std::byte (&raw_array)[16]) {
     std::memcpy(&gps_z, &raw_array[12], 4);
 }
 
+
+DataEntry::DataEntry(const DataEntry& other) noexcept(true): type(other.type) {
+    switch (other.type) {
+        case DataPacketType::ROCKET_KINEMATICS_DATA:
+            data.rocket_kinematics_data = other.data.rocket_kinematics_data;
+            break;
+        case DataPacketType::ROCKET_SENSOR_DATA:
+            data.rocket_sensor_data = other.data.rocket_sensor_data;
+            break;
+    }
+}

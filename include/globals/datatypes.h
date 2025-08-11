@@ -40,12 +40,23 @@ struct DataEntry {
         RocketKinematicsData rocket_kinematics_data;
         RocketSensorData rocket_sensor_data;
 
+        /** Default (empty) constructor */
+        DataEntryUnionType() { }
         DataEntryUnionType(RocketKinematicsData _rocket_kinematics_data): rocket_kinematics_data(_rocket_kinematics_data) { }
         DataEntryUnionType(RocketSensorData _rocket_sensor_data): rocket_sensor_data(_rocket_sensor_data) { }
     } data;
 
+    /** Default (empty) constructor */
+    DataEntry() { }
+
+    /** Copy constructor */
+    DataEntry(const DataEntry& other) noexcept(true);
+
+    /** Constructor for DataEntry that initializes to hold a RocketKinematicsData */
     DataEntry(RocketKinematicsData _rocket_kinematics_data): 
         type(DataPacketType::ROCKET_KINEMATICS_DATA), data(_rocket_kinematics_data) { }
+
+    /** Constructor for DataEntry that initializes to hold a RocketSensorData */
     DataEntry(RocketSensorData _rocket_sensor_data): 
         type(DataPacketType::ROCKET_SENSOR_DATA), data(_rocket_sensor_data) { }
 };

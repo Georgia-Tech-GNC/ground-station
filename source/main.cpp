@@ -1,17 +1,29 @@
 #include <iostream>
 
-#include "sql_commands.h"
+#include "buffered_db.h"
 #include "datatypes.h"
+
+#include <chrono>
+#include <thread>
+#include <type_traits>
 
 
 
 int main() {
-    std::cout << "Hello World!";
-    SQLDatabase db("data.db");
+    std::cout << "Hello World!\n";
 
-    DataEntry data(RocketSensorData(5234, 12, 123));
-    DataEntry data2(RocketKinematicsData(0.1, 0.2, 0.3, 12, 13));
+    BufferedSQLDatabase db("data.db");
 
-    db.insert_data(data, 1);
-    db.insert_data(data2, 1);
+    std::thread t1(&BufferedSQLDatabase::run_storage_loop, std::ref(db));
+
+    db.add_entry(DataEntry(RocketKinematicsData(.1, .2, .3, 12, 13)), 0);
+    db.add_entry(DataEntry(RocketKinematicsData(.2, .2, .3, 12, 13)), 1);
+    db.add_entry(DataEntry(RocketKinematicsData(.3, .2, .3, 12, 13)), 2);
+
+    std::this_thread::sleep_for(std::chrono::nanoseconds((long long)1e5));
+
+    db.terminate_storage_loop();
+    t1.join();
+
+    std::cout << "complete!";
 }

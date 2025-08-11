@@ -15,13 +15,12 @@ private:
 
     bool is_transaction_open;
 
-     /** Starts a SQL transaction */
+public:
+    /** Starts a SQL transaction */
     void begin_transaction();
 
     /** Ends an SQL transaction and commits all changes */
     void close_transaction();
-
-public:
 
     /** Allocates an SQL database object and creates all of the required tables. */
     SQLDatabase(const std::string& name);

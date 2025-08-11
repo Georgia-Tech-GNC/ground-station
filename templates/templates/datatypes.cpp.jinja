@@ -10,3 +10,13 @@
 }
 
 {% endfor %}
+
+DataEntry::DataEntry(const DataEntry& other) noexcept(true): type(other.type) {
+    switch (other.type) {
+        {% for data_packet in all_data_packets%}
+        case DataPacketType::{{data_packet.variable_name | upper}}:
+            data.{{data_packet.variable_name}} = other.data.{{data_packet.variable_name}};
+            break;
+        {% endfor %}
+    }
+}
