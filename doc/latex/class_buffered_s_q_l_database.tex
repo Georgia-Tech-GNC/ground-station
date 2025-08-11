@@ -1,0 +1,80 @@
+\doxysection{Buffered\+SQLDatabase Class Reference}
+\hypertarget{class_buffered_s_q_l_database}{}\label{class_buffered_s_q_l_database}\index{BufferedSQLDatabase@{BufferedSQLDatabase}}
+
+
+{\ttfamily \#include $<$buffered\+\_\+db.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_buffered_s_q_l_database_a8d1c8b9260b1c8fb8f7bde87056a17be}{Buffered\+SQLDatabase}} (const std\+::string \&name)
+\item 
+\mbox{\hyperlink{class_buffered_s_q_l_database_a7f894f40d3ecc13ce9c436147c9d89a1}{Buffered\+SQLDatabase}} (const \mbox{\hyperlink{class_buffered_s_q_l_database}{Buffered\+SQLDatabase}} \&)=delete
+\item 
+void \mbox{\hyperlink{class_buffered_s_q_l_database_accbee4a5111f0ea78cb8cb4b71bc0578}{add\+\_\+entry}} (const \mbox{\hyperlink{struct_data_entry}{Data\+Entry}} \&data)
+\item 
+void \mbox{\hyperlink{class_buffered_s_q_l_database_a27ec1ca3ca19d0f738bf1ff595a8bca5}{buffered\+\_\+storage\+\_\+loop}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_s_q_l_database}{SQLDatabase}} \mbox{\hyperlink{class_buffered_s_q_l_database_a96ccd1481afa2cde7866a13bfe739392}{db}}
+\item 
+std\+::atomic\+\_\+flag \mbox{\hyperlink{class_buffered_s_q_l_database_a894285bcda8e95fbcab6ba72a18b27fe}{terminate}}
+\end{DoxyCompactItemize}
+
+
+\label{doc-constructors}
+\Hypertarget{class_buffered_s_q_l_database_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_buffered_s_q_l_database_a8d1c8b9260b1c8fb8f7bde87056a17be}\index{BufferedSQLDatabase@{BufferedSQLDatabase}!BufferedSQLDatabase@{BufferedSQLDatabase}}
+\index{BufferedSQLDatabase@{BufferedSQLDatabase}!BufferedSQLDatabase@{BufferedSQLDatabase}}
+\doxysubsubsection{\texorpdfstring{BufferedSQLDatabase()}{BufferedSQLDatabase()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_buffered_s_q_l_database_a8d1c8b9260b1c8fb8f7bde87056a17be} 
+Buffered\+SQLDatabase\+::\+Buffered\+SQLDatabase (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{class_buffered_s_q_l_database_a7f894f40d3ecc13ce9c436147c9d89a1}\index{BufferedSQLDatabase@{BufferedSQLDatabase}!BufferedSQLDatabase@{BufferedSQLDatabase}}
+\index{BufferedSQLDatabase@{BufferedSQLDatabase}!BufferedSQLDatabase@{BufferedSQLDatabase}}
+\doxysubsubsection{\texorpdfstring{BufferedSQLDatabase()}{BufferedSQLDatabase()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_buffered_s_q_l_database_a7f894f40d3ecc13ce9c436147c9d89a1} 
+Buffered\+SQLDatabase\+::\+Buffered\+SQLDatabase (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_buffered_s_q_l_database}{Buffered\+SQLDatabase}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+
+
+\label{doc-func-members}
+\Hypertarget{class_buffered_s_q_l_database_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_buffered_s_q_l_database_accbee4a5111f0ea78cb8cb4b71bc0578}\index{BufferedSQLDatabase@{BufferedSQLDatabase}!add\_entry@{add\_entry}}
+\index{add\_entry@{add\_entry}!BufferedSQLDatabase@{BufferedSQLDatabase}}
+\doxysubsubsection{\texorpdfstring{add\_entry()}{add\_entry()}}
+{\footnotesize\ttfamily \label{class_buffered_s_q_l_database_accbee4a5111f0ea78cb8cb4b71bc0578} 
+void Buffered\+SQLDatabase\+::add\+\_\+entry (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_data_entry}{Data\+Entry}} \&}]{data}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_buffered_s_q_l_database_a27ec1ca3ca19d0f738bf1ff595a8bca5}\index{BufferedSQLDatabase@{BufferedSQLDatabase}!buffered\_storage\_loop@{buffered\_storage\_loop}}
+\index{buffered\_storage\_loop@{buffered\_storage\_loop}!BufferedSQLDatabase@{BufferedSQLDatabase}}
+\doxysubsubsection{\texorpdfstring{buffered\_storage\_loop()}{buffered\_storage\_loop()}}
+{\footnotesize\ttfamily \label{class_buffered_s_q_l_database_a27ec1ca3ca19d0f738bf1ff595a8bca5} 
+void Buffered\+SQLDatabase\+::buffered\+\_\+storage\+\_\+loop (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\label{doc-variable-members}
+\Hypertarget{class_buffered_s_q_l_database_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_buffered_s_q_l_database_a96ccd1481afa2cde7866a13bfe739392}\index{BufferedSQLDatabase@{BufferedSQLDatabase}!db@{db}}
+\index{db@{db}!BufferedSQLDatabase@{BufferedSQLDatabase}}
+\doxysubsubsection{\texorpdfstring{db}{db}}
+{\footnotesize\ttfamily \label{class_buffered_s_q_l_database_a96ccd1481afa2cde7866a13bfe739392} 
+\mbox{\hyperlink{class_s_q_l_database}{SQLDatabase}} Buffered\+SQLDatabase\+::db\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{class_buffered_s_q_l_database_a894285bcda8e95fbcab6ba72a18b27fe}\index{BufferedSQLDatabase@{BufferedSQLDatabase}!terminate@{terminate}}
+\index{terminate@{terminate}!BufferedSQLDatabase@{BufferedSQLDatabase}}
+\doxysubsubsection{\texorpdfstring{terminate}{terminate}}
+{\footnotesize\ttfamily \label{class_buffered_s_q_l_database_a894285bcda8e95fbcab6ba72a18b27fe} 
+std\+::atomic\+\_\+flag Buffered\+SQLDatabase\+::terminate\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/database/\mbox{\hyperlink{buffered__db_8h}{buffered\+\_\+db.\+h}}\end{DoxyCompactItemize}

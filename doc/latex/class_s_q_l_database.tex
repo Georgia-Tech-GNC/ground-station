@@ -1,0 +1,120 @@
+\doxysection{SQLDatabase Class Reference}
+\hypertarget{class_s_q_l_database}{}\label{class_s_q_l_database}\index{SQLDatabase@{SQLDatabase}}
+
+
+{\ttfamily \#include $<$sql\+\_\+commands.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_s_q_l_database_a3a7537d2a6b5a58cf7550ead9c701eb2}{SQLDatabase}} (const std\+::string \&name)
+\item 
+\mbox{\hyperlink{class_s_q_l_database_ab657b940e617e9ac76d6064f8ac9334b}{SQLDatabase}} (const \mbox{\hyperlink{class_s_q_l_database}{SQLDatabase}} \&)=delete
+\item 
+\mbox{\hyperlink{class_s_q_l_database_a1cb442f795759c2bd9acfd7841813d71}{\texorpdfstring{$\sim$}{\string~}\+SQLDatabase}} ()
+\item 
+void \mbox{\hyperlink{class_s_q_l_database_a7980d9f0c9fd2e85389451d2245151f1}{insert\+\_\+data}} (const \mbox{\hyperlink{struct_data_entry}{Data\+Entry}} \&data, \mbox{\hyperlink{config_8h_a85d6d3ccace866da37c93e500a2c4147}{timestamp\+\_\+t}} timestamp)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_s_q_l_database_aa5992d394832278ad8b4122dbfc65632}{begin\+\_\+transaction}} ()
+\item 
+void \mbox{\hyperlink{class_s_q_l_database_ade905b6658c25b2022ca6abe5155c540}{close\+\_\+transaction}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+sqlite3\+\_\+stmt \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{class_s_q_l_database_ad746ff2457920132f2ce67cacff292f0}{rocket\+\_\+kinematics\+\_\+data\+\_\+insert\+\_\+cmd}}
+\item 
+sqlite3\+\_\+stmt \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{class_s_q_l_database_a725ce74af833cc977a56c5a4a2180c65}{rocket\+\_\+sensor\+\_\+data\+\_\+insert\+\_\+cmd}}
+\item 
+sqlite3 \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{class_s_q_l_database_aa9974cfc9bb2b010750099df7b3605f8}{db}}
+\item 
+bool \mbox{\hyperlink{class_s_q_l_database_a3656ab41fde1159b37cf31a09e4abcde}{is\+\_\+transaction\+\_\+open}}
+\end{DoxyCompactItemize}
+
+
+\label{doc-constructors}
+\Hypertarget{class_s_q_l_database_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_s_q_l_database_a3a7537d2a6b5a58cf7550ead9c701eb2}\index{SQLDatabase@{SQLDatabase}!SQLDatabase@{SQLDatabase}}
+\index{SQLDatabase@{SQLDatabase}!SQLDatabase@{SQLDatabase}}
+\doxysubsubsection{\texorpdfstring{SQLDatabase()}{SQLDatabase()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_s_q_l_database_a3a7537d2a6b5a58cf7550ead9c701eb2} 
+SQLDatabase\+::\+SQLDatabase (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name}{}\end{DoxyParamCaption})}
+
+Allocates an SQL database object and creates all of the required tables.
+
+Allocates an SQL database object and creates all of the required tables. This method should be called once accross all threads at the start of the program \Hypertarget{class_s_q_l_database_ab657b940e617e9ac76d6064f8ac9334b}\index{SQLDatabase@{SQLDatabase}!SQLDatabase@{SQLDatabase}}
+\index{SQLDatabase@{SQLDatabase}!SQLDatabase@{SQLDatabase}}
+\doxysubsubsection{\texorpdfstring{SQLDatabase()}{SQLDatabase()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_s_q_l_database_ab657b940e617e9ac76d6064f8ac9334b} 
+SQLDatabase\+::\+SQLDatabase (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_s_q_l_database}{SQLDatabase}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+\Hypertarget{class_s_q_l_database_a1cb442f795759c2bd9acfd7841813d71}\index{SQLDatabase@{SQLDatabase}!````~SQLDatabase@{\texorpdfstring{$\sim$}{\string~}SQLDatabase}}
+\index{````~SQLDatabase@{\texorpdfstring{$\sim$}{\string~}SQLDatabase}!SQLDatabase@{SQLDatabase}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}SQLDatabase()}{\string~SQLDatabase()}}
+{\footnotesize\ttfamily \label{class_s_q_l_database_a1cb442f795759c2bd9acfd7841813d71} 
+SQLDatabase\+::\texorpdfstring{$\sim$}{\string~}\+SQLDatabase (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Deallocates the SQL database object and frees all prepared statements
+
+Deallocates the SQL database object This method should be called once at the end of the program 
+
+\label{doc-func-members}
+\Hypertarget{class_s_q_l_database_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_s_q_l_database_aa5992d394832278ad8b4122dbfc65632}\index{SQLDatabase@{SQLDatabase}!begin\_transaction@{begin\_transaction}}
+\index{begin\_transaction@{begin\_transaction}!SQLDatabase@{SQLDatabase}}
+\doxysubsubsection{\texorpdfstring{begin\_transaction()}{begin\_transaction()}}
+{\footnotesize\ttfamily \label{class_s_q_l_database_aa5992d394832278ad8b4122dbfc65632} 
+void SQLDatabase\+::begin\+\_\+transaction (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+Starts a SQL transaction \Hypertarget{class_s_q_l_database_ade905b6658c25b2022ca6abe5155c540}\index{SQLDatabase@{SQLDatabase}!close\_transaction@{close\_transaction}}
+\index{close\_transaction@{close\_transaction}!SQLDatabase@{SQLDatabase}}
+\doxysubsubsection{\texorpdfstring{close\_transaction()}{close\_transaction()}}
+{\footnotesize\ttfamily \label{class_s_q_l_database_ade905b6658c25b2022ca6abe5155c540} 
+void SQLDatabase\+::close\+\_\+transaction (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+Ends an SQL transaction and commits all changes \Hypertarget{class_s_q_l_database_a7980d9f0c9fd2e85389451d2245151f1}\index{SQLDatabase@{SQLDatabase}!insert\_data@{insert\_data}}
+\index{insert\_data@{insert\_data}!SQLDatabase@{SQLDatabase}}
+\doxysubsubsection{\texorpdfstring{insert\_data()}{insert\_data()}}
+{\footnotesize\ttfamily \label{class_s_q_l_database_a7980d9f0c9fd2e85389451d2245151f1} 
+void SQLDatabase\+::insert\+\_\+data (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_data_entry}{Data\+Entry}} \&}]{data}{, }\item[{\mbox{\hyperlink{config_8h_a85d6d3ccace866da37c93e500a2c4147}{timestamp\+\_\+t}}}]{timestamp}{}\end{DoxyParamCaption})}
+
+Adds the provided entry to the SQL database 
+
+\label{doc-variable-members}
+\Hypertarget{class_s_q_l_database_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_s_q_l_database_aa9974cfc9bb2b010750099df7b3605f8}\index{SQLDatabase@{SQLDatabase}!db@{db}}
+\index{db@{db}!SQLDatabase@{SQLDatabase}}
+\doxysubsubsection{\texorpdfstring{db}{db}}
+{\footnotesize\ttfamily \label{class_s_q_l_database_aa9974cfc9bb2b010750099df7b3605f8} 
+sqlite3\texorpdfstring{$\ast$}{*} SQLDatabase\+::db\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{class_s_q_l_database_a3656ab41fde1159b37cf31a09e4abcde}\index{SQLDatabase@{SQLDatabase}!is\_transaction\_open@{is\_transaction\_open}}
+\index{is\_transaction\_open@{is\_transaction\_open}!SQLDatabase@{SQLDatabase}}
+\doxysubsubsection{\texorpdfstring{is\_transaction\_open}{is\_transaction\_open}}
+{\footnotesize\ttfamily \label{class_s_q_l_database_a3656ab41fde1159b37cf31a09e4abcde} 
+bool SQLDatabase\+::is\+\_\+transaction\+\_\+open\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{class_s_q_l_database_ad746ff2457920132f2ce67cacff292f0}\index{SQLDatabase@{SQLDatabase}!rocket\_kinematics\_data\_insert\_cmd@{rocket\_kinematics\_data\_insert\_cmd}}
+\index{rocket\_kinematics\_data\_insert\_cmd@{rocket\_kinematics\_data\_insert\_cmd}!SQLDatabase@{SQLDatabase}}
+\doxysubsubsection{\texorpdfstring{rocket\_kinematics\_data\_insert\_cmd}{rocket\_kinematics\_data\_insert\_cmd}}
+{\footnotesize\ttfamily \label{class_s_q_l_database_ad746ff2457920132f2ce67cacff292f0} 
+sqlite3\+\_\+stmt\texorpdfstring{$\ast$}{*} SQLDatabase\+::rocket\+\_\+kinematics\+\_\+data\+\_\+insert\+\_\+cmd\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{class_s_q_l_database_a725ce74af833cc977a56c5a4a2180c65}\index{SQLDatabase@{SQLDatabase}!rocket\_sensor\_data\_insert\_cmd@{rocket\_sensor\_data\_insert\_cmd}}
+\index{rocket\_sensor\_data\_insert\_cmd@{rocket\_sensor\_data\_insert\_cmd}!SQLDatabase@{SQLDatabase}}
+\doxysubsubsection{\texorpdfstring{rocket\_sensor\_data\_insert\_cmd}{rocket\_sensor\_data\_insert\_cmd}}
+{\footnotesize\ttfamily \label{class_s_q_l_database_a725ce74af833cc977a56c5a4a2180c65} 
+sqlite3\+\_\+stmt \texorpdfstring{$\ast$}{*} SQLDatabase\+::rocket\+\_\+sensor\+\_\+data\+\_\+insert\+\_\+cmd\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/database/\mbox{\hyperlink{sql__commands_8h}{sql\+\_\+commands.\+h}}\item 
+source/database/\mbox{\hyperlink{sql__commands_8cpp}{sql\+\_\+commands.\+cpp}}\end{DoxyCompactItemize}

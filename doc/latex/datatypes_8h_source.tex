@@ -1,0 +1,59 @@
+\doxysection{datatypes.\+h}
+\hypertarget{datatypes_8h_source}{}\label{datatypes_8h_source}\index{include/globals/datatypes.h@{include/globals/datatypes.h}}
+\mbox{\hyperlink{datatypes_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ DATATYPES\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ DATATYPES\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <cstddef>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <array>}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}sqlite3.h"{}}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{enum\ class}\ \mbox{\hyperlink{datatypes_8h_a8177281edf91c9421c33891469a41308}{DataPacketType}}\ \{}
+\DoxyCodeLine{00011\ \ \ \ \ \mbox{\hyperlink{datatypes_8h_a8177281edf91c9421c33891469a41308a5625e1605c55761fe8abb144de312d7d}{ROCKET\_KINEMATICS\_DATA}},}
+\DoxyCodeLine{00012\ \ \ \ \ \mbox{\hyperlink{datatypes_8h_a8177281edf91c9421c33891469a41308a4efffbb76c598efeeafb176ae7b97645}{ROCKET\_SENSOR\_DATA}},}
+\DoxyCodeLine{00013\ \};}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_rocket_kinematics_data_a3018337e6d206b3cbf079352efaa6429}{RocketKinematicsData}}\ \{}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_rocket_kinematics_data_ad08c23b16a637a14b84d7fd2426c40d4}{x}},\ \mbox{\hyperlink{struct_rocket_kinematics_data_a43cb5f466d36a5cd519b95eafc5d23e6}{y}},\ \mbox{\hyperlink{struct_rocket_kinematics_data_a6ef4f05eb02ee3b03e27ca8378d6a443}{z}};}
+\DoxyCodeLine{00017\ \ \ \ \ uint16\_t\ \mbox{\hyperlink{struct_rocket_kinematics_data_a20a631fda40874585e472bfc21b429ea}{roll}},\ \mbox{\hyperlink{struct_rocket_kinematics_data_a0b0ebc171bf87876e81112511314c057}{pitch}};}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \ \ \ \ \mbox{\hyperlink{struct_rocket_kinematics_data_a3018337e6d206b3cbf079352efaa6429}{RocketKinematicsData}}(\textcolor{keyword}{const}\ std::byte\ (\&raw\_array)[16]);\ }
+\DoxyCodeLine{00020\ \ \ \ \ \mbox{\hyperlink{struct_rocket_kinematics_data_a453eb704a10dc1bf8ce720813489713b}{RocketKinematicsData}}(\textcolor{keywordtype}{float}\ \_x,\ \textcolor{keywordtype}{float}\ \_y,\ \textcolor{keywordtype}{float}\ \_z,\ uint16\_t\ \_roll,\ uint16\_t\ \_pitch):}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_rocket_kinematics_data_ad08c23b16a637a14b84d7fd2426c40d4}{x}}(\_x),\ \mbox{\hyperlink{struct_rocket_kinematics_data_a43cb5f466d36a5cd519b95eafc5d23e6}{y}}(\_y),\ \mbox{\hyperlink{struct_rocket_kinematics_data_a6ef4f05eb02ee3b03e27ca8378d6a443}{z}}(\_z),\ \mbox{\hyperlink{struct_rocket_kinematics_data_a20a631fda40874585e472bfc21b429ea}{roll}}(\_roll),\ \mbox{\hyperlink{struct_rocket_kinematics_data_a0b0ebc171bf87876e81112511314c057}{pitch}}(\_pitch)\ \{\ \}}
+\DoxyCodeLine{00022\ \ \ \ \ \mbox{\hyperlink{struct_rocket_kinematics_data_a62e1dcb95237f09783e4e1195538db67}{RocketKinematicsData}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_rocket_kinematics_data_a3018337e6d206b3cbf079352efaa6429}{RocketKinematicsData}}\&\ other):}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_rocket_kinematics_data_ad08c23b16a637a14b84d7fd2426c40d4}{x}}(other.\mbox{\hyperlink{struct_rocket_kinematics_data_ad08c23b16a637a14b84d7fd2426c40d4}{x}}),\ \mbox{\hyperlink{struct_rocket_kinematics_data_a43cb5f466d36a5cd519b95eafc5d23e6}{y}}(other.\mbox{\hyperlink{struct_rocket_kinematics_data_a43cb5f466d36a5cd519b95eafc5d23e6}{y}}),\ \mbox{\hyperlink{struct_rocket_kinematics_data_a6ef4f05eb02ee3b03e27ca8378d6a443}{z}}(other.\mbox{\hyperlink{struct_rocket_kinematics_data_a6ef4f05eb02ee3b03e27ca8378d6a443}{z}}),\ \mbox{\hyperlink{struct_rocket_kinematics_data_a20a631fda40874585e472bfc21b429ea}{roll}}(other.\mbox{\hyperlink{struct_rocket_kinematics_data_a20a631fda40874585e472bfc21b429ea}{roll}}),\ \mbox{\hyperlink{struct_rocket_kinematics_data_a0b0ebc171bf87876e81112511314c057}{pitch}}(other.\mbox{\hyperlink{struct_rocket_kinematics_data_a0b0ebc171bf87876e81112511314c057}{pitch}})\ \{\ \}}
+\DoxyCodeLine{00024\ \};}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_rocket_sensor_data_ae607ab0dd009bd81a3d889daaada348e}{RocketSensorData}}\ \{}
+\DoxyCodeLine{00027\ \ \ \ \ int64\_t\ \mbox{\hyperlink{struct_rocket_sensor_data_a8dfb836120f7760000e1e89f92fee974}{gps\_x}};}
+\DoxyCodeLine{00028\ \ \ \ \ int32\_t\ \mbox{\hyperlink{struct_rocket_sensor_data_adabd08c48f35ad3eb424fe75628f97fc}{gps\_y}},\ \mbox{\hyperlink{struct_rocket_sensor_data_a63bf312da0df88dda0f3b91a1b1c1a15}{gps\_z}};}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ \mbox{\hyperlink{struct_rocket_sensor_data_ae607ab0dd009bd81a3d889daaada348e}{RocketSensorData}}(\textcolor{keyword}{const}\ std::byte\ (\&raw\_array)[16]);\ }
+\DoxyCodeLine{00031\ \ \ \ \ \mbox{\hyperlink{struct_rocket_sensor_data_afd2184417cbce11f630a327a569b5cf9}{RocketSensorData}}(int64\_t\ \_gps\_x,\ int32\_t\ \_gps\_y,\ int32\_t\ \_gps\_z):}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_rocket_sensor_data_a8dfb836120f7760000e1e89f92fee974}{gps\_x}}(\_gps\_x),\ \mbox{\hyperlink{struct_rocket_sensor_data_adabd08c48f35ad3eb424fe75628f97fc}{gps\_y}}(\_gps\_y),\ \mbox{\hyperlink{struct_rocket_sensor_data_a63bf312da0df88dda0f3b91a1b1c1a15}{gps\_z}}(\_gps\_z)\ \{\ \}}
+\DoxyCodeLine{00033\ \ \ \ \ \mbox{\hyperlink{struct_rocket_sensor_data_afeac52dc4fc939df0817f8e6b862a8f0}{RocketSensorData}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_rocket_sensor_data_ae607ab0dd009bd81a3d889daaada348e}{RocketSensorData}}\&\ other):}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_rocket_sensor_data_a8dfb836120f7760000e1e89f92fee974}{gps\_x}}(other.\mbox{\hyperlink{struct_rocket_sensor_data_a8dfb836120f7760000e1e89f92fee974}{gps\_x}}),\ \mbox{\hyperlink{struct_rocket_sensor_data_adabd08c48f35ad3eb424fe75628f97fc}{gps\_y}}(other.\mbox{\hyperlink{struct_rocket_sensor_data_adabd08c48f35ad3eb424fe75628f97fc}{gps\_y}}),\ \mbox{\hyperlink{struct_rocket_sensor_data_a63bf312da0df88dda0f3b91a1b1c1a15}{gps\_z}}(other.\mbox{\hyperlink{struct_rocket_sensor_data_a63bf312da0df88dda0f3b91a1b1c1a15}{gps\_z}})\ \{\ \}}
+\DoxyCodeLine{00035\ \};}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_data_entry_af350797a9abba9d96854267f32b585a1}{DataEntry}}\ \{}
+\DoxyCodeLine{00038\ \ \ \ \ \mbox{\hyperlink{datatypes_8h_a8177281edf91c9421c33891469a41308}{DataPacketType}}\ \mbox{\hyperlink{struct_data_entry_afe58b9dc361f3637ecb9f820054fea4e}{type}};}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keyword}{union\ }\mbox{\hyperlink{union_data_entry_1_1_data_entry_union_type_aab0d402326f30428bc91934006e152ad}{DataEntryUnionType}}\ \{}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_rocket_kinematics_data}{RocketKinematicsData}}\ \mbox{\hyperlink{union_data_entry_1_1_data_entry_union_type_a9fb2a1bb25de4c3a815061e7fbfc29e5}{rocket\_kinematics\_data}};}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_rocket_sensor_data}{RocketSensorData}}\ \mbox{\hyperlink{union_data_entry_1_1_data_entry_union_type_a4dbfc6c3bfb7d0f57c459c6d13ccf98c}{rocket\_sensor\_data}};}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{union_data_entry_1_1_data_entry_union_type_aab0d402326f30428bc91934006e152ad}{DataEntryUnionType}}(\mbox{\hyperlink{struct_rocket_kinematics_data}{RocketKinematicsData}}\ \_rocket\_kinematics\_data):\ \mbox{\hyperlink{union_data_entry_1_1_data_entry_union_type_a9fb2a1bb25de4c3a815061e7fbfc29e5}{rocket\_kinematics\_data}}(\_rocket\_kinematics\_data)\ \{\ \}}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{union_data_entry_1_1_data_entry_union_type_aadfbe70e6ae014c80877973057a535fe}{DataEntryUnionType}}(\mbox{\hyperlink{struct_rocket_sensor_data}{RocketSensorData}}\ \_rocket\_sensor\_data):\ \mbox{\hyperlink{union_data_entry_1_1_data_entry_union_type_a4dbfc6c3bfb7d0f57c459c6d13ccf98c}{rocket\_sensor\_data}}(\_rocket\_sensor\_data)\ \{\ \}}
+\DoxyCodeLine{00045\ \ \ \ \ \}\ \mbox{\hyperlink{struct_data_entry_aac0c440b95bcfc516ba78b02a3fc6d6d}{data}};}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \mbox{\hyperlink{struct_data_entry_af350797a9abba9d96854267f32b585a1}{DataEntry}}(\mbox{\hyperlink{struct_rocket_kinematics_data}{RocketKinematicsData}}\ \_rocket\_kinematics\_data):\ }
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_data_entry_afe58b9dc361f3637ecb9f820054fea4e}{type}}(\mbox{\hyperlink{datatypes_8h_a8177281edf91c9421c33891469a41308}{DataPacketType}}::\mbox{\hyperlink{datatypes_8h_a8177281edf91c9421c33891469a41308a5625e1605c55761fe8abb144de312d7d}{ROCKET\_KINEMATICS\_DATA}}),\ \mbox{\hyperlink{struct_data_entry_aac0c440b95bcfc516ba78b02a3fc6d6d}{data}}(\_rocket\_kinematics\_data)\ \{\ \}}
+\DoxyCodeLine{00049\ \ \ \ \ \mbox{\hyperlink{struct_data_entry_a93e70cd3f9224c46f22acda1a90aa477}{DataEntry}}(\mbox{\hyperlink{struct_rocket_sensor_data}{RocketSensorData}}\ \_rocket\_sensor\_data):\ }
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_data_entry_afe58b9dc361f3637ecb9f820054fea4e}{type}}(\mbox{\hyperlink{datatypes_8h_a8177281edf91c9421c33891469a41308}{DataPacketType}}::\mbox{\hyperlink{datatypes_8h_a8177281edf91c9421c33891469a41308a4efffbb76c598efeeafb176ae7b97645}{ROCKET\_SENSOR\_DATA}}),\ \mbox{\hyperlink{struct_data_entry_aac0c440b95bcfc516ba78b02a3fc6d6d}{data}}(\_rocket\_sensor\_data)\ \{\ \}}
+\DoxyCodeLine{00051\ \};}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

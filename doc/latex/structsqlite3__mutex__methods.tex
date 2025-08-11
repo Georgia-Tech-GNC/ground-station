@@ -1,0 +1,87 @@
+\doxysection{sqlite3\+\_\+mutex\+\_\+methods Struct Reference}
+\hypertarget{structsqlite3__mutex__methods}{}\label{structsqlite3__mutex__methods}\index{sqlite3\_mutex\_methods@{sqlite3\_mutex\_methods}}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__mutex__methods_a1a163f0e0eaed85223b1537434df635a}{x\+Mutex\+Init}} )(void)
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__mutex__methods_ab3bc5e370edbeb1db4199d5f609fb09f}{x\+Mutex\+End}} )(void)
+\item 
+\mbox{\hyperlink{structsqlite3__mutex}{sqlite3\+\_\+mutex}} \texorpdfstring{$\ast$}{*}(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__mutex__methods_ad754273b9e7b39d8821aa65815239858}{x\+Mutex\+Alloc}} )(int)
+\item 
+void(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__mutex__methods_a632046a2d4a6372a567a5ac5e8175b30}{x\+Mutex\+Free}} )(\mbox{\hyperlink{structsqlite3__mutex}{sqlite3\+\_\+mutex}} \texorpdfstring{$\ast$}{*})
+\item 
+void(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__mutex__methods_a0237ae1928c2edab7be16e9e007f6a02}{x\+Mutex\+Enter}} )(\mbox{\hyperlink{structsqlite3__mutex}{sqlite3\+\_\+mutex}} \texorpdfstring{$\ast$}{*})
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__mutex__methods_aa65a38cee32246dc3257a80ce47be5fe}{x\+Mutex\+Try}} )(\mbox{\hyperlink{structsqlite3__mutex}{sqlite3\+\_\+mutex}} \texorpdfstring{$\ast$}{*})
+\item 
+void(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__mutex__methods_a0d4ef78481d18de5f9346f80321a17b1}{x\+Mutex\+Leave}} )(\mbox{\hyperlink{structsqlite3__mutex}{sqlite3\+\_\+mutex}} \texorpdfstring{$\ast$}{*})
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__mutex__methods_a71a26118133388426ddf18ab59ce87f5}{x\+Mutex\+Held}} )(\mbox{\hyperlink{structsqlite3__mutex}{sqlite3\+\_\+mutex}} \texorpdfstring{$\ast$}{*})
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__mutex__methods_a5b7c9daa7aea5f01ef9fa58f6d1c5cb1}{x\+Mutex\+Notheld}} )(\mbox{\hyperlink{structsqlite3__mutex}{sqlite3\+\_\+mutex}} \texorpdfstring{$\ast$}{*})
+\end{DoxyCompactItemize}
+
+
+\label{doc-variable-members}
+\Hypertarget{structsqlite3__mutex__methods_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structsqlite3__mutex__methods_ad754273b9e7b39d8821aa65815239858}\index{sqlite3\_mutex\_methods@{sqlite3\_mutex\_methods}!xMutexAlloc@{xMutexAlloc}}
+\index{xMutexAlloc@{xMutexAlloc}!sqlite3\_mutex\_methods@{sqlite3\_mutex\_methods}}
+\doxysubsubsection{\texorpdfstring{xMutexAlloc}{xMutexAlloc}}
+{\footnotesize\ttfamily \label{structsqlite3__mutex__methods_ad754273b9e7b39d8821aa65815239858} 
+\mbox{\hyperlink{structsqlite3__mutex}{sqlite3\+\_\+mutex}} \texorpdfstring{$\ast$}{*}(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+mutex\+\_\+methods\+::x\+Mutex\+Alloc) (int)}
+
+\Hypertarget{structsqlite3__mutex__methods_ab3bc5e370edbeb1db4199d5f609fb09f}\index{sqlite3\_mutex\_methods@{sqlite3\_mutex\_methods}!xMutexEnd@{xMutexEnd}}
+\index{xMutexEnd@{xMutexEnd}!sqlite3\_mutex\_methods@{sqlite3\_mutex\_methods}}
+\doxysubsubsection{\texorpdfstring{xMutexEnd}{xMutexEnd}}
+{\footnotesize\ttfamily \label{structsqlite3__mutex__methods_ab3bc5e370edbeb1db4199d5f609fb09f} 
+int(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+mutex\+\_\+methods\+::x\+Mutex\+End) (void)}
+
+\Hypertarget{structsqlite3__mutex__methods_a0237ae1928c2edab7be16e9e007f6a02}\index{sqlite3\_mutex\_methods@{sqlite3\_mutex\_methods}!xMutexEnter@{xMutexEnter}}
+\index{xMutexEnter@{xMutexEnter}!sqlite3\_mutex\_methods@{sqlite3\_mutex\_methods}}
+\doxysubsubsection{\texorpdfstring{xMutexEnter}{xMutexEnter}}
+{\footnotesize\ttfamily \label{structsqlite3__mutex__methods_a0237ae1928c2edab7be16e9e007f6a02} 
+void(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+mutex\+\_\+methods\+::x\+Mutex\+Enter) (\mbox{\hyperlink{structsqlite3__mutex}{sqlite3\+\_\+mutex}} \texorpdfstring{$\ast$}{*})}
+
+\Hypertarget{structsqlite3__mutex__methods_a632046a2d4a6372a567a5ac5e8175b30}\index{sqlite3\_mutex\_methods@{sqlite3\_mutex\_methods}!xMutexFree@{xMutexFree}}
+\index{xMutexFree@{xMutexFree}!sqlite3\_mutex\_methods@{sqlite3\_mutex\_methods}}
+\doxysubsubsection{\texorpdfstring{xMutexFree}{xMutexFree}}
+{\footnotesize\ttfamily \label{structsqlite3__mutex__methods_a632046a2d4a6372a567a5ac5e8175b30} 
+void(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+mutex\+\_\+methods\+::x\+Mutex\+Free) (\mbox{\hyperlink{structsqlite3__mutex}{sqlite3\+\_\+mutex}} \texorpdfstring{$\ast$}{*})}
+
+\Hypertarget{structsqlite3__mutex__methods_a71a26118133388426ddf18ab59ce87f5}\index{sqlite3\_mutex\_methods@{sqlite3\_mutex\_methods}!xMutexHeld@{xMutexHeld}}
+\index{xMutexHeld@{xMutexHeld}!sqlite3\_mutex\_methods@{sqlite3\_mutex\_methods}}
+\doxysubsubsection{\texorpdfstring{xMutexHeld}{xMutexHeld}}
+{\footnotesize\ttfamily \label{structsqlite3__mutex__methods_a71a26118133388426ddf18ab59ce87f5} 
+int(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+mutex\+\_\+methods\+::x\+Mutex\+Held) (\mbox{\hyperlink{structsqlite3__mutex}{sqlite3\+\_\+mutex}} \texorpdfstring{$\ast$}{*})}
+
+\Hypertarget{structsqlite3__mutex__methods_a1a163f0e0eaed85223b1537434df635a}\index{sqlite3\_mutex\_methods@{sqlite3\_mutex\_methods}!xMutexInit@{xMutexInit}}
+\index{xMutexInit@{xMutexInit}!sqlite3\_mutex\_methods@{sqlite3\_mutex\_methods}}
+\doxysubsubsection{\texorpdfstring{xMutexInit}{xMutexInit}}
+{\footnotesize\ttfamily \label{structsqlite3__mutex__methods_a1a163f0e0eaed85223b1537434df635a} 
+int(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+mutex\+\_\+methods\+::x\+Mutex\+Init) (void)}
+
+\Hypertarget{structsqlite3__mutex__methods_a0d4ef78481d18de5f9346f80321a17b1}\index{sqlite3\_mutex\_methods@{sqlite3\_mutex\_methods}!xMutexLeave@{xMutexLeave}}
+\index{xMutexLeave@{xMutexLeave}!sqlite3\_mutex\_methods@{sqlite3\_mutex\_methods}}
+\doxysubsubsection{\texorpdfstring{xMutexLeave}{xMutexLeave}}
+{\footnotesize\ttfamily \label{structsqlite3__mutex__methods_a0d4ef78481d18de5f9346f80321a17b1} 
+void(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+mutex\+\_\+methods\+::x\+Mutex\+Leave) (\mbox{\hyperlink{structsqlite3__mutex}{sqlite3\+\_\+mutex}} \texorpdfstring{$\ast$}{*})}
+
+\Hypertarget{structsqlite3__mutex__methods_a5b7c9daa7aea5f01ef9fa58f6d1c5cb1}\index{sqlite3\_mutex\_methods@{sqlite3\_mutex\_methods}!xMutexNotheld@{xMutexNotheld}}
+\index{xMutexNotheld@{xMutexNotheld}!sqlite3\_mutex\_methods@{sqlite3\_mutex\_methods}}
+\doxysubsubsection{\texorpdfstring{xMutexNotheld}{xMutexNotheld}}
+{\footnotesize\ttfamily \label{structsqlite3__mutex__methods_a5b7c9daa7aea5f01ef9fa58f6d1c5cb1} 
+int(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+mutex\+\_\+methods\+::x\+Mutex\+Notheld) (\mbox{\hyperlink{structsqlite3__mutex}{sqlite3\+\_\+mutex}} \texorpdfstring{$\ast$}{*})}
+
+\Hypertarget{structsqlite3__mutex__methods_aa65a38cee32246dc3257a80ce47be5fe}\index{sqlite3\_mutex\_methods@{sqlite3\_mutex\_methods}!xMutexTry@{xMutexTry}}
+\index{xMutexTry@{xMutexTry}!sqlite3\_mutex\_methods@{sqlite3\_mutex\_methods}}
+\doxysubsubsection{\texorpdfstring{xMutexTry}{xMutexTry}}
+{\footnotesize\ttfamily \label{structsqlite3__mutex__methods_aa65a38cee32246dc3257a80ce47be5fe} 
+int(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+mutex\+\_\+methods\+::x\+Mutex\+Try) (\mbox{\hyperlink{structsqlite3__mutex}{sqlite3\+\_\+mutex}} \texorpdfstring{$\ast$}{*})}
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+source/database/\mbox{\hyperlink{sqlite3_8c}{sqlite3.\+c}}\end{DoxyCompactItemize}

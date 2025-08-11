@@ -36,6 +36,12 @@ $(BUILD_DIR)/%.cpp.o: %.cpp
 	@mkdir -p $(dir $@)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
 
+.PHONY: docs
+docs: 
+	@echo "Creating Documentation Files"
+	@doxygen ./Doxyfile
+	@open doc/html/index.html
+
 .PHONY: clean
 clean:
 	rm -r $(BUILD_DIR)

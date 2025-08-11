@@ -1,0 +1,191 @@
+\doxysection{sqlite3\+\_\+vfs Struct Reference}
+\hypertarget{structsqlite3__vfs}{}\label{structsqlite3__vfs}\index{sqlite3\_vfs@{sqlite3\_vfs}}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{structsqlite3__vfs_a694dd264949bd163545fe174510ed019}{i\+Version}}
+\item 
+int \mbox{\hyperlink{structsqlite3__vfs_a549399081342d61134b6398562a0a997}{sz\+Os\+File}}
+\item 
+int \mbox{\hyperlink{structsqlite3__vfs_adb2d82c74891b00b5529fb94e7710135}{mx\+Pathname}}
+\item 
+\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__vfs_ae795a4417697ecd35163f6cdf0069073}{p\+Next}}
+\item 
+const char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__vfs_a0f06a27ac2201ea04c0623ef19e5d73e}{z\+Name}}
+\item 
+void \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__vfs_a1ba832cf207fe59c1fc8eb436524bc35}{p\+App\+Data}}
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__vfs_ac67b95a09949bb1df0bd80ac407d7d33}{x\+Open}} )(\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{sqlite3_8c_a3c0a7abc54e75ea849020e706998b2f0}{sqlite3\+\_\+filename}} \mbox{\hyperlink{structsqlite3__vfs_a0f06a27ac2201ea04c0623ef19e5d73e}{z\+Name}}, \mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*}, int flags, int \texorpdfstring{$\ast$}{*}p\+Out\+Flags)
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__vfs_a9a84baca80b7ab2da9fb147cb40c73d2}{x\+Delete}} )(\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}} \texorpdfstring{$\ast$}{*}, const char \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structsqlite3__vfs_a0f06a27ac2201ea04c0623ef19e5d73e}{z\+Name}}, int sync\+Dir)
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__vfs_a3a5cc43f1b8a88747eb77db730ce4f69}{x\+Access}} )(\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}} \texorpdfstring{$\ast$}{*}, const char \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structsqlite3__vfs_a0f06a27ac2201ea04c0623ef19e5d73e}{z\+Name}}, int flags, int \texorpdfstring{$\ast$}{*}p\+Res\+Out)
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__vfs_ae6573ffda4c4f014960b0ec3a1522dfa}{x\+Full\+Pathname}} )(\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}} \texorpdfstring{$\ast$}{*}, const char \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structsqlite3__vfs_a0f06a27ac2201ea04c0623ef19e5d73e}{z\+Name}}, int n\+Out, char \texorpdfstring{$\ast$}{*}z\+Out)
+\item 
+void \texorpdfstring{$\ast$}{*}(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__vfs_a54394c81571ae7d7d2b8e5cffaf4ac03}{x\+Dl\+Open}} )(\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}} \texorpdfstring{$\ast$}{*}, const char \texorpdfstring{$\ast$}{*}z\+Filename)
+\item 
+void(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__vfs_ace296f3efa5d1a490c892069891f37c0}{x\+Dl\+Error}} )(\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}} \texorpdfstring{$\ast$}{*}, int n\+Byte, char \texorpdfstring{$\ast$}{*}z\+Err\+Msg)
+\item 
+void(\texorpdfstring{$\ast$}{*}(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__vfs_a847ba7d9a80164138031aacef1d01507}{x\+Dl\+Sym}} )(\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}} \texorpdfstring{$\ast$}{*}, void \texorpdfstring{$\ast$}{*}, const char \texorpdfstring{$\ast$}{*}z\+Symbol))(void)
+\item 
+void(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__vfs_a0cbdab1584e0e2a80b32b2c335f17f99}{x\+Dl\+Close}} )(\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}} \texorpdfstring{$\ast$}{*}, void \texorpdfstring{$\ast$}{*})
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__vfs_ac74c20a91cbd440ed72b11de4c4333ea}{x\+Randomness}} )(\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}} \texorpdfstring{$\ast$}{*}, int n\+Byte, char \texorpdfstring{$\ast$}{*}z\+Out)
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__vfs_abd36ce64a27bd6c1b57a6f2c7031ff65}{x\+Sleep}} )(\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}} \texorpdfstring{$\ast$}{*}, int microseconds)
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__vfs_a925aa81bcf67f2daf50ad59de850ef41}{x\+Current\+Time}} )(\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}} \texorpdfstring{$\ast$}{*}, double \texorpdfstring{$\ast$}{*})
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__vfs_ae90895f142cc41801f515ae5e339a3d7}{x\+Get\+Last\+Error}} )(\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}} \texorpdfstring{$\ast$}{*}, int, char \texorpdfstring{$\ast$}{*})
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__vfs_a2a344dbc5e4625343d992546fbff5421}{x\+Current\+Time\+Int64}} )(\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{sqlite3_8c_a0a4d3e6c1ad46f90e746b920ab6ca0d2}{sqlite3\+\_\+int64}} \texorpdfstring{$\ast$}{*})
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__vfs_a444cd80f79ea4994f72551bb9f403866}{x\+Set\+System\+Call}} )(\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}} \texorpdfstring{$\ast$}{*}, const char \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structsqlite3__vfs_a0f06a27ac2201ea04c0623ef19e5d73e}{z\+Name}}, \mbox{\hyperlink{sqlite3_8c_a99a6393e96d7095fa024de9c1257aa6f}{sqlite3\+\_\+syscall\+\_\+ptr}})
+\item 
+\mbox{\hyperlink{sqlite3_8c_a99a6393e96d7095fa024de9c1257aa6f}{sqlite3\+\_\+syscall\+\_\+ptr}}(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__vfs_a1bf78a1603ab605cd92d146e3f810727}{x\+Get\+System\+Call}} )(\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}} \texorpdfstring{$\ast$}{*}, const char \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structsqlite3__vfs_a0f06a27ac2201ea04c0623ef19e5d73e}{z\+Name}})
+\item 
+const char \texorpdfstring{$\ast$}{*}(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__vfs_a6fee8f6276ceba4995e448ad28162540}{x\+Next\+System\+Call}} )(\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}} \texorpdfstring{$\ast$}{*}, const char \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structsqlite3__vfs_a0f06a27ac2201ea04c0623ef19e5d73e}{z\+Name}})
+\end{DoxyCompactItemize}
+
+
+\label{doc-variable-members}
+\Hypertarget{structsqlite3__vfs_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structsqlite3__vfs_a694dd264949bd163545fe174510ed019}\index{sqlite3\_vfs@{sqlite3\_vfs}!iVersion@{iVersion}}
+\index{iVersion@{iVersion}!sqlite3\_vfs@{sqlite3\_vfs}}
+\doxysubsubsection{\texorpdfstring{iVersion}{iVersion}}
+{\footnotesize\ttfamily \label{structsqlite3__vfs_a694dd264949bd163545fe174510ed019} 
+int sqlite3\+\_\+vfs\+::i\+Version}
+
+\Hypertarget{structsqlite3__vfs_adb2d82c74891b00b5529fb94e7710135}\index{sqlite3\_vfs@{sqlite3\_vfs}!mxPathname@{mxPathname}}
+\index{mxPathname@{mxPathname}!sqlite3\_vfs@{sqlite3\_vfs}}
+\doxysubsubsection{\texorpdfstring{mxPathname}{mxPathname}}
+{\footnotesize\ttfamily \label{structsqlite3__vfs_adb2d82c74891b00b5529fb94e7710135} 
+int sqlite3\+\_\+vfs\+::mx\+Pathname}
+
+\Hypertarget{structsqlite3__vfs_a1ba832cf207fe59c1fc8eb436524bc35}\index{sqlite3\_vfs@{sqlite3\_vfs}!pAppData@{pAppData}}
+\index{pAppData@{pAppData}!sqlite3\_vfs@{sqlite3\_vfs}}
+\doxysubsubsection{\texorpdfstring{pAppData}{pAppData}}
+{\footnotesize\ttfamily \label{structsqlite3__vfs_a1ba832cf207fe59c1fc8eb436524bc35} 
+void\texorpdfstring{$\ast$}{*} sqlite3\+\_\+vfs\+::p\+App\+Data}
+
+\Hypertarget{structsqlite3__vfs_ae795a4417697ecd35163f6cdf0069073}\index{sqlite3\_vfs@{sqlite3\_vfs}!pNext@{pNext}}
+\index{pNext@{pNext}!sqlite3\_vfs@{sqlite3\_vfs}}
+\doxysubsubsection{\texorpdfstring{pNext}{pNext}}
+{\footnotesize\ttfamily \label{structsqlite3__vfs_ae795a4417697ecd35163f6cdf0069073} 
+\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}}\texorpdfstring{$\ast$}{*} sqlite3\+\_\+vfs\+::p\+Next}
+
+\Hypertarget{structsqlite3__vfs_a549399081342d61134b6398562a0a997}\index{sqlite3\_vfs@{sqlite3\_vfs}!szOsFile@{szOsFile}}
+\index{szOsFile@{szOsFile}!sqlite3\_vfs@{sqlite3\_vfs}}
+\doxysubsubsection{\texorpdfstring{szOsFile}{szOsFile}}
+{\footnotesize\ttfamily \label{structsqlite3__vfs_a549399081342d61134b6398562a0a997} 
+int sqlite3\+\_\+vfs\+::sz\+Os\+File}
+
+\Hypertarget{structsqlite3__vfs_a3a5cc43f1b8a88747eb77db730ce4f69}\index{sqlite3\_vfs@{sqlite3\_vfs}!xAccess@{xAccess}}
+\index{xAccess@{xAccess}!sqlite3\_vfs@{sqlite3\_vfs}}
+\doxysubsubsection{\texorpdfstring{xAccess}{xAccess}}
+{\footnotesize\ttfamily \label{structsqlite3__vfs_a3a5cc43f1b8a88747eb77db730ce4f69} 
+int(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+vfs\+::x\+Access) (\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}} \texorpdfstring{$\ast$}{*}, const char \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structsqlite3__vfs_a0f06a27ac2201ea04c0623ef19e5d73e}{z\+Name}}, int flags, int \texorpdfstring{$\ast$}{*}p\+Res\+Out)}
+
+\Hypertarget{structsqlite3__vfs_a925aa81bcf67f2daf50ad59de850ef41}\index{sqlite3\_vfs@{sqlite3\_vfs}!xCurrentTime@{xCurrentTime}}
+\index{xCurrentTime@{xCurrentTime}!sqlite3\_vfs@{sqlite3\_vfs}}
+\doxysubsubsection{\texorpdfstring{xCurrentTime}{xCurrentTime}}
+{\footnotesize\ttfamily \label{structsqlite3__vfs_a925aa81bcf67f2daf50ad59de850ef41} 
+int(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+vfs\+::x\+Current\+Time) (\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}} \texorpdfstring{$\ast$}{*}, double \texorpdfstring{$\ast$}{*})}
+
+\Hypertarget{structsqlite3__vfs_a2a344dbc5e4625343d992546fbff5421}\index{sqlite3\_vfs@{sqlite3\_vfs}!xCurrentTimeInt64@{xCurrentTimeInt64}}
+\index{xCurrentTimeInt64@{xCurrentTimeInt64}!sqlite3\_vfs@{sqlite3\_vfs}}
+\doxysubsubsection{\texorpdfstring{xCurrentTimeInt64}{xCurrentTimeInt64}}
+{\footnotesize\ttfamily \label{structsqlite3__vfs_a2a344dbc5e4625343d992546fbff5421} 
+int(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+vfs\+::x\+Current\+Time\+Int64) (\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{sqlite3_8c_a0a4d3e6c1ad46f90e746b920ab6ca0d2}{sqlite3\+\_\+int64}} \texorpdfstring{$\ast$}{*})}
+
+\Hypertarget{structsqlite3__vfs_a9a84baca80b7ab2da9fb147cb40c73d2}\index{sqlite3\_vfs@{sqlite3\_vfs}!xDelete@{xDelete}}
+\index{xDelete@{xDelete}!sqlite3\_vfs@{sqlite3\_vfs}}
+\doxysubsubsection{\texorpdfstring{xDelete}{xDelete}}
+{\footnotesize\ttfamily \label{structsqlite3__vfs_a9a84baca80b7ab2da9fb147cb40c73d2} 
+int(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+vfs\+::x\+Delete) (\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}} \texorpdfstring{$\ast$}{*}, const char \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structsqlite3__vfs_a0f06a27ac2201ea04c0623ef19e5d73e}{z\+Name}}, int sync\+Dir)}
+
+\Hypertarget{structsqlite3__vfs_a0cbdab1584e0e2a80b32b2c335f17f99}\index{sqlite3\_vfs@{sqlite3\_vfs}!xDlClose@{xDlClose}}
+\index{xDlClose@{xDlClose}!sqlite3\_vfs@{sqlite3\_vfs}}
+\doxysubsubsection{\texorpdfstring{xDlClose}{xDlClose}}
+{\footnotesize\ttfamily \label{structsqlite3__vfs_a0cbdab1584e0e2a80b32b2c335f17f99} 
+void(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+vfs\+::x\+Dl\+Close) (\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}} \texorpdfstring{$\ast$}{*}, void \texorpdfstring{$\ast$}{*})}
+
+\Hypertarget{structsqlite3__vfs_ace296f3efa5d1a490c892069891f37c0}\index{sqlite3\_vfs@{sqlite3\_vfs}!xDlError@{xDlError}}
+\index{xDlError@{xDlError}!sqlite3\_vfs@{sqlite3\_vfs}}
+\doxysubsubsection{\texorpdfstring{xDlError}{xDlError}}
+{\footnotesize\ttfamily \label{structsqlite3__vfs_ace296f3efa5d1a490c892069891f37c0} 
+void(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+vfs\+::x\+Dl\+Error) (\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}} \texorpdfstring{$\ast$}{*}, int n\+Byte, char \texorpdfstring{$\ast$}{*}z\+Err\+Msg)}
+
+\Hypertarget{structsqlite3__vfs_a54394c81571ae7d7d2b8e5cffaf4ac03}\index{sqlite3\_vfs@{sqlite3\_vfs}!xDlOpen@{xDlOpen}}
+\index{xDlOpen@{xDlOpen}!sqlite3\_vfs@{sqlite3\_vfs}}
+\doxysubsubsection{\texorpdfstring{xDlOpen}{xDlOpen}}
+{\footnotesize\ttfamily \label{structsqlite3__vfs_a54394c81571ae7d7d2b8e5cffaf4ac03} 
+void \texorpdfstring{$\ast$}{*}(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+vfs\+::x\+Dl\+Open) (\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}} \texorpdfstring{$\ast$}{*}, const char \texorpdfstring{$\ast$}{*}z\+Filename)}
+
+\Hypertarget{structsqlite3__vfs_a847ba7d9a80164138031aacef1d01507}\index{sqlite3\_vfs@{sqlite3\_vfs}!xDlSym@{xDlSym}}
+\index{xDlSym@{xDlSym}!sqlite3\_vfs@{sqlite3\_vfs}}
+\doxysubsubsection{\texorpdfstring{xDlSym}{xDlSym}}
+{\footnotesize\ttfamily \label{structsqlite3__vfs_a847ba7d9a80164138031aacef1d01507} 
+void(\texorpdfstring{$\ast$}{*}(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+vfs\+::x\+Dl\+Sym) (\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}} \texorpdfstring{$\ast$}{*}, void \texorpdfstring{$\ast$}{*}, const char \texorpdfstring{$\ast$}{*}z\+Symbol))(void)}
+
+\Hypertarget{structsqlite3__vfs_ae6573ffda4c4f014960b0ec3a1522dfa}\index{sqlite3\_vfs@{sqlite3\_vfs}!xFullPathname@{xFullPathname}}
+\index{xFullPathname@{xFullPathname}!sqlite3\_vfs@{sqlite3\_vfs}}
+\doxysubsubsection{\texorpdfstring{xFullPathname}{xFullPathname}}
+{\footnotesize\ttfamily \label{structsqlite3__vfs_ae6573ffda4c4f014960b0ec3a1522dfa} 
+int(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+vfs\+::x\+Full\+Pathname) (\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}} \texorpdfstring{$\ast$}{*}, const char \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structsqlite3__vfs_a0f06a27ac2201ea04c0623ef19e5d73e}{z\+Name}}, int n\+Out, char \texorpdfstring{$\ast$}{*}z\+Out)}
+
+\Hypertarget{structsqlite3__vfs_ae90895f142cc41801f515ae5e339a3d7}\index{sqlite3\_vfs@{sqlite3\_vfs}!xGetLastError@{xGetLastError}}
+\index{xGetLastError@{xGetLastError}!sqlite3\_vfs@{sqlite3\_vfs}}
+\doxysubsubsection{\texorpdfstring{xGetLastError}{xGetLastError}}
+{\footnotesize\ttfamily \label{structsqlite3__vfs_ae90895f142cc41801f515ae5e339a3d7} 
+int(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+vfs\+::x\+Get\+Last\+Error) (\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}} \texorpdfstring{$\ast$}{*}, int, char \texorpdfstring{$\ast$}{*})}
+
+\Hypertarget{structsqlite3__vfs_a1bf78a1603ab605cd92d146e3f810727}\index{sqlite3\_vfs@{sqlite3\_vfs}!xGetSystemCall@{xGetSystemCall}}
+\index{xGetSystemCall@{xGetSystemCall}!sqlite3\_vfs@{sqlite3\_vfs}}
+\doxysubsubsection{\texorpdfstring{xGetSystemCall}{xGetSystemCall}}
+{\footnotesize\ttfamily \label{structsqlite3__vfs_a1bf78a1603ab605cd92d146e3f810727} 
+\mbox{\hyperlink{sqlite3_8c_a99a6393e96d7095fa024de9c1257aa6f}{sqlite3\+\_\+syscall\+\_\+ptr}}(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+vfs\+::x\+Get\+System\+Call) (\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}} \texorpdfstring{$\ast$}{*}, const char \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structsqlite3__vfs_a0f06a27ac2201ea04c0623ef19e5d73e}{z\+Name}})}
+
+\Hypertarget{structsqlite3__vfs_a6fee8f6276ceba4995e448ad28162540}\index{sqlite3\_vfs@{sqlite3\_vfs}!xNextSystemCall@{xNextSystemCall}}
+\index{xNextSystemCall@{xNextSystemCall}!sqlite3\_vfs@{sqlite3\_vfs}}
+\doxysubsubsection{\texorpdfstring{xNextSystemCall}{xNextSystemCall}}
+{\footnotesize\ttfamily \label{structsqlite3__vfs_a6fee8f6276ceba4995e448ad28162540} 
+const char \texorpdfstring{$\ast$}{*}(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+vfs\+::x\+Next\+System\+Call) (\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}} \texorpdfstring{$\ast$}{*}, const char \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structsqlite3__vfs_a0f06a27ac2201ea04c0623ef19e5d73e}{z\+Name}})}
+
+\Hypertarget{structsqlite3__vfs_ac67b95a09949bb1df0bd80ac407d7d33}\index{sqlite3\_vfs@{sqlite3\_vfs}!xOpen@{xOpen}}
+\index{xOpen@{xOpen}!sqlite3\_vfs@{sqlite3\_vfs}}
+\doxysubsubsection{\texorpdfstring{xOpen}{xOpen}}
+{\footnotesize\ttfamily \label{structsqlite3__vfs_ac67b95a09949bb1df0bd80ac407d7d33} 
+int(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+vfs\+::x\+Open) (\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{sqlite3_8c_a3c0a7abc54e75ea849020e706998b2f0}{sqlite3\+\_\+filename}} \mbox{\hyperlink{structsqlite3__vfs_a0f06a27ac2201ea04c0623ef19e5d73e}{z\+Name}}, \mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*}, int flags, int \texorpdfstring{$\ast$}{*}p\+Out\+Flags)}
+
+\Hypertarget{structsqlite3__vfs_ac74c20a91cbd440ed72b11de4c4333ea}\index{sqlite3\_vfs@{sqlite3\_vfs}!xRandomness@{xRandomness}}
+\index{xRandomness@{xRandomness}!sqlite3\_vfs@{sqlite3\_vfs}}
+\doxysubsubsection{\texorpdfstring{xRandomness}{xRandomness}}
+{\footnotesize\ttfamily \label{structsqlite3__vfs_ac74c20a91cbd440ed72b11de4c4333ea} 
+int(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+vfs\+::x\+Randomness) (\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}} \texorpdfstring{$\ast$}{*}, int n\+Byte, char \texorpdfstring{$\ast$}{*}z\+Out)}
+
+\Hypertarget{structsqlite3__vfs_a444cd80f79ea4994f72551bb9f403866}\index{sqlite3\_vfs@{sqlite3\_vfs}!xSetSystemCall@{xSetSystemCall}}
+\index{xSetSystemCall@{xSetSystemCall}!sqlite3\_vfs@{sqlite3\_vfs}}
+\doxysubsubsection{\texorpdfstring{xSetSystemCall}{xSetSystemCall}}
+{\footnotesize\ttfamily \label{structsqlite3__vfs_a444cd80f79ea4994f72551bb9f403866} 
+int(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+vfs\+::x\+Set\+System\+Call) (\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}} \texorpdfstring{$\ast$}{*}, const char \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{structsqlite3__vfs_a0f06a27ac2201ea04c0623ef19e5d73e}{z\+Name}}, \mbox{\hyperlink{sqlite3_8c_a99a6393e96d7095fa024de9c1257aa6f}{sqlite3\+\_\+syscall\+\_\+ptr}})}
+
+\Hypertarget{structsqlite3__vfs_abd36ce64a27bd6c1b57a6f2c7031ff65}\index{sqlite3\_vfs@{sqlite3\_vfs}!xSleep@{xSleep}}
+\index{xSleep@{xSleep}!sqlite3\_vfs@{sqlite3\_vfs}}
+\doxysubsubsection{\texorpdfstring{xSleep}{xSleep}}
+{\footnotesize\ttfamily \label{structsqlite3__vfs_abd36ce64a27bd6c1b57a6f2c7031ff65} 
+int(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+vfs\+::x\+Sleep) (\mbox{\hyperlink{structsqlite3__vfs}{sqlite3\+\_\+vfs}} \texorpdfstring{$\ast$}{*}, int microseconds)}
+
+\Hypertarget{structsqlite3__vfs_a0f06a27ac2201ea04c0623ef19e5d73e}\index{sqlite3\_vfs@{sqlite3\_vfs}!zName@{zName}}
+\index{zName@{zName}!sqlite3\_vfs@{sqlite3\_vfs}}
+\doxysubsubsection{\texorpdfstring{zName}{zName}}
+{\footnotesize\ttfamily \label{structsqlite3__vfs_a0f06a27ac2201ea04c0623ef19e5d73e} 
+const char\texorpdfstring{$\ast$}{*} sqlite3\+\_\+vfs\+::z\+Name}
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+source/database/\mbox{\hyperlink{sqlite3_8c}{sqlite3.\+c}}\end{DoxyCompactItemize}

@@ -1,0 +1,167 @@
+\doxysection{sqlite3\+\_\+io\+\_\+methods Struct Reference}
+\hypertarget{structsqlite3__io__methods}{}\label{structsqlite3__io__methods}\index{sqlite3\_io\_methods@{sqlite3\_io\_methods}}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{structsqlite3__io__methods_ad1c72bdfde750a09a797f314a096a965}{i\+Version}}
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__io__methods_ae0673b03bfa033d59188bfdab418cd26}{x\+Close}} )(\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*})
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__io__methods_ac1433ffc0da0414a2a67a46d338d83eb}{x\+Read}} )(\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*}, void \texorpdfstring{$\ast$}{*}, int i\+Amt, \mbox{\hyperlink{sqlite3_8c_a0a4d3e6c1ad46f90e746b920ab6ca0d2}{sqlite3\+\_\+int64}} i\+Ofst)
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__io__methods_a659f6a40777b685c6a6b80e5f07a3328}{x\+Write}} )(\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*}, const void \texorpdfstring{$\ast$}{*}, int i\+Amt, \mbox{\hyperlink{sqlite3_8c_a0a4d3e6c1ad46f90e746b920ab6ca0d2}{sqlite3\+\_\+int64}} i\+Ofst)
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__io__methods_abe797948913bfe94d4fab7246773af50}{x\+Truncate}} )(\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{sqlite3_8c_a0a4d3e6c1ad46f90e746b920ab6ca0d2}{sqlite3\+\_\+int64}} size)
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__io__methods_ad4b78f6b0b475e621fe29fb1cc886437}{x\+Sync}} )(\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*}, int flags)
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__io__methods_ae875f158de72435f40ca0bd5207d9862}{x\+File\+Size}} )(\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{sqlite3_8c_a0a4d3e6c1ad46f90e746b920ab6ca0d2}{sqlite3\+\_\+int64}} \texorpdfstring{$\ast$}{*}p\+Size)
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__io__methods_ac88793475b0c4188fb02c229f1a11e8b}{x\+Lock}} )(\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*}, int)
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__io__methods_a5ce75a5ca2df9c1edcaef74d4c0d7e38}{x\+Unlock}} )(\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*}, int)
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__io__methods_a484752731e4a054c97497ad8d48a344b}{x\+Check\+Reserved\+Lock}} )(\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*}, int \texorpdfstring{$\ast$}{*}p\+Res\+Out)
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__io__methods_a913b12deb1dcae2c61b90776bcd9d19c}{x\+File\+Control}} )(\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*}, int op, void \texorpdfstring{$\ast$}{*}p\+Arg)
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__io__methods_a7a1c0cf3c4de6402a69f50e625be5ca2}{x\+Sector\+Size}} )(\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*})
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__io__methods_abbf1b4769c310bfee517af815eed93e9}{x\+Device\+Characteristics}} )(\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*})
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__io__methods_ac82f4e2ea17263ae0827576aba308032}{x\+Shm\+Map}} )(\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*}, int i\+Pg, int pgsz, int, void volatile \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*})
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__io__methods_a2dbd4777e8ebce36b91dd5d64aef9bbf}{x\+Shm\+Lock}} )(\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*}, int offset, int n, int flags)
+\item 
+void(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__io__methods_aa4e436fef318c4702940da870f8e2710}{x\+Shm\+Barrier}} )(\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*})
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__io__methods_a494ae8bbfe91c38598c73aaa18f1848f}{x\+Shm\+Unmap}} )(\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*}, int delete\+Flag)
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__io__methods_a71e611fc755d95ffbd3e7ecb8cb5fae6}{x\+Fetch}} )(\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{sqlite3_8c_a0a4d3e6c1ad46f90e746b920ab6ca0d2}{sqlite3\+\_\+int64}} i\+Ofst, int i\+Amt, void \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}pp)
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structsqlite3__io__methods_abebf1bbaa50bea56f0e37d0f66193bda}{x\+Unfetch}} )(\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{sqlite3_8c_a0a4d3e6c1ad46f90e746b920ab6ca0d2}{sqlite3\+\_\+int64}} i\+Ofst, void \texorpdfstring{$\ast$}{*}p)
+\end{DoxyCompactItemize}
+
+
+\label{doc-variable-members}
+\Hypertarget{structsqlite3__io__methods_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structsqlite3__io__methods_ad1c72bdfde750a09a797f314a096a965}\index{sqlite3\_io\_methods@{sqlite3\_io\_methods}!iVersion@{iVersion}}
+\index{iVersion@{iVersion}!sqlite3\_io\_methods@{sqlite3\_io\_methods}}
+\doxysubsubsection{\texorpdfstring{iVersion}{iVersion}}
+{\footnotesize\ttfamily \label{structsqlite3__io__methods_ad1c72bdfde750a09a797f314a096a965} 
+int sqlite3\+\_\+io\+\_\+methods\+::i\+Version}
+
+\Hypertarget{structsqlite3__io__methods_a484752731e4a054c97497ad8d48a344b}\index{sqlite3\_io\_methods@{sqlite3\_io\_methods}!xCheckReservedLock@{xCheckReservedLock}}
+\index{xCheckReservedLock@{xCheckReservedLock}!sqlite3\_io\_methods@{sqlite3\_io\_methods}}
+\doxysubsubsection{\texorpdfstring{xCheckReservedLock}{xCheckReservedLock}}
+{\footnotesize\ttfamily \label{structsqlite3__io__methods_a484752731e4a054c97497ad8d48a344b} 
+int(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+io\+\_\+methods\+::x\+Check\+Reserved\+Lock) (\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*}, int \texorpdfstring{$\ast$}{*}p\+Res\+Out)}
+
+\Hypertarget{structsqlite3__io__methods_ae0673b03bfa033d59188bfdab418cd26}\index{sqlite3\_io\_methods@{sqlite3\_io\_methods}!xClose@{xClose}}
+\index{xClose@{xClose}!sqlite3\_io\_methods@{sqlite3\_io\_methods}}
+\doxysubsubsection{\texorpdfstring{xClose}{xClose}}
+{\footnotesize\ttfamily \label{structsqlite3__io__methods_ae0673b03bfa033d59188bfdab418cd26} 
+int(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+io\+\_\+methods\+::x\+Close) (\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*})}
+
+\Hypertarget{structsqlite3__io__methods_abbf1b4769c310bfee517af815eed93e9}\index{sqlite3\_io\_methods@{sqlite3\_io\_methods}!xDeviceCharacteristics@{xDeviceCharacteristics}}
+\index{xDeviceCharacteristics@{xDeviceCharacteristics}!sqlite3\_io\_methods@{sqlite3\_io\_methods}}
+\doxysubsubsection{\texorpdfstring{xDeviceCharacteristics}{xDeviceCharacteristics}}
+{\footnotesize\ttfamily \label{structsqlite3__io__methods_abbf1b4769c310bfee517af815eed93e9} 
+int(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+io\+\_\+methods\+::x\+Device\+Characteristics) (\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*})}
+
+\Hypertarget{structsqlite3__io__methods_a71e611fc755d95ffbd3e7ecb8cb5fae6}\index{sqlite3\_io\_methods@{sqlite3\_io\_methods}!xFetch@{xFetch}}
+\index{xFetch@{xFetch}!sqlite3\_io\_methods@{sqlite3\_io\_methods}}
+\doxysubsubsection{\texorpdfstring{xFetch}{xFetch}}
+{\footnotesize\ttfamily \label{structsqlite3__io__methods_a71e611fc755d95ffbd3e7ecb8cb5fae6} 
+int(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+io\+\_\+methods\+::x\+Fetch) (\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{sqlite3_8c_a0a4d3e6c1ad46f90e746b920ab6ca0d2}{sqlite3\+\_\+int64}} i\+Ofst, int i\+Amt, void \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}pp)}
+
+\Hypertarget{structsqlite3__io__methods_a913b12deb1dcae2c61b90776bcd9d19c}\index{sqlite3\_io\_methods@{sqlite3\_io\_methods}!xFileControl@{xFileControl}}
+\index{xFileControl@{xFileControl}!sqlite3\_io\_methods@{sqlite3\_io\_methods}}
+\doxysubsubsection{\texorpdfstring{xFileControl}{xFileControl}}
+{\footnotesize\ttfamily \label{structsqlite3__io__methods_a913b12deb1dcae2c61b90776bcd9d19c} 
+int(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+io\+\_\+methods\+::x\+File\+Control) (\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*}, int op, void \texorpdfstring{$\ast$}{*}p\+Arg)}
+
+\Hypertarget{structsqlite3__io__methods_ae875f158de72435f40ca0bd5207d9862}\index{sqlite3\_io\_methods@{sqlite3\_io\_methods}!xFileSize@{xFileSize}}
+\index{xFileSize@{xFileSize}!sqlite3\_io\_methods@{sqlite3\_io\_methods}}
+\doxysubsubsection{\texorpdfstring{xFileSize}{xFileSize}}
+{\footnotesize\ttfamily \label{structsqlite3__io__methods_ae875f158de72435f40ca0bd5207d9862} 
+int(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+io\+\_\+methods\+::x\+File\+Size) (\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{sqlite3_8c_a0a4d3e6c1ad46f90e746b920ab6ca0d2}{sqlite3\+\_\+int64}} \texorpdfstring{$\ast$}{*}p\+Size)}
+
+\Hypertarget{structsqlite3__io__methods_ac88793475b0c4188fb02c229f1a11e8b}\index{sqlite3\_io\_methods@{sqlite3\_io\_methods}!xLock@{xLock}}
+\index{xLock@{xLock}!sqlite3\_io\_methods@{sqlite3\_io\_methods}}
+\doxysubsubsection{\texorpdfstring{xLock}{xLock}}
+{\footnotesize\ttfamily \label{structsqlite3__io__methods_ac88793475b0c4188fb02c229f1a11e8b} 
+int(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+io\+\_\+methods\+::x\+Lock) (\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*}, int)}
+
+\Hypertarget{structsqlite3__io__methods_ac1433ffc0da0414a2a67a46d338d83eb}\index{sqlite3\_io\_methods@{sqlite3\_io\_methods}!xRead@{xRead}}
+\index{xRead@{xRead}!sqlite3\_io\_methods@{sqlite3\_io\_methods}}
+\doxysubsubsection{\texorpdfstring{xRead}{xRead}}
+{\footnotesize\ttfamily \label{structsqlite3__io__methods_ac1433ffc0da0414a2a67a46d338d83eb} 
+int(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+io\+\_\+methods\+::x\+Read) (\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*}, void \texorpdfstring{$\ast$}{*}, int i\+Amt, \mbox{\hyperlink{sqlite3_8c_a0a4d3e6c1ad46f90e746b920ab6ca0d2}{sqlite3\+\_\+int64}} i\+Ofst)}
+
+\Hypertarget{structsqlite3__io__methods_a7a1c0cf3c4de6402a69f50e625be5ca2}\index{sqlite3\_io\_methods@{sqlite3\_io\_methods}!xSectorSize@{xSectorSize}}
+\index{xSectorSize@{xSectorSize}!sqlite3\_io\_methods@{sqlite3\_io\_methods}}
+\doxysubsubsection{\texorpdfstring{xSectorSize}{xSectorSize}}
+{\footnotesize\ttfamily \label{structsqlite3__io__methods_a7a1c0cf3c4de6402a69f50e625be5ca2} 
+int(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+io\+\_\+methods\+::x\+Sector\+Size) (\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*})}
+
+\Hypertarget{structsqlite3__io__methods_aa4e436fef318c4702940da870f8e2710}\index{sqlite3\_io\_methods@{sqlite3\_io\_methods}!xShmBarrier@{xShmBarrier}}
+\index{xShmBarrier@{xShmBarrier}!sqlite3\_io\_methods@{sqlite3\_io\_methods}}
+\doxysubsubsection{\texorpdfstring{xShmBarrier}{xShmBarrier}}
+{\footnotesize\ttfamily \label{structsqlite3__io__methods_aa4e436fef318c4702940da870f8e2710} 
+void(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+io\+\_\+methods\+::x\+Shm\+Barrier) (\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*})}
+
+\Hypertarget{structsqlite3__io__methods_a2dbd4777e8ebce36b91dd5d64aef9bbf}\index{sqlite3\_io\_methods@{sqlite3\_io\_methods}!xShmLock@{xShmLock}}
+\index{xShmLock@{xShmLock}!sqlite3\_io\_methods@{sqlite3\_io\_methods}}
+\doxysubsubsection{\texorpdfstring{xShmLock}{xShmLock}}
+{\footnotesize\ttfamily \label{structsqlite3__io__methods_a2dbd4777e8ebce36b91dd5d64aef9bbf} 
+int(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+io\+\_\+methods\+::x\+Shm\+Lock) (\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*}, int offset, int n, int flags)}
+
+\Hypertarget{structsqlite3__io__methods_ac82f4e2ea17263ae0827576aba308032}\index{sqlite3\_io\_methods@{sqlite3\_io\_methods}!xShmMap@{xShmMap}}
+\index{xShmMap@{xShmMap}!sqlite3\_io\_methods@{sqlite3\_io\_methods}}
+\doxysubsubsection{\texorpdfstring{xShmMap}{xShmMap}}
+{\footnotesize\ttfamily \label{structsqlite3__io__methods_ac82f4e2ea17263ae0827576aba308032} 
+int(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+io\+\_\+methods\+::x\+Shm\+Map) (\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*}, int i\+Pg, int pgsz, int, void volatile  \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*})}
+
+\Hypertarget{structsqlite3__io__methods_a494ae8bbfe91c38598c73aaa18f1848f}\index{sqlite3\_io\_methods@{sqlite3\_io\_methods}!xShmUnmap@{xShmUnmap}}
+\index{xShmUnmap@{xShmUnmap}!sqlite3\_io\_methods@{sqlite3\_io\_methods}}
+\doxysubsubsection{\texorpdfstring{xShmUnmap}{xShmUnmap}}
+{\footnotesize\ttfamily \label{structsqlite3__io__methods_a494ae8bbfe91c38598c73aaa18f1848f} 
+int(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+io\+\_\+methods\+::x\+Shm\+Unmap) (\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*}, int delete\+Flag)}
+
+\Hypertarget{structsqlite3__io__methods_ad4b78f6b0b475e621fe29fb1cc886437}\index{sqlite3\_io\_methods@{sqlite3\_io\_methods}!xSync@{xSync}}
+\index{xSync@{xSync}!sqlite3\_io\_methods@{sqlite3\_io\_methods}}
+\doxysubsubsection{\texorpdfstring{xSync}{xSync}}
+{\footnotesize\ttfamily \label{structsqlite3__io__methods_ad4b78f6b0b475e621fe29fb1cc886437} 
+int(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+io\+\_\+methods\+::x\+Sync) (\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*}, int flags)}
+
+\Hypertarget{structsqlite3__io__methods_abe797948913bfe94d4fab7246773af50}\index{sqlite3\_io\_methods@{sqlite3\_io\_methods}!xTruncate@{xTruncate}}
+\index{xTruncate@{xTruncate}!sqlite3\_io\_methods@{sqlite3\_io\_methods}}
+\doxysubsubsection{\texorpdfstring{xTruncate}{xTruncate}}
+{\footnotesize\ttfamily \label{structsqlite3__io__methods_abe797948913bfe94d4fab7246773af50} 
+int(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+io\+\_\+methods\+::x\+Truncate) (\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{sqlite3_8c_a0a4d3e6c1ad46f90e746b920ab6ca0d2}{sqlite3\+\_\+int64}} size)}
+
+\Hypertarget{structsqlite3__io__methods_abebf1bbaa50bea56f0e37d0f66193bda}\index{sqlite3\_io\_methods@{sqlite3\_io\_methods}!xUnfetch@{xUnfetch}}
+\index{xUnfetch@{xUnfetch}!sqlite3\_io\_methods@{sqlite3\_io\_methods}}
+\doxysubsubsection{\texorpdfstring{xUnfetch}{xUnfetch}}
+{\footnotesize\ttfamily \label{structsqlite3__io__methods_abebf1bbaa50bea56f0e37d0f66193bda} 
+int(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+io\+\_\+methods\+::x\+Unfetch) (\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{sqlite3_8c_a0a4d3e6c1ad46f90e746b920ab6ca0d2}{sqlite3\+\_\+int64}} i\+Ofst, void \texorpdfstring{$\ast$}{*}p)}
+
+\Hypertarget{structsqlite3__io__methods_a5ce75a5ca2df9c1edcaef74d4c0d7e38}\index{sqlite3\_io\_methods@{sqlite3\_io\_methods}!xUnlock@{xUnlock}}
+\index{xUnlock@{xUnlock}!sqlite3\_io\_methods@{sqlite3\_io\_methods}}
+\doxysubsubsection{\texorpdfstring{xUnlock}{xUnlock}}
+{\footnotesize\ttfamily \label{structsqlite3__io__methods_a5ce75a5ca2df9c1edcaef74d4c0d7e38} 
+int(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+io\+\_\+methods\+::x\+Unlock) (\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*}, int)}
+
+\Hypertarget{structsqlite3__io__methods_a659f6a40777b685c6a6b80e5f07a3328}\index{sqlite3\_io\_methods@{sqlite3\_io\_methods}!xWrite@{xWrite}}
+\index{xWrite@{xWrite}!sqlite3\_io\_methods@{sqlite3\_io\_methods}}
+\doxysubsubsection{\texorpdfstring{xWrite}{xWrite}}
+{\footnotesize\ttfamily \label{structsqlite3__io__methods_a659f6a40777b685c6a6b80e5f07a3328} 
+int(\texorpdfstring{$\ast$}{*} sqlite3\+\_\+io\+\_\+methods\+::x\+Write) (\mbox{\hyperlink{structsqlite3__file}{sqlite3\+\_\+file}} \texorpdfstring{$\ast$}{*}, const void \texorpdfstring{$\ast$}{*}, int i\+Amt, \mbox{\hyperlink{sqlite3_8c_a0a4d3e6c1ad46f90e746b920ab6ca0d2}{sqlite3\+\_\+int64}} i\+Ofst)}
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+source/database/\mbox{\hyperlink{sqlite3_8c}{sqlite3.\+c}}\end{DoxyCompactItemize}
