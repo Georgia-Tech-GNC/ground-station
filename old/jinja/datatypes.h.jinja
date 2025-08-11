@@ -1,0 +1,30 @@
+#ifndef DATATYPES_H
+#define DATATYPES_H
+
+#include <cstdint>
+#include <cstddef>
+#include <array>
+
+#include "sqlite3.h"
+
+{% for data_packet in all_data_packets %}
+struct {{data_packet.title_name}} {
+    {% for variable_type, variable_names in data_packet.variables_by_type.items() %}
+    {{variable_type}} {{variable_names | join(", ")}};
+    {% endfor %}
+
+    {{data_packet.title_name}}(std::array<std::byte, {{data_packet.byteform.length}}>); 
+    {{data_packet.title_name}}(const {{data_packet.title_name}}&); 
+
+    static constexpr char* sql_table_gen_command = "{{data_packet.sql_table_gen_command}}";
+    static thread_local sqlite3_stmt* write_statement;
+    void bind_write_statement();
+};
+
+{% endfor %}
+
+int initialize_data_packet_sql(sqlite3* db);
+
+bool build_all_tables(sqlite3* db);
+
+#endif

@@ -1,0 +1,12 @@
+#include "datatypes.h"
+
+{% for data_packet in all_data_packets %}
+{{data_packet.title_name}}::{{data_packet.title_name}}(const std::byte (&raw_array)[{{data_packet.byteform.length}}]) {
+    {% set ns = namespace(offset=0) %}
+    {% for variable in data_packet.variables %}
+    std::memcpy(&{{variable.name}}, &raw_array[{{ns.offset}}], {{variable.length}});
+    {% set ns.offset = ns.offset + variable.length %}
+    {% endfor %}
+}
+
+{% endfor %}

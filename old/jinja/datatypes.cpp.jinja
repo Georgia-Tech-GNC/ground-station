@@ -1,0 +1,55 @@
+#include "datatypes.h"
+
+static bool GENERATED_PREPARED_STATEMENTS = false;
+
+{% for data_packet in all_data_packets %}
+{{data_packet.title_name}}::{{data_packet.title_name}}(std::array<std::byte, {{data_packet.byteform.length}}> raw_array) {
+    {% set ns = namespace(offset=0) %}
+    {% for variable in data_packet.variables %}
+    std::memcpy(&{{variable.name}}, raw_array.begin() + {{ns.offset}}, {{variable.length}});
+    {% set ns.offset = ns.offset + variable.length %}
+    {% endfor %}
+}
+
+{{data_packet.title_name}}::{{data_packet.title_name}}(const {{data_packet.title_name}}& other) {
+    {% for variable in data_packet.variables %}
+    {{variable.name}} = other.{{variable.name}};
+    {% endfor %}
+}
+
+void {{data_packet.title_name}}::bind_write_statement() {
+    {% for variable in data_packet.variables %}
+    {{variable.sqlite_binding}}({{data_packet.title_name}}::write_statement, {{loop.index}}, {{variable.name}});
+    {% endfor %}
+}
+
+{% endfor %}
+
+int initialize_data_packet_sql(sqlite3* db) {
+    if (GENERATED_PREPARED_STATEMENTS) {
+        return SQLITE_OK;
+    }
+
+    int error_code;
+    
+{% for data_packet in all_data_packets %}
+    error_code = sqlite3_prepare_v2(db, "{{data_packet.sqlite_prepared_statement}}", {{data_packet.sqlite_prepared_statement | length + 1}}, &{{data_packet.title_name}}::write_statement, nullptr);
+    if (error_code != SQLITE_OK) return error_code;
+
+{% endfor %}
+
+    GENERATED_PREPARED_STATEMENTS = true;
+    return SQLITE_OK;
+}
+
+bool build_all_tables(sqlite3* db) {
+    char* errMsg;
+    {% for data_packet in all_data_packets %}
+    sqlite3_exec(db, {{data_packet.title_name}}::sql_table_gen_command, nullptr, nullptr, &errMsg);
+    if (errMsg) {
+        sqlite3_free(errMsg);
+        return false;
+    }
+    {% endfor %}    
+    return true;
+}

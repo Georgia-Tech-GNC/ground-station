@@ -1,0 +1,48 @@
+#ifndef DATATYPES_H
+#define DATATYPES_H
+
+#include <cstdint>
+#include <cstddef>
+#include <array>
+
+#include "sqlite3.h"
+
+enum class DataPacketType {
+    {% for data_packet in all_data_packets%}
+    {{data_packet.variable_name | upper}},
+    {% endfor %}
+};
+
+{% for data_packet in all_data_packets %}
+struct {{data_packet.title_name}} {
+    {% for variable_type, variable_names in data_packet.variables_by_type.items() %}
+    {{variable_type}} {{variable_names | join(", ")}};
+    {% endfor %}
+
+    {{data_packet.title_name}}(const std::byte (&raw_array)[{{data_packet.byteform.length}}]); 
+    {{data_packet.title_name}}({{ data_packet.variables | map("strformat", "{0[type]} _{0[name]}" )| join(", ") }}):
+        {{ data_packet.variables | map(attribute="name") | map("strformat", "{0}(_{0})" ) | join(", ") }} { }
+    {{data_packet.title_name}}(const {{data_packet.title_name}}& other):
+        {{ data_packet.variables | map(attribute="name") | map("strformat", "{0}(other.{0})" )| join(", ") }} { }
+};
+
+{% endfor %}
+struct DataEntry {
+    DataPacketType type;
+    union DataEntryUnionType {
+        {% for data_packet in all_data_packets%}
+        {{data_packet.title_name}} {{data_packet.variable_name}};
+        {% endfor %}
+
+        {% for data_packet in all_data_packets%}
+        DataEntryUnionType({{data_packet.title_name}} _{{data_packet.variable_name}}): {{data_packet.variable_name}}(_{{data_packet.variable_name}}) { }
+        {% endfor %}
+    } data;
+
+    {% for data_packet in all_data_packets%}
+    DataEntry({{data_packet.title_name}} _{{data_packet.variable_name}}): 
+        type(DataPacketType::{{data_packet.variable_name | upper}}), data(_{{data_packet.variable_name}}) { }
+    {% endfor %}
+};
+
+#endif
