@@ -1,0 +1,30 @@
+\doxysection{mg\+\_\+flash\+\_\+driver\+\_\+interface Struct Reference}
+\hypertarget{structmg__flash__driver__interface}{}\label{structmg__flash__driver__interface}\index{mg\_flash\_driver\_interface@{mg\_flash\_driver\_interface}}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{group__bigint__api_gaa04a00088db8519ba90c2bbd8bbf58a2}{version}}
+\item 
+uint32\+\_\+t(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{group__bigint__api_gaed3aa7d9ffa60d36ae13d0ecfbdb1ba3}{init}} )(struct \mbox{\hyperlink{structmg__flash__config}{mg\+\_\+flash\+\_\+config}} \texorpdfstring{$\ast$}{*})
+\item 
+uint32\+\_\+t(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{group__bigint__api_ga79d8b2c19bee44751fb29996d0f9f6f5}{erase}} )(struct \mbox{\hyperlink{structmg__flash__config}{mg\+\_\+flash\+\_\+config}} \texorpdfstring{$\ast$}{*}, uint32\+\_\+t start, uint32\+\_\+t len, uint32\+\_\+t key)
+\item 
+uint32\+\_\+t(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{group__bigint__api_gac49a386c9e8ac177d0ae5b6e4a579fa7}{program}} )(struct \mbox{\hyperlink{structmg__flash__config}{mg\+\_\+flash\+\_\+config}} \texorpdfstring{$\ast$}{*}, uint32\+\_\+t start, uint8\+\_\+t \texorpdfstring{$\ast$}{*}src, uint32\+\_\+t len)
+\item 
+uint32\+\_\+t(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{group__bigint__api_ga76af79b3b7fa3ef8fd040470fb8a4806}{verify\+\_\+erase}} )(struct \mbox{\hyperlink{structmg__flash__config}{mg\+\_\+flash\+\_\+config}} \texorpdfstring{$\ast$}{*}, uint32\+\_\+t start, uint32\+\_\+t len)
+\item 
+uint32\+\_\+t(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{group__bigint__api_ga127404b7665f69095ce329b69d79a4c6}{verify\+\_\+program}} )(struct \mbox{\hyperlink{structmg__flash__config}{mg\+\_\+flash\+\_\+config}} \texorpdfstring{$\ast$}{*}, uint32\+\_\+t start, uint32\+\_\+t len, const uint8\+\_\+t \texorpdfstring{$\ast$}{*}expected, uint32\+\_\+t \texorpdfstring{$\ast$}{*}addr, uint32\+\_\+t \texorpdfstring{$\ast$}{*}failed)
+\item 
+uint32\+\_\+t \mbox{\hyperlink{group__bigint__api_ga67b9992854dfc62da3e649d71308a580}{reserved1}} \mbox{[}12\mbox{]}
+\item 
+uint32\+\_\+t(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{group__bigint__api_ga118f01a9f35cd586e89d40aa2e462c6a}{read}} )(struct \mbox{\hyperlink{structmg__flash__config}{mg\+\_\+flash\+\_\+config}} \texorpdfstring{$\ast$}{*}, uint32\+\_\+t start, uint8\+\_\+t \texorpdfstring{$\ast$}{*}dest, uint32\+\_\+t len)
+\item 
+uint32\+\_\+t \mbox{\hyperlink{group__bigint__api_gaf163e7a694e3e5e04f892dad574df529}{reserved2}} \mbox{[}4\mbox{]}
+\item 
+uint32\+\_\+t(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{group__bigint__api_gabbe602713c4cfacd5dbbc61d316333ad}{deinit}} )(struct \mbox{\hyperlink{structmg__flash__config}{mg\+\_\+flash\+\_\+config}} \texorpdfstring{$\ast$}{*})
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+source/web\+\_\+server/\mbox{\hyperlink{mongoose_8c}{mongoose.\+c}}\end{DoxyCompactItemize}

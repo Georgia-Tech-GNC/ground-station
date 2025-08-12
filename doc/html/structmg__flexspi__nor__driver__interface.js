@@ -1,0 +1,27 @@
+var structmg__flexspi__nor__driver__interface =
+[
+    [ "clear_cache", "group__bigint__api.html#gab62a1c0a89877cebf688c673915990c3", null ],
+    [ "config_clock", "group__bigint__api.html#gaee66605ce8525e142924040510f02e01", null ],
+    [ "erase", "group__bigint__api.html#ga2be3974f0843922849ebb14ae81612a6", null ],
+    [ "erase", "group__bigint__api.html#ga4ee26b99670afd5268c4adfd64478b3c", null ],
+    [ "erase_all", "group__bigint__api.html#ga567afbd7feeecd4926a568ace59a55b9", null ],
+    [ "erase_block", "group__bigint__api.html#gacff959b9a7f9744d9d1ff695d6f0bd4d", null ],
+    [ "erase_sector", "group__bigint__api.html#gac5ca8c62cf3c28f171a6ea512fec405e", null ],
+    [ "get_config", "group__bigint__api.html#gac873ebe605008572bbae3559b22af532", null ],
+    [ "hw_reset", "group__bigint__api.html#ga1b8204b0ed93f50a36234479ea14e138", null ],
+    [ "init", "group__bigint__api.html#ga09e98f77f00d79fab9805dbf125f8bb7", null ],
+    [ "init", "group__bigint__api.html#ga12eaf83065dde56563cfdabfd4c74205", null ],
+    [ "page_program", "group__bigint__api.html#gaea958e281b7f526574bd6383b30bcdf0", null ],
+    [ "partial_program", "group__bigint__api.html#ga8930fb291f6568c13a2c26eb564ec2fe", null ],
+    [ "program", "group__bigint__api.html#gad619746e5bd97900dba0e86d07245173", null ],
+    [ "read", "group__bigint__api.html#ga051ab9c0dc859917f4bcd527c9a903ec", null ],
+    [ "reserved", "group__bigint__api.html#ga312e4946b35dac9f2be58b2e8221f208", null ],
+    [ "reserved2", "group__bigint__api.html#ga917bf93d8ebcc6c30924798c94c77a3c", null ],
+    [ "set_clock_source", "group__bigint__api.html#gaa7b91a14b0a885f17e258e39ebe6cf1d", null ],
+    [ "update_lut", "group__bigint__api.html#ga9f7cf39756e58aa0d1e1051586619273", null ],
+    [ "update_lut", "group__bigint__api.html#gafada7202a345a183573f310c0d2eb9b9", null ],
+    [ "version", "group__bigint__api.html#ga5eb8d6204b53df4a01711a8e2f9f277e", null ],
+    [ "wait_busy", "group__bigint__api.html#ga82fbdad4bdc336e52fb286e0db3e8bf4", null ],
+    [ "xfer", "group__bigint__api.html#gaa153bc544d101e89674efc800b2b0326", null ],
+    [ "xfer", "group__bigint__api.html#ga6d2f4416a30dacf7e6758c0d998241d7", null ]
+];

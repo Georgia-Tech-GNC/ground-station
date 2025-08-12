@@ -38,7 +38,9 @@ void DataCollection::store(const DataEntry& data) {
     switch (data.type) {
         case DataPacketType::ROCKET_KINEMATICS_DATA:
             rocket_kinematics_data.store(data.data.rocket_kinematics_data, std::memory_order_relaxed);
+            break;
         case DataPacketType::ROCKET_SENSOR_DATA:
             rocket_sensor_data.store(data.data.rocket_sensor_data, std::memory_order_relaxed);
+            break;
     }
 }

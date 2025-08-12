@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['sqldatabase_0',['SQLDatabase',['../class_s_q_l_database.html#a3a7537d2a6b5a58cf7550ead9c701eb2',1,'SQLDatabase::SQLDatabase(const std::string &amp;name)'],['../class_s_q_l_database.html#ab657b940e617e9ac76d6064f8ac9334b',1,'SQLDatabase::SQLDatabase(const SQLDatabase &amp;)=delete']]]
+  ['load_0',['load',['../struct_data_collection.html#afa685739b57867104d92d103d78872bd',1,'DataCollection::load()'],['../struct_data_collection.html#a8b299a4a2507294f92177298c30ced89',1,'DataCollection::load()'],['../struct_data_collection.html#a1567421952098490e63612cd7b5af8ec',1,'DataCollection::load()']]]
 ];

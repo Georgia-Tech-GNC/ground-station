@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['last_5ftransaction_5fcommit_0',['last_transaction_commit',['../class_buffered_s_q_l_database.html#a9297af453665a744bdbd4ebaab8181e8',1,'BufferedSQLDatabase']]]
+  ['httpreplyparser_0',['HTTPReplyParser',['../class_h_t_t_p_reply_parser.html',1,'HTTPReplyParser'],['../class_h_t_t_p_reply_parser.html#a3fdeb0dc8060cefc0c5fc9dddd074135',1,'HTTPReplyParser::HTTPReplyParser()']]]
 ];

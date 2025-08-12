@@ -1,0 +1,27 @@
+#include "json_parser.h"
+#include "datatypes.h"
+
+#include "mongoose.h"
+
+void HTTPReplyParser::get_json_string_by_index(char* buffer, size_t len, uint32_t index) {
+    if (!db) {
+        mg_snprintf(buffer, len, "{}");
+        return;
+    }
+    
+    switch (index) {
+        {% for data_packet in all_data_packets %}
+        case (static_cast<uint32_t>(DataPacketType::{{data_packet.variable_name | upper}})): {
+            {{data_packet.title_name}} data = db->see_most_recent_entry<{{data_packet.title_name}}>();
+            mg_snprintf(
+                buffer, len,
+                "{\"data\":[{{data_packet.variables | map(attribute="type.printf_flag") | join(",") }}]}",
+                {{data_packet.variables | map(attribute="name") | map("strformat", "data.{}") | join(", ") }}
+            );
+            break;
+        }
+        {% endfor %}
+        default:
+            mg_snprintf(buffer, len, "{}"); // Return an empty buffer for invalid indices
+    }
+}

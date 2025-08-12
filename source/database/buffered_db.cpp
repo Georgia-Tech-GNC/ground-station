@@ -31,7 +31,9 @@ void BufferedSQLDatabase::run_storage_loop() {
 }
 
 BufferedSQLDatabase::BufferedSQLDatabase(const std::string& name): 
-    db(name), terminate_flag(false), work_queue(INTERNAL_WORK_QUEUE_SIZE), last_transaction_commit(std::chrono::steady_clock::now()) 
+    db(name), terminate_flag(false), 
+    work_queue(INTERNAL_WORK_QUEUE_SIZE), last_transaction_commit(std::chrono::steady_clock::now()),
+    most_recent_entries() 
 { 
     db.begin_transaction();
 }

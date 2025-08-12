@@ -22,13 +22,12 @@ struct {{data_packet.title_name}} {
 
     /** Default (empty) constructor */
     {{data_packet.title_name}}(): 
-        {{ data_packet.variables | map("strformat", "{0[name]}({0[default]})" ) | join(", ") }} { }
+        {{ data_packet.variables | map("strformat", "{0[name]}({0[type].default_value})" ) | join(", ") }} { }
 
     {{data_packet.title_name}}(const std::byte (&raw_array)[{{data_packet.byteform.length}}]); 
-    {{data_packet.title_name}}({{ data_packet.variables | map("strformat", "{0[type]} _{0[name]}" )| join(", ") }}):
+    {{data_packet.title_name}}({{ data_packet.variables | map("strformat", "{0[type].typename} _{0[name]}" )| join(", ") }}):
         {{ data_packet.variables | map(attribute="name") | map("strformat", "{0}(_{0})" ) | join(", ") }} { }
-    {{data_packet.title_name}}(const {{data_packet.title_name}}& other):
-        {{ data_packet.variables | map(attribute="name") | map("strformat", "{0}(other.{0})" )| join(", ") }} { }
+    {{data_packet.title_name}}(const {{data_packet.title_name}}&) = default;
 };
 
 {% endfor %}
@@ -65,7 +64,9 @@ struct DataCollection {
     {% endfor %}
 
     /** Default (empty) constructor */
-    DataCollection() { }
+    DataCollection():
+        {{ all_data_packets | map("strformat", "{0[variable_name]}({0[title_name]}())") | join(",\n\t\t")}}
+    { }
 
     /** Copy constructor */
     DataCollection(const DataCollection& other) = delete;

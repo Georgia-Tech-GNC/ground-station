@@ -13,6 +13,8 @@
 \item 
 void \mbox{\hyperlink{class_buffered_s_q_l_database_a13d035ad75a2646761b0f01ed2b2ce51}{add\+\_\+entry}} (const \mbox{\hyperlink{struct_data_entry}{Data\+Entry}} \&data, const \mbox{\hyperlink{config_8h_a85d6d3ccace866da37c93e500a2c4147}{timestamp\+\_\+t}} timestamp)
 \item 
+{\footnotesize template$<$typename T$>$ }\\T \mbox{\hyperlink{class_buffered_s_q_l_database_a0570ca3ade4099451ce10665566d2215}{see\+\_\+most\+\_\+recent\+\_\+entry}} ()
+\item 
 void \mbox{\hyperlink{class_buffered_s_q_l_database_a6a14258bb6ee256f023771fbc8fa983c}{terminate\+\_\+storage\+\_\+loop}} ()
 \item 
 void \mbox{\hyperlink{class_buffered_s_q_l_database_ad3e0f4af4bb8b151e5acf98776a535be}{run\+\_\+storage\+\_\+loop}} ()
@@ -32,6 +34,8 @@ std\+::atomic\+\_\+flag \mbox{\hyperlink{class_buffered_s_q_l_database_a41b899de
 MPMCQueue$<$ std\+::pair$<$ \mbox{\hyperlink{struct_data_entry}{Data\+Entry}}, \mbox{\hyperlink{config_8h_a85d6d3ccace866da37c93e500a2c4147}{timestamp\+\_\+t}} $>$ $>$ \mbox{\hyperlink{class_buffered_s_q_l_database_a9290ab0e828c7ee60726cadaa58cb653}{work\+\_\+queue}}
 \item 
 std\+::chrono\+::time\+\_\+point$<$ std\+::chrono\+::steady\+\_\+clock $>$ \mbox{\hyperlink{class_buffered_s_q_l_database_a9297af453665a744bdbd4ebaab8181e8}{last\+\_\+transaction\+\_\+commit}}
+\item 
+\mbox{\hyperlink{struct_data_collection}{Data\+Collection}} \mbox{\hyperlink{class_buffered_s_q_l_database_a2711efebfa8fc628e9f75c86d9d638ab}{most\+\_\+recent\+\_\+entries}}
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Static Private Attributes}
 \begin{DoxyCompactItemize}
@@ -45,7 +49,10 @@ static constexpr std\+::chrono\+::nanoseconds \mbox{\hyperlink{class_buffered_s_
 \doxysubsection{Detailed Description}
 A threadsafe wrapper over \doxylink{class_s_q_l_database}{SQLDatabase} which adds inserts to a bounded length queue instead of inserting them immediately.
 
-Inserts are handled in batches via the \doxylink{class_buffered_s_q_l_database_ad3e0f4af4bb8b151e5acf98776a535be}{Buffered\+SQLDatabase\+::run\+\_\+storage\+\_\+loop} method, which should be ran in it\textquotesingle{}s own thread. 
+Inserts are handled in batches via the \doxylink{class_buffered_s_q_l_database_ad3e0f4af4bb8b151e5acf98776a535be}{Buffered\+SQLDatabase\+::run\+\_\+storage\+\_\+loop} method, which should be ran in it\textquotesingle{}s own thread. ~\newline
+
+
+For accessing, this class also retains a copy of the most recent entry of each datatype. These copies are not stored in the database itself. 
 
 \label{doc-constructors}
 \Hypertarget{class_buffered_s_q_l_database_doc-constructors}
@@ -89,7 +96,14 @@ void Buffered\+SQLDatabase\+::run\+\_\+storage\+\_\+loop (\begin{DoxyParamCaptio
 
 Runs the storage loop.
 
-This method should run in its own thread. Once started, it will loop infinitely until the \doxylink{class_buffered_s_q_l_database_a6a14258bb6ee256f023771fbc8fa983c}{Buffered\+SQLDatabase\+::terminate\+\_\+storage\+\_\+loop} method is called in another thread. \Hypertarget{class_buffered_s_q_l_database_a6a14258bb6ee256f023771fbc8fa983c}\index{BufferedSQLDatabase@{BufferedSQLDatabase}!terminate\_storage\_loop@{terminate\_storage\_loop}}
+This method should run in its own thread. Once started, it will loop infinitely until the \doxylink{class_buffered_s_q_l_database_a6a14258bb6ee256f023771fbc8fa983c}{Buffered\+SQLDatabase\+::terminate\+\_\+storage\+\_\+loop} method is called in another thread. \Hypertarget{class_buffered_s_q_l_database_a0570ca3ade4099451ce10665566d2215}\index{BufferedSQLDatabase@{BufferedSQLDatabase}!see\_most\_recent\_entry@{see\_most\_recent\_entry}}
+\index{see\_most\_recent\_entry@{see\_most\_recent\_entry}!BufferedSQLDatabase@{BufferedSQLDatabase}}
+\doxysubsubsection{\texorpdfstring{see\_most\_recent\_entry()}{see\_most\_recent\_entry()}}
+{\footnotesize\ttfamily \label{class_buffered_s_q_l_database_a0570ca3ade4099451ce10665566d2215} 
+template$<$typename T$>$ \\
+T Buffered\+SQLDatabase\+::see\+\_\+most\+\_\+recent\+\_\+entry (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Returns the most recent recorded entry of type T \Hypertarget{class_buffered_s_q_l_database_a6a14258bb6ee256f023771fbc8fa983c}\index{BufferedSQLDatabase@{BufferedSQLDatabase}!terminate\_storage\_loop@{terminate\_storage\_loop}}
 \index{terminate\_storage\_loop@{terminate\_storage\_loop}!BufferedSQLDatabase@{BufferedSQLDatabase}}
 \doxysubsubsection{\texorpdfstring{terminate\_storage\_loop()}{terminate\_storage\_loop()}}
 {\footnotesize\ttfamily \label{class_buffered_s_q_l_database_a6a14258bb6ee256f023771fbc8fa983c} 
@@ -118,7 +132,13 @@ The number of slots in the work queue used to hold pending insert operations \Hy
 {\footnotesize\ttfamily \label{class_buffered_s_q_l_database_a9297af453665a744bdbd4ebaab8181e8} 
 std\+::chrono\+::time\+\_\+point$<$std\+::chrono\+::steady\+\_\+clock$>$ Buffered\+SQLDatabase\+::last\+\_\+transaction\+\_\+commit\hspace{0.3cm}{\ttfamily [private]}}
 
-Last timestamp when a transaction commit occurred \Hypertarget{class_buffered_s_q_l_database_a41b899decb8bebf47356fb3ca8c390db}\index{BufferedSQLDatabase@{BufferedSQLDatabase}!terminate\_flag@{terminate\_flag}}
+Last timestamp when a transaction commit occurred \Hypertarget{class_buffered_s_q_l_database_a2711efebfa8fc628e9f75c86d9d638ab}\index{BufferedSQLDatabase@{BufferedSQLDatabase}!most\_recent\_entries@{most\_recent\_entries}}
+\index{most\_recent\_entries@{most\_recent\_entries}!BufferedSQLDatabase@{BufferedSQLDatabase}}
+\doxysubsubsection{\texorpdfstring{most\_recent\_entries}{most\_recent\_entries}}
+{\footnotesize\ttfamily \label{class_buffered_s_q_l_database_a2711efebfa8fc628e9f75c86d9d638ab} 
+\mbox{\hyperlink{struct_data_collection}{Data\+Collection}} Buffered\+SQLDatabase\+::most\+\_\+recent\+\_\+entries\hspace{0.3cm}{\ttfamily [private]}}
+
+Stores the most recent entry of each type \Hypertarget{class_buffered_s_q_l_database_a41b899decb8bebf47356fb3ca8c390db}\index{BufferedSQLDatabase@{BufferedSQLDatabase}!terminate\_flag@{terminate\_flag}}
 \index{terminate\_flag@{terminate\_flag}!BufferedSQLDatabase@{BufferedSQLDatabase}}
 \doxysubsubsection{\texorpdfstring{terminate\_flag}{terminate\_flag}}
 {\footnotesize\ttfamily \label{class_buffered_s_q_l_database_a41b899decb8bebf47356fb3ca8c390db} 

@@ -8,6 +8,8 @@ TARGETS = [
     "source/database/sql_database.cpp",
     "include/globals/datatypes.h",
     "source/globals/datatypes.cpp",
+    "source/web_server/json_parser.cpp",
+    "include/web_server/json_parser.h"
 ]
 
 if __name__ == "__main__":

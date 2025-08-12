@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['pitch_0',['pitch',['../struct_rocket_kinematics_data.html#a0b0ebc171bf87876e81112511314c057',1,'RocketKinematicsData']]]
+  ['most_5frecent_5fentries_0',['most_recent_entries',['../class_buffered_s_q_l_database.html#a2711efebfa8fc628e9f75c86d9d638ab',1,'BufferedSQLDatabase']]]
 ];

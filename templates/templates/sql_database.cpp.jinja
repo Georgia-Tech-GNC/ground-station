@@ -52,7 +52,7 @@ void SQLDatabase::insert_data(const DataEntry& data, timestamp_t timestamp) {
 
             sqlite3_bind_int(target_stmt, 1, timestamp);
             {% for variable in data_packet.variables %}
-            {{variable.sqlite_binding}}(target_stmt, {{loop.index + 1}}, data.data.{{data_packet.variable_name}}.{{variable.name}});
+            {{variable.type.sqlite_bind}}(target_stmt, {{loop.index + 1}}, data.data.{{data_packet.variable_name}}.{{variable.name}});
             {% endfor %}
 
             break;

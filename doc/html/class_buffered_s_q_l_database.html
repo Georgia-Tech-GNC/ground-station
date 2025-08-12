@@ -99,6 +99,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8d1c8b9260b1c8fb8f7bde87056a17be" id="r_a8d1c8b9260b1c8fb8f7bde87056a17be"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8d1c8b9260b1c8fb8f7bde87056a17be">BufferedSQLDatabase</a> (const std::string &amp;name)</td></tr>
 <tr class="memitem:a7f894f40d3ecc13ce9c436147c9d89a1" id="r_a7f894f40d3ecc13ce9c436147c9d89a1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7f894f40d3ecc13ce9c436147c9d89a1">BufferedSQLDatabase</a> (const <a class="el" href="class_buffered_s_q_l_database.html">BufferedSQLDatabase</a> &amp;)=delete</td></tr>
 <tr class="memitem:a13d035ad75a2646761b0f01ed2b2ce51" id="r_a13d035ad75a2646761b0f01ed2b2ce51"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a13d035ad75a2646761b0f01ed2b2ce51">add_entry</a> (const <a class="el" href="struct_data_entry.html">DataEntry</a> &amp;data, const <a class="el" href="config_8h.html#a85d6d3ccace866da37c93e500a2c4147">timestamp_t</a> timestamp)</td></tr>
+<tr class="memitem:a0570ca3ade4099451ce10665566d2215" id="r_a0570ca3ade4099451ce10665566d2215"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:a0570ca3ade4099451ce10665566d2215 template"><td class="memItemLeft" align="right" valign="top">T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0570ca3ade4099451ce10665566d2215">see_most_recent_entry</a> ()</td></tr>
 <tr class="memitem:a6a14258bb6ee256f023771fbc8fa983c" id="r_a6a14258bb6ee256f023771fbc8fa983c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6a14258bb6ee256f023771fbc8fa983c">terminate_storage_loop</a> ()</td></tr>
 <tr class="memitem:ad3e0f4af4bb8b151e5acf98776a535be" id="r_ad3e0f4af4bb8b151e5acf98776a535be"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad3e0f4af4bb8b151e5acf98776a535be">run_storage_loop</a> ()</td></tr>
 </table><table class="memberdecls">
@@ -112,6 +114,7 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:a41b899decb8bebf47356fb3ca8c390db" id="r_a41b899decb8bebf47356fb3ca8c390db"><td class="memItemLeft" align="right" valign="top">std::atomic_flag&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a41b899decb8bebf47356fb3ca8c390db">terminate_flag</a></td></tr>
 <tr class="memitem:a9290ab0e828c7ee60726cadaa58cb653" id="r_a9290ab0e828c7ee60726cadaa58cb653"><td class="memItemLeft" align="right" valign="top">MPMCQueue&lt; std::pair&lt; <a class="el" href="struct_data_entry.html">DataEntry</a>, <a class="el" href="config_8h.html#a85d6d3ccace866da37c93e500a2c4147">timestamp_t</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9290ab0e828c7ee60726cadaa58cb653">work_queue</a></td></tr>
 <tr class="memitem:a9297af453665a744bdbd4ebaab8181e8" id="r_a9297af453665a744bdbd4ebaab8181e8"><td class="memItemLeft" align="right" valign="top">std::chrono::time_point&lt; std::chrono::steady_clock &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9297af453665a744bdbd4ebaab8181e8">last_transaction_commit</a></td></tr>
+<tr class="memitem:a2711efebfa8fc628e9f75c86d9d638ab" id="r_a2711efebfa8fc628e9f75c86d9d638ab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_data_collection.html">DataCollection</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2711efebfa8fc628e9f75c86d9d638ab">most_recent_entries</a></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pri-static-attribs" class="groupheader"><a id="pri-static-attribs" name="pri-static-attribs"></a>
 Static Private Attributes</h2></td></tr>
@@ -120,7 +123,9 @@ Static Private Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A threadsafe wrapper over <a class="el" href="class_s_q_l_database.html">SQLDatabase</a> which adds inserts to a bounded length queue instead of inserting them immediately.</p>
-<p>Inserts are handled in batches via the <a class="el" href="#ad3e0f4af4bb8b151e5acf98776a535be">BufferedSQLDatabase::run_storage_loop</a> method, which should be ran in it's own thread. </p>
+<p>Inserts are handled in batches via the <a class="el" href="#ad3e0f4af4bb8b151e5acf98776a535be">BufferedSQLDatabase::run_storage_loop</a> method, which should be ran in it's own thread. <br  />
+</p>
+<p>For accessing, this class also retains a copy of the most recent entry of each datatype. These copies are not stored in the database itself. </p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a8d1c8b9260b1c8fb8f7bde87056a17be" name="a8d1c8b9260b1c8fb8f7bde87056a17be"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8d1c8b9260b1c8fb8f7bde87056a17be">&#9670;&#160;</a></span>BufferedSQLDatabase() <span class="overload">[1/2]</span></h2>
@@ -233,6 +238,34 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a0570ca3ade4099451ce10665566d2215" name="a0570ca3ade4099451ce10665566d2215"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0570ca3ade4099451ce10665566d2215">&#9670;&#160;</a></span>see_most_recent_entry()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">T BufferedSQLDatabase::see_most_recent_entry </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Returns the most recent recorded entry of type T </p>
+
+</div>
+</div>
 <a id="a6a14258bb6ee256f023771fbc8fa983c" name="a6a14258bb6ee256f023771fbc8fa983c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6a14258bb6ee256f023771fbc8fa983c">&#9670;&#160;</a></span>terminate_storage_loop()</h2>
 
@@ -326,6 +359,29 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <p>Last timestamp when a transaction commit occurred </p>
+
+</div>
+</div>
+<a id="a2711efebfa8fc628e9f75c86d9d638ab" name="a2711efebfa8fc628e9f75c86d9d638ab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2711efebfa8fc628e9f75c86d9d638ab">&#9670;&#160;</a></span>most_recent_entries</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_data_collection.html">DataCollection</a> BufferedSQLDatabase::most_recent_entries</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Stores the most recent entry of each type </p>
 
 </div>
 </div>

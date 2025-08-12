@@ -1,0 +1,100 @@
+\doxysection{Data\+Collection Struct Reference}
+\hypertarget{struct_data_collection}{}\label{struct_data_collection}\index{DataCollection@{DataCollection}}
+
+
+{\ttfamily \#include $<$datatypes.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_data_collection_a9b9255ce56dbe9bb37184cd81b46f1f7}{Data\+Collection}} ()
+\item 
+\mbox{\hyperlink{struct_data_collection_ad6b510aeb939eea95be1b134b1cfa720}{Data\+Collection}} (const \mbox{\hyperlink{struct_data_collection}{Data\+Collection}} \&other)=delete
+\item 
+{\footnotesize template$<$typename T$>$ }\\T \mbox{\hyperlink{struct_data_collection_afa685739b57867104d92d103d78872bd}{load}} ()
+\item 
+void \mbox{\hyperlink{struct_data_collection_a8a230e0d48ea8fb73b24df3ad06d4315}{store}} (const \mbox{\hyperlink{struct_data_entry}{Data\+Entry}} \&data)
+\item 
+template$<$$>$ \mbox{\hyperlink{struct_rocket_kinematics_data}{Rocket\+Kinematics\+Data}} \mbox{\hyperlink{struct_data_collection_a8b299a4a2507294f92177298c30ced89}{load}} ()
+\item 
+template$<$$>$ \mbox{\hyperlink{struct_rocket_sensor_data}{Rocket\+Sensor\+Data}} \mbox{\hyperlink{struct_data_collection_a1567421952098490e63612cd7b5af8ec}{load}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::atomic$<$ \mbox{\hyperlink{struct_rocket_kinematics_data}{Rocket\+Kinematics\+Data}} $>$ \mbox{\hyperlink{struct_data_collection_a539ed11becb0c333d192db2c46cacebe}{rocket\+\_\+kinematics\+\_\+data}}
+\item 
+std\+::atomic$<$ \mbox{\hyperlink{struct_rocket_sensor_data}{Rocket\+Sensor\+Data}} $>$ \mbox{\hyperlink{struct_data_collection_a74b582de27cd5a13de7b9b73dacf8e9f}{rocket\+\_\+sensor\+\_\+data}}
+\end{DoxyCompactItemize}
+
+
+\label{doc-constructors}
+\Hypertarget{struct_data_collection_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{struct_data_collection_a9b9255ce56dbe9bb37184cd81b46f1f7}\index{DataCollection@{DataCollection}!DataCollection@{DataCollection}}
+\index{DataCollection@{DataCollection}!DataCollection@{DataCollection}}
+\doxysubsubsection{\texorpdfstring{DataCollection()}{DataCollection()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{struct_data_collection_a9b9255ce56dbe9bb37184cd81b46f1f7} 
+Data\+Collection\+::\+Data\+Collection (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Default (empty) constructor \Hypertarget{struct_data_collection_ad6b510aeb939eea95be1b134b1cfa720}\index{DataCollection@{DataCollection}!DataCollection@{DataCollection}}
+\index{DataCollection@{DataCollection}!DataCollection@{DataCollection}}
+\doxysubsubsection{\texorpdfstring{DataCollection()}{DataCollection()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{struct_data_collection_ad6b510aeb939eea95be1b134b1cfa720} 
+Data\+Collection\+::\+Data\+Collection (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_data_collection}{Data\+Collection}} \&}]{other}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+Copy constructor 
+
+\label{doc-func-members}
+\Hypertarget{struct_data_collection_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{struct_data_collection_afa685739b57867104d92d103d78872bd}\index{DataCollection@{DataCollection}!load@{load}}
+\index{load@{load}!DataCollection@{DataCollection}}
+\doxysubsubsection{\texorpdfstring{load()}{load()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{struct_data_collection_afa685739b57867104d92d103d78872bd} 
+template$<$typename T$>$ \\
+T Data\+Collection\+::load (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{struct_data_collection_a8b299a4a2507294f92177298c30ced89}\index{DataCollection@{DataCollection}!load@{load}}
+\index{load@{load}!DataCollection@{DataCollection}}
+\doxysubsubsection{\texorpdfstring{load()}{load()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{struct_data_collection_a8b299a4a2507294f92177298c30ced89} 
+template$<$$>$ \\
+\mbox{\hyperlink{struct_rocket_kinematics_data}{Rocket\+Kinematics\+Data}} Data\+Collection\+::load (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{struct_data_collection_a1567421952098490e63612cd7b5af8ec}\index{DataCollection@{DataCollection}!load@{load}}
+\index{load@{load}!DataCollection@{DataCollection}}
+\doxysubsubsection{\texorpdfstring{load()}{load()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{struct_data_collection_a1567421952098490e63612cd7b5af8ec} 
+template$<$$>$ \\
+\mbox{\hyperlink{struct_rocket_sensor_data}{Rocket\+Sensor\+Data}} Data\+Collection\+::load (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{struct_data_collection_a8a230e0d48ea8fb73b24df3ad06d4315}\index{DataCollection@{DataCollection}!store@{store}}
+\index{store@{store}!DataCollection@{DataCollection}}
+\doxysubsubsection{\texorpdfstring{store()}{store()}}
+{\footnotesize\ttfamily \label{struct_data_collection_a8a230e0d48ea8fb73b24df3ad06d4315} 
+void Data\+Collection\+::store (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_data_entry}{Data\+Entry}} \&}]{data}{}\end{DoxyParamCaption})}
+
+
+
+\label{doc-variable-members}
+\Hypertarget{struct_data_collection_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_data_collection_a539ed11becb0c333d192db2c46cacebe}\index{DataCollection@{DataCollection}!rocket\_kinematics\_data@{rocket\_kinematics\_data}}
+\index{rocket\_kinematics\_data@{rocket\_kinematics\_data}!DataCollection@{DataCollection}}
+\doxysubsubsection{\texorpdfstring{rocket\_kinematics\_data}{rocket\_kinematics\_data}}
+{\footnotesize\ttfamily \label{struct_data_collection_a539ed11becb0c333d192db2c46cacebe} 
+std\+::atomic$<$\mbox{\hyperlink{struct_rocket_kinematics_data}{Rocket\+Kinematics\+Data}}$>$ Data\+Collection\+::rocket\+\_\+kinematics\+\_\+data}
+
+\Hypertarget{struct_data_collection_a74b582de27cd5a13de7b9b73dacf8e9f}\index{DataCollection@{DataCollection}!rocket\_sensor\_data@{rocket\_sensor\_data}}
+\index{rocket\_sensor\_data@{rocket\_sensor\_data}!DataCollection@{DataCollection}}
+\doxysubsubsection{\texorpdfstring{rocket\_sensor\_data}{rocket\_sensor\_data}}
+{\footnotesize\ttfamily \label{struct_data_collection_a74b582de27cd5a13de7b9b73dacf8e9f} 
+std\+::atomic$<$\mbox{\hyperlink{struct_rocket_sensor_data}{Rocket\+Sensor\+Data}}$>$ Data\+Collection\+::rocket\+\_\+sensor\+\_\+data}
+
+
+
+The documentation for this struct was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/globals/\mbox{\hyperlink{datatypes_8h}{datatypes.\+h}}\item 
+source/globals/\mbox{\hyperlink{datatypes_8cpp}{datatypes.\+cpp}}\end{DoxyCompactItemize}

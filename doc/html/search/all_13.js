@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['y_0',['y',['../struct_rocket_kinematics_data.html#a43cb5f466d36a5cd519b95eafc5d23e6',1,'RocketKinematicsData']]]
+  ['_7esqldatabase_0',['~SQLDatabase',['../class_s_q_l_database.html#a1cb442f795759c2bd9acfd7841813d71',1,'SQLDatabase']]]
 ];

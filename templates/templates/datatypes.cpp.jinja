@@ -4,7 +4,7 @@
 {{data_packet.title_name}}::{{data_packet.title_name}}(const std::byte (&raw_array)[{{data_packet.byteform.length}}]) {
     {% set ns = namespace(offset=0) %}
     {% for variable in data_packet.variables %}
-    std::memcpy(&{{variable.name}}, &raw_array[{{ns.offset}}], {{variable.length}});
+    std::memcpy(&{{variable.name}}, &raw_array[{{ns.offset}}], {{variable.type.size}});
     {% set ns.offset = ns.offset + variable.length %}
     {% endfor %}
 }
@@ -32,6 +32,7 @@ void DataCollection::store(const DataEntry& data) {
         {% for data_packet in all_data_packets%}
         case DataPacketType::{{data_packet.variable_name | upper}}:
             {{data_packet.variable_name}}.store(data.data.{{data_packet.variable_name}}, std::memory_order_relaxed);
+            break;
         {% endfor %}
     }
 }

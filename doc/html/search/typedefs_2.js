@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['value_5ftype_0',['value_type',['../structmpmc_1_1_aligned_allocator.html#aa4692be47bc2558cdb0f1844b88b8f8b',1,'mpmc::AlignedAllocator']]]
+  ['dlimb_5ft_0',['dlimb_t',['../group__bigint__api.html#ga50a3fb8b904049b07c95b8a6cd8253bd',1,'mongoose.c']]]
 ];

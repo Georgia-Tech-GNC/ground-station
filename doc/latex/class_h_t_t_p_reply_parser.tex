@@ -1,0 +1,62 @@
+\doxysection{HTTPReply\+Parser Class Reference}
+\hypertarget{class_h_t_t_p_reply_parser}{}\label{class_h_t_t_p_reply_parser}\index{HTTPReplyParser@{HTTPReplyParser}}
+
+
+{\ttfamily \#include $<$json\+\_\+parser.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_h_t_t_p_reply_parser_a3fdeb0dc8060cefc0c5fc9dddd074135}{HTTPReply\+Parser}} (\mbox{\hyperlink{class_buffered_s_q_l_database}{Buffered\+SQLDatabase}} \&\+\_\+db)
+\item 
+void \mbox{\hyperlink{class_h_t_t_p_reply_parser_ab37029753129ce2b1d6ea639c41e1cae}{get\+\_\+json\+\_\+string\+\_\+by\+\_\+index}} (char \texorpdfstring{$\ast$}{*}buffer, size\+\_\+t len, uint32\+\_\+t packet\+\_\+type)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_buffered_s_q_l_database}{Buffered\+SQLDatabase}} \& \mbox{\hyperlink{class_h_t_t_p_reply_parser_a77e3b9493e1faf373d0643135aacb68d}{db}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Utility wrapper over \doxylink{class_buffered_s_q_l_database}{Buffered\+SQLDatabase} which allows for indexed access to recent data formatted in JSON notation 
+
+\label{doc-constructors}
+\Hypertarget{class_h_t_t_p_reply_parser_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_h_t_t_p_reply_parser_a3fdeb0dc8060cefc0c5fc9dddd074135}\index{HTTPReplyParser@{HTTPReplyParser}!HTTPReplyParser@{HTTPReplyParser}}
+\index{HTTPReplyParser@{HTTPReplyParser}!HTTPReplyParser@{HTTPReplyParser}}
+\doxysubsubsection{\texorpdfstring{HTTPReplyParser()}{HTTPReplyParser()}}
+{\footnotesize\ttfamily \label{class_h_t_t_p_reply_parser_a3fdeb0dc8060cefc0c5fc9dddd074135} 
+HTTPReply\+Parser\+::\+HTTPReply\+Parser (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_buffered_s_q_l_database}{Buffered\+SQLDatabase}} \&}]{\+\_\+db}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}
+
+
+
+\label{doc-func-members}
+\Hypertarget{class_h_t_t_p_reply_parser_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_h_t_t_p_reply_parser_ab37029753129ce2b1d6ea639c41e1cae}\index{HTTPReplyParser@{HTTPReplyParser}!get\_json\_string\_by\_index@{get\_json\_string\_by\_index}}
+\index{get\_json\_string\_by\_index@{get\_json\_string\_by\_index}!HTTPReplyParser@{HTTPReplyParser}}
+\doxysubsubsection{\texorpdfstring{get\_json\_string\_by\_index()}{get\_json\_string\_by\_index()}}
+{\footnotesize\ttfamily \label{class_h_t_t_p_reply_parser_ab37029753129ce2b1d6ea639c41e1cae} 
+void HTTPReply\+Parser\+::get\+\_\+json\+\_\+string\+\_\+by\+\_\+index (\begin{DoxyParamCaption}\item[{char \texorpdfstring{$\ast$}{*}}]{buffer}{, }\item[{size\+\_\+t}]{len}{, }\item[{uint32\+\_\+t}]{packet\+\_\+type}{}\end{DoxyParamCaption})}
+
+Get a JSON-\/formatted string represented the last recorded packet of type packet\+\_\+type
+
+packet\+\_\+type is equivalent to the value of the corresponding \doxylink{datatypes_8h_a8177281edf91c9421c33891469a41308}{Data\+Packet\+Type} Invalid packet\+\_\+type\textquotesingle{}s will return "{}\{\}"{} 
+
+\label{doc-variable-members}
+\Hypertarget{class_h_t_t_p_reply_parser_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_h_t_t_p_reply_parser_a77e3b9493e1faf373d0643135aacb68d}\index{HTTPReplyParser@{HTTPReplyParser}!db@{db}}
+\index{db@{db}!HTTPReplyParser@{HTTPReplyParser}}
+\doxysubsubsection{\texorpdfstring{db}{db}}
+{\footnotesize\ttfamily \label{class_h_t_t_p_reply_parser_a77e3b9493e1faf373d0643135aacb68d} 
+\mbox{\hyperlink{class_buffered_s_q_l_database}{Buffered\+SQLDatabase}}\& HTTPReply\+Parser\+::db\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/web\+\_\+server/\mbox{\hyperlink{json__parser_8h}{json\+\_\+parser.\+h}}\item 
+source/web\+\_\+server/\mbox{\hyperlink{json__parser_8cpp}{json\+\_\+parser.\+cpp}}\end{DoxyCompactItemize}

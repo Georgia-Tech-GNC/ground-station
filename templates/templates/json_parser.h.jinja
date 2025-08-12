@@ -1,0 +1,34 @@
+#ifndef JSON_PARSER
+#define JSON_PARSER
+
+#include "buffered_db.h"
+#include "datatypes.h"
+
+#include <cstddef>
+
+constexpr size_t MAX_DATA_PACKET_JSON_STRING_LEN = {{all_data_packets | map(attribute='json_str_length') | max}};
+
+/** Utility wrapper over #BufferedSQLDatabase which allows for indexed access to recent data formatted in JSON notation */
+class HTTPReplyParser {
+
+private:
+    BufferedSQLDatabase* db;
+
+public:
+    explicit HTTPReplyParser(BufferedSQLDatabase* _db): db(_db) { }
+
+    /** Sets the #BufferedSQLDatabase that this wrapper should use. */
+    inline void set_db(BufferedSQLDatabase* db) {
+        this->db = db;
+    }
+
+    /** 
+     * Get a JSON-formatted string represented the last recorded packet of type packet_type 
+     * 
+     * packet_type is equivalent to the value of the corresponding #DataPacketType
+     * An invalid packet_type or a null databse will return "{}"
+     */
+    void get_json_string_by_index(char* buffer, size_t len, uint32_t packet_type);
+};
+
+#endif

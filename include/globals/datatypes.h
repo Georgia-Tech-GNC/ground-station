@@ -24,8 +24,7 @@ struct RocketKinematicsData {
     RocketKinematicsData(const std::byte (&raw_array)[16]); 
     RocketKinematicsData(float _x, float _y, float _z, uint16_t _roll, uint16_t _pitch):
         x(_x), y(_y), z(_z), roll(_roll), pitch(_pitch) { }
-    RocketKinematicsData(const RocketKinematicsData& other):
-        x(other.x), y(other.y), z(other.z), roll(other.roll), pitch(other.pitch) { }
+    RocketKinematicsData(const RocketKinematicsData&) = default;
 };
 
 struct RocketSensorData {
@@ -39,8 +38,7 @@ struct RocketSensorData {
     RocketSensorData(const std::byte (&raw_array)[16]); 
     RocketSensorData(int64_t _gps_x, int32_t _gps_y, int32_t _gps_z):
         gps_x(_gps_x), gps_y(_gps_y), gps_z(_gps_z) { }
-    RocketSensorData(const RocketSensorData& other):
-        gps_x(other.gps_x), gps_y(other.gps_y), gps_z(other.gps_z) { }
+    RocketSensorData(const RocketSensorData&) = default;
 };
 
 struct DataEntry {
@@ -75,7 +73,10 @@ struct DataCollection {
     std::atomic<RocketSensorData> rocket_sensor_data;
 
     /** Default (empty) constructor */
-    DataCollection() { }
+    DataCollection():
+        rocket_kinematics_data(RocketKinematicsData()),
+		rocket_sensor_data(RocketSensorData())
+    { }
 
     /** Copy constructor */
     DataCollection(const DataCollection& other) = delete;

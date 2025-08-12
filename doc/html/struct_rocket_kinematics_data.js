@@ -1,8 +1,9 @@
 var struct_rocket_kinematics_data =
 [
+    [ "RocketKinematicsData", "struct_rocket_kinematics_data.html#a709eab6bdc9abf58b3e9679848ee6c4d", null ],
     [ "RocketKinematicsData", "struct_rocket_kinematics_data.html#a3018337e6d206b3cbf079352efaa6429", null ],
     [ "RocketKinematicsData", "struct_rocket_kinematics_data.html#a453eb704a10dc1bf8ce720813489713b", null ],
-    [ "RocketKinematicsData", "struct_rocket_kinematics_data.html#a62e1dcb95237f09783e4e1195538db67", null ],
+    [ "RocketKinematicsData", "struct_rocket_kinematics_data.html#abb688772deb90f970bbcf59026f14003", null ],
     [ "pitch", "struct_rocket_kinematics_data.html#a0b0ebc171bf87876e81112511314c057", null ],
     [ "roll", "struct_rocket_kinematics_data.html#a20a631fda40874585e472bfc21b429ea", null ],
     [ "x", "struct_rocket_kinematics_data.html#ad08c23b16a637a14b84d7fd2426c40d4", null ],

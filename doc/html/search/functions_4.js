@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['insert_5fdata_0',['insert_data',['../class_s_q_l_database.html#a7980d9f0c9fd2e85389451d2245151f1',1,'SQLDatabase']]]
+  ['get_5fjson_5fstring_5fby_5findex_0',['get_json_string_by_index',['../class_h_t_t_p_reply_parser.html#ab37029753129ce2b1d6ea639c41e1cae',1,'HTTPReplyParser']]]
 ];

@@ -4,7 +4,7 @@ TARGET_EXECUTABLE_NAME := ground_station
 # Define the source and build folders
 BUILD_DIR := ./build
 SRC_DIRS := ./source
-INC_DIRS := ./include/database ./include/globals ./include
+INC_DIRS := ./include/database ./include/globals ./include ./include/web_server
 
 # Find all source files
 ALL_SRC_FILES := $(shell find $(SRC_DIRS) -name '*.cpp' -or -name '*.c')

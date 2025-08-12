@@ -1,0 +1,52 @@
+\doxysection{tls\+\_\+data Struct Reference}
+\hypertarget{structtls__data}{}\label{structtls__data}\index{tls\_data@{tls\_data}}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{mongoose_8c_ae843dc3ea4e45c3fe745c32b821f0d7b}{mg\+\_\+tls\+\_\+hs\+\_\+state}} \mbox{\hyperlink{group__bigint__api_ga2d9eff8a1ee0625addec609ddfa97bae}{state}}
+\item 
+struct \mbox{\hyperlink{structmg__iobuf}{mg\+\_\+iobuf}} \mbox{\hyperlink{group__bigint__api_gafb5d2bc12976c623d1dc7429a8ba7971}{send}}
+\item 
+size\+\_\+t \mbox{\hyperlink{group__bigint__api_ga39da4095ed7f2d65159ee60330465739}{recv\+\_\+offset}}
+\item 
+size\+\_\+t \mbox{\hyperlink{group__bigint__api_gae950a8e7e074400399a0ede0b00a672b}{recv\+\_\+len}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{group__bigint__api_ga91c9c72397a127b16eb899fdfd1c7493}{content\+\_\+type}}
+\item 
+\mbox{\hyperlink{structmg__sha256__ctx}{mg\+\_\+sha256\+\_\+ctx}} \mbox{\hyperlink{group__bigint__api_gac9066b352cd64f0bf063e167f85e80c2}{sha256}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{group__bigint__api_ga27640ecc865f59bd5a70b2dc2779ea58}{random}} \mbox{[}32\mbox{]}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{group__bigint__api_gaa2c383a03223facb762bb34f5f2c0018}{session\+\_\+id}} \mbox{[}32\mbox{]}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{group__bigint__api_ga354d7be5be379410589a7271e3f7bf72}{x25519\+\_\+cli}} \mbox{[}32\mbox{]}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{group__bigint__api_gae6414c7c07ab58d15777cb8c2664099e}{x25519\+\_\+sec}} \mbox{[}32\mbox{]}
+\item 
+int \mbox{\hyperlink{group__bigint__api_gafde5fea2b32c61889b0735a4787883c6}{skip\+\_\+verification}}
+\item 
+int \mbox{\hyperlink{group__bigint__api_gaf51e02fc7e915f7eddcd37125c177ef9}{cert\+\_\+requested}}
+\item 
+struct \mbox{\hyperlink{structmg__str}{mg\+\_\+str}} \mbox{\hyperlink{group__bigint__api_ga6037417e90a4bda65c5da4578ab78b42}{cert\+\_\+der}}
+\item 
+struct \mbox{\hyperlink{structmg__str}{mg\+\_\+str}} \mbox{\hyperlink{group__bigint__api_ga5b1d0ca21c7201a8fdecd7085ae45eba}{ca\+\_\+der}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{group__bigint__api_gae0c090f8d99f9e3d6eaf693ad1a45a07}{ec\+\_\+key}} \mbox{[}32\mbox{]}
+\item 
+char \mbox{\hyperlink{group__bigint__api_ga4b22fb2c176506e0fea27d127fa2914d}{hostname}} \mbox{[}254\mbox{]}
+\item 
+int \mbox{\hyperlink{group__bigint__api_ga592b0568f4c7086bec1751fbb71474f4}{is\+\_\+ec\+\_\+pubkey}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{group__bigint__api_gaa45ed17ea80eab883ab3e61ced8193e0}{pubkey}} \mbox{[}512+16\mbox{]}
+\item 
+size\+\_\+t \mbox{\hyperlink{group__bigint__api_gaa328d31121a0d25465a009d70329fc4f}{pubkeysz}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{group__bigint__api_ga5572fc65150b01b6682ed1a50930875f}{sighash}} \mbox{[}32\mbox{]}
+\item 
+struct \mbox{\hyperlink{structtls__enc}{tls\+\_\+enc}} \mbox{\hyperlink{group__bigint__api_ga390d9e94e6ff5e3b5690b91fe782c1ea}{enc}}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+source/web\+\_\+server/\mbox{\hyperlink{mongoose_8c}{mongoose.\+c}}\end{DoxyCompactItemize}

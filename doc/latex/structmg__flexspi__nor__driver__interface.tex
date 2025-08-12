@@ -1,0 +1,58 @@
+\doxysection{mg\+\_\+flexspi\+\_\+nor\+\_\+driver\+\_\+interface Struct Reference}
+\hypertarget{structmg__flexspi__nor__driver__interface}{}\label{structmg__flexspi__nor__driver__interface}\index{mg\_flexspi\_nor\_driver\_interface@{mg\_flexspi\_nor\_driver\_interface}}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{group__bigint__api_ga5eb8d6204b53df4a01711a8e2f9f277e}{version}}
+\item 
+uint32\+\_\+t(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{group__bigint__api_ga09e98f77f00d79fab9805dbf125f8bb7}{init}} )(uint32\+\_\+t instance, struct \mbox{\hyperlink{structmg__flexspi__nor__config}{mg\+\_\+flexspi\+\_\+nor\+\_\+config}} \texorpdfstring{$\ast$}{*}config)
+\item 
+uint32\+\_\+t(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{group__bigint__api_ga82fbdad4bdc336e52fb286e0db3e8bf4}{wait\+\_\+busy}} )(uint32\+\_\+t instance, struct \mbox{\hyperlink{structmg__flexspi__nor__config}{mg\+\_\+flexspi\+\_\+nor\+\_\+config}} \texorpdfstring{$\ast$}{*}config, uint32\+\_\+t address, bool keep\+State)
+\item 
+uint32\+\_\+t(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{group__bigint__api_gaea958e281b7f526574bd6383b30bcdf0}{page\+\_\+program}} )(uint32\+\_\+t instance, struct \mbox{\hyperlink{structmg__flexspi__nor__config}{mg\+\_\+flexspi\+\_\+nor\+\_\+config}} \texorpdfstring{$\ast$}{*}config, uint32\+\_\+t dst\+Addr, const uint32\+\_\+t \texorpdfstring{$\ast$}{*}src, bool keep\+State)
+\item 
+uint32\+\_\+t(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{group__bigint__api_ga567afbd7feeecd4926a568ace59a55b9}{erase\+\_\+all}} )(uint32\+\_\+t instance, struct \mbox{\hyperlink{structmg__flexspi__nor__config}{mg\+\_\+flexspi\+\_\+nor\+\_\+config}} \texorpdfstring{$\ast$}{*}config)
+\item 
+uint32\+\_\+t(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{group__bigint__api_ga2be3974f0843922849ebb14ae81612a6}{erase}} )(uint32\+\_\+t instance, struct \mbox{\hyperlink{structmg__flexspi__nor__config}{mg\+\_\+flexspi\+\_\+nor\+\_\+config}} \texorpdfstring{$\ast$}{*}config, uint32\+\_\+t start, uint32\+\_\+t length)
+\item 
+uint32\+\_\+t(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{group__bigint__api_gac5ca8c62cf3c28f171a6ea512fec405e}{erase\+\_\+sector}} )(uint32\+\_\+t instance, struct \mbox{\hyperlink{structmg__flexspi__nor__config}{mg\+\_\+flexspi\+\_\+nor\+\_\+config}} \texorpdfstring{$\ast$}{*}config, uint32\+\_\+t address)
+\item 
+uint32\+\_\+t(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{group__bigint__api_gacff959b9a7f9744d9d1ff695d6f0bd4d}{erase\+\_\+block}} )(uint32\+\_\+t instance, struct \mbox{\hyperlink{structmg__flexspi__nor__config}{mg\+\_\+flexspi\+\_\+nor\+\_\+config}} \texorpdfstring{$\ast$}{*}config, uint32\+\_\+t address)
+\item 
+uint32\+\_\+t(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{group__bigint__api_ga051ab9c0dc859917f4bcd527c9a903ec}{read}} )(uint32\+\_\+t instance, struct \mbox{\hyperlink{structmg__flexspi__nor__config}{mg\+\_\+flexspi\+\_\+nor\+\_\+config}} \texorpdfstring{$\ast$}{*}config, uint32\+\_\+t \texorpdfstring{$\ast$}{*}dst, uint32\+\_\+t start, uint32\+\_\+t bytes)
+\item 
+void(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{group__bigint__api_gaee66605ce8525e142924040510f02e01}{config\+\_\+clock}} )(uint32\+\_\+t instance, uint32\+\_\+t freq\+Option, uint32\+\_\+t sample\+Clk\+Mode)
+\item 
+uint32\+\_\+t(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{group__bigint__api_gaa7b91a14b0a885f17e258e39ebe6cf1d}{set\+\_\+clock\+\_\+source}} )(uint32\+\_\+t clock\+Src)
+\item 
+uint32\+\_\+t(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{group__bigint__api_gac873ebe605008572bbae3559b22af532}{get\+\_\+config}} )(uint32\+\_\+t instance, struct \mbox{\hyperlink{structmg__flexspi__nor__config}{mg\+\_\+flexspi\+\_\+nor\+\_\+config}} \texorpdfstring{$\ast$}{*}config, uint32\+\_\+t \texorpdfstring{$\ast$}{*}option)
+\item 
+void(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{group__bigint__api_ga1b8204b0ed93f50a36234479ea14e138}{hw\+\_\+reset}} )(uint32\+\_\+t instance, uint32\+\_\+t reset\+\_\+logic)
+\item 
+uint32\+\_\+t(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{group__bigint__api_gaa153bc544d101e89674efc800b2b0326}{xfer}} )(uint32\+\_\+t instance, char \texorpdfstring{$\ast$}{*}xfer)
+\item 
+uint32\+\_\+t(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{group__bigint__api_ga9f7cf39756e58aa0d1e1051586619273}{update\+\_\+lut}} )(uint32\+\_\+t instance, uint32\+\_\+t seq\+Index, const uint32\+\_\+t \texorpdfstring{$\ast$}{*}lut\+Base, uint32\+\_\+t number\+Of\+Seq)
+\item 
+uint32\+\_\+t(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{group__bigint__api_ga8930fb291f6568c13a2c26eb564ec2fe}{partial\+\_\+program}} )(uint32\+\_\+t instance, struct \mbox{\hyperlink{structmg__flexspi__nor__config}{mg\+\_\+flexspi\+\_\+nor\+\_\+config}} \texorpdfstring{$\ast$}{*}config, uint32\+\_\+t dst\+Addr, const uint32\+\_\+t \texorpdfstring{$\ast$}{*}src, uint32\+\_\+t length, bool keep\+State)
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{group__bigint__api_ga12eaf83065dde56563cfdabfd4c74205}{init}} )(uint32\+\_\+t instance, struct \mbox{\hyperlink{structmg__flexspi__nor__config}{mg\+\_\+flexspi\+\_\+nor\+\_\+config}} \texorpdfstring{$\ast$}{*}config)
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{group__bigint__api_gad619746e5bd97900dba0e86d07245173}{program}} )(uint32\+\_\+t instance, struct \mbox{\hyperlink{structmg__flexspi__nor__config}{mg\+\_\+flexspi\+\_\+nor\+\_\+config}} \texorpdfstring{$\ast$}{*}config, uint32\+\_\+t dst\+\_\+addr, const uint32\+\_\+t \texorpdfstring{$\ast$}{*}src)
+\item 
+uint32\+\_\+t \mbox{\hyperlink{group__bigint__api_ga312e4946b35dac9f2be58b2e8221f208}{reserved}}
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{group__bigint__api_ga4ee26b99670afd5268c4adfd64478b3c}{erase}} )(uint32\+\_\+t instance, struct \mbox{\hyperlink{structmg__flexspi__nor__config}{mg\+\_\+flexspi\+\_\+nor\+\_\+config}} \texorpdfstring{$\ast$}{*}config, uint32\+\_\+t start, uint32\+\_\+t length\+In\+Bytes)
+\item 
+uint32\+\_\+t \mbox{\hyperlink{group__bigint__api_ga917bf93d8ebcc6c30924798c94c77a3c}{reserved2}}
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{group__bigint__api_gafada7202a345a183573f310c0d2eb9b9}{update\+\_\+lut}} )(uint32\+\_\+t instance, uint32\+\_\+t seq\+Index, const uint32\+\_\+t \texorpdfstring{$\ast$}{*}lut\+Base, uint32\+\_\+t seq\+Number)
+\item 
+int(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{group__bigint__api_ga6d2f4416a30dacf7e6758c0d998241d7}{xfer}} )(uint32\+\_\+t instance, char \texorpdfstring{$\ast$}{*}xfer)
+\item 
+void(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{group__bigint__api_gab62a1c0a89877cebf688c673915990c3}{clear\+\_\+cache}} )(uint32\+\_\+t instance)
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+source/web\+\_\+server/\mbox{\hyperlink{mongoose_8c}{mongoose.\+c}}\end{DoxyCompactItemize}
