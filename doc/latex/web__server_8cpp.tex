@@ -1,0 +1,33 @@
+\doxysection{source/web\+\_\+server/web\+\_\+server.cpp File Reference}
+\hypertarget{web__server_8cpp}{}\label{web__server_8cpp}\index{source/web\_server/web\_server.cpp@{source/web\_server/web\_server.cpp}}
+{\ttfamily \#include "{}web\+\_\+server.\+h"{}}\newline
+{\ttfamily \#include "{}json\+\_\+parser.\+h"{}}\newline
+{\ttfamily \#include $<$cstdint$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespaceweb__server}{web\+\_\+server}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{namespaceweb__server_a86e4537afa1b9eec29a16d2328d4cc88}{web\+\_\+server\+::initialize\+\_\+web\+\_\+server}} (const std\+::string \&address, \mbox{\hyperlink{class_buffered_s_q_l_database}{Buffered\+SQLDatabase}} \&db)
+\item 
+void \mbox{\hyperlink{namespaceweb__server_ae8d580779b0699cab45a90ee85c488b2}{web\+\_\+server\+::close\+\_\+web\+\_\+server}} ()
+\item 
+void \mbox{\hyperlink{namespaceweb__server_a9642cabcf5cff050614f10d6bab9f393}{web\+\_\+server\+::run\+\_\+web\+\_\+server\+\_\+loop}} (std\+::atomic\+\_\+flag \&stop\+\_\+flag)
+\item 
+void \mbox{\hyperlink{namespaceweb__server_a561f10aba636ae2ed149bbdbde180a25}{web\+\_\+server\+::handle\+\_\+api\+\_\+data\+\_\+response}} (mg\+\_\+connection \texorpdfstring{$\ast$}{*}c, mg\+\_\+http\+\_\+message \texorpdfstring{$\ast$}{*}msg)
+\item 
+void \mbox{\hyperlink{namespaceweb__server_adce4276336410f131a871a5f5d768a65}{web\+\_\+server\+::event\+\_\+handler}} (mg\+\_\+connection \texorpdfstring{$\ast$}{*}c, int ev, void \texorpdfstring{$\ast$}{*}ev\+\_\+data)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+mg\+\_\+mgr \mbox{\hyperlink{namespaceweb__server_aec910175c157403bc5411d7e3ea127b8}{web\+\_\+server\+::mgr}}
+\item 
+\mbox{\hyperlink{class_h_t_t_p_reply_parser}{HTTPReply\+Parser}} \mbox{\hyperlink{namespaceweb__server_a6538d46bdd7a140732593506ad4fdebd}{web\+\_\+server\+::database}} (nullptr)
+\item 
+thread\+\_\+local char \mbox{\hyperlink{namespaceweb__server_a507c77712f5a39fc95e8429a54964cb1}{web\+\_\+server\+::api\+\_\+response\+\_\+buffer}} \mbox{[}\mbox{\hyperlink{json__parser_8h_aada2266a010e000a77b734289b67a26e}{MAX\+\_\+\+DATA\+\_\+\+PACKET\+\_\+\+JSON\+\_\+\+STRING\+\_\+\+LEN}}\mbox{]}
+\end{DoxyCompactItemize}

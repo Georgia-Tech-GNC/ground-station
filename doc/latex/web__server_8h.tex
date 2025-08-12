@@ -1,0 +1,22 @@
+\doxysection{include/web\+\_\+server/web\+\_\+server.h File Reference}
+\hypertarget{web__server_8h}{}\label{web__server_8h}\index{include/web\_server/web\_server.h@{include/web\_server/web\_server.h}}
+{\ttfamily \#include "{}mongoose.\+h"{}}\newline
+{\ttfamily \#include "{}buffered\+\_\+db.\+h"{}}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$atomic$>$}\newline
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespaceweb__server}{web\+\_\+server}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{namespaceweb__server_adce4276336410f131a871a5f5d768a65}{web\+\_\+server\+::event\+\_\+handler}} (mg\+\_\+connection \texorpdfstring{$\ast$}{*}c, int ev, void \texorpdfstring{$\ast$}{*}ev\+\_\+data)
+\item 
+void \mbox{\hyperlink{namespaceweb__server_a86e4537afa1b9eec29a16d2328d4cc88}{web\+\_\+server\+::initialize\+\_\+web\+\_\+server}} (const std\+::string \&address, \mbox{\hyperlink{class_buffered_s_q_l_database}{Buffered\+SQLDatabase}} \&db)
+\item 
+void \mbox{\hyperlink{namespaceweb__server_ae8d580779b0699cab45a90ee85c488b2}{web\+\_\+server\+::close\+\_\+web\+\_\+server}} ()
+\item 
+void \mbox{\hyperlink{namespaceweb__server_a9642cabcf5cff050614f10d6bab9f393}{web\+\_\+server\+::run\+\_\+web\+\_\+server\+\_\+loop}} (std\+::atomic\+\_\+flag \&stop\+\_\+flag)
+\end{DoxyCompactItemize}

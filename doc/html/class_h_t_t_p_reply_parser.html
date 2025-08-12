@@ -96,18 +96,19 @@ $(function(){initNavTree('class_h_t_t_p_reply_parser.html','','class_h_t_t_p_rep
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a3fdeb0dc8060cefc0c5fc9dddd074135" id="r_a3fdeb0dc8060cefc0c5fc9dddd074135"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3fdeb0dc8060cefc0c5fc9dddd074135">HTTPReplyParser</a> (<a class="el" href="class_buffered_s_q_l_database.html">BufferedSQLDatabase</a> &amp;_db)</td></tr>
+<tr class="memitem:abcee85759c468fad350afa7678846737" id="r_abcee85759c468fad350afa7678846737"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abcee85759c468fad350afa7678846737">HTTPReplyParser</a> (<a class="el" href="class_buffered_s_q_l_database.html">BufferedSQLDatabase</a> *_db)</td></tr>
+<tr class="memitem:a63ccefa5865818ca64404017b34e60c4" id="r_a63ccefa5865818ca64404017b34e60c4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a63ccefa5865818ca64404017b34e60c4">set_db</a> (<a class="el" href="class_buffered_s_q_l_database.html">BufferedSQLDatabase</a> *<a class="el" href="#a427b23f3b09e4f07c63eab6f86de2b97">db</a>)</td></tr>
 <tr class="memitem:ab37029753129ce2b1d6ea639c41e1cae" id="r_ab37029753129ce2b1d6ea639c41e1cae"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab37029753129ce2b1d6ea639c41e1cae">get_json_string_by_index</a> (char *buffer, size_t len, uint32_t packet_type)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pri-attribs" class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:a77e3b9493e1faf373d0643135aacb68d" id="r_a77e3b9493e1faf373d0643135aacb68d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_buffered_s_q_l_database.html">BufferedSQLDatabase</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a77e3b9493e1faf373d0643135aacb68d">db</a></td></tr>
+<tr class="memitem:a427b23f3b09e4f07c63eab6f86de2b97" id="r_a427b23f3b09e4f07c63eab6f86de2b97"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_buffered_s_q_l_database.html">BufferedSQLDatabase</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a427b23f3b09e4f07c63eab6f86de2b97">db</a></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Utility wrapper over <a class="el" href="class_buffered_s_q_l_database.html">BufferedSQLDatabase</a> which allows for indexed access to recent data formatted in JSON notation </p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a3fdeb0dc8060cefc0c5fc9dddd074135" name="a3fdeb0dc8060cefc0c5fc9dddd074135"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3fdeb0dc8060cefc0c5fc9dddd074135">&#9670;&#160;</a></span>HTTPReplyParser()</h2>
+<a id="abcee85759c468fad350afa7678846737" name="abcee85759c468fad350afa7678846737"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abcee85759c468fad350afa7678846737">&#9670;&#160;</a></span>HTTPReplyParser()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -118,7 +119,7 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="memname">HTTPReplyParser::HTTPReplyParser </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="class_buffered_s_q_l_database.html">BufferedSQLDatabase</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>_db</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="class_buffered_s_q_l_database.html">BufferedSQLDatabase</a> *</td>          <td class="paramname"><span class="paramname"><em>_db</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -156,13 +157,12 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Get a JSON-formatted string represented the last recorded packet of type packet_type</p>
-<p>packet_type is equivalent to the value of the corresponding <a class="el" href="datatypes_8h.html#a8177281edf91c9421c33891469a41308">DataPacketType</a> Invalid packet_type's will return "{}" </p>
+<p>packet_type is equivalent to the value of the corresponding <a class="el" href="datatypes_8h.html#a8177281edf91c9421c33891469a41308">DataPacketType</a> An invalid packet_type or a null databse will return "{}" </p>
 
 </div>
 </div>
-<a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
-<a id="a77e3b9493e1faf373d0643135aacb68d" name="a77e3b9493e1faf373d0643135aacb68d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a77e3b9493e1faf373d0643135aacb68d">&#9670;&#160;</a></span>db</h2>
+<a id="a63ccefa5865818ca64404017b34e60c4" name="a63ccefa5865818ca64404017b34e60c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a63ccefa5865818ca64404017b34e60c4">&#9670;&#160;</a></span>set_db()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -171,7 +171,34 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="class_buffered_s_q_l_database.html">BufferedSQLDatabase</a>&amp; HTTPReplyParser::db</td>
+          <td class="memname">void HTTPReplyParser::set_db </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_buffered_s_q_l_database.html">BufferedSQLDatabase</a> *</td>          <td class="paramname"><span class="paramname"><em>db</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Sets the <a class="el" href="class_buffered_s_q_l_database.html">BufferedSQLDatabase</a> that this wrapper should use. </p>
+
+</div>
+</div>
+<a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
+<a id="a427b23f3b09e4f07c63eab6f86de2b97" name="a427b23f3b09e4f07c63eab6f86de2b97"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a427b23f3b09e4f07c63eab6f86de2b97">&#9670;&#160;</a></span>db</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_buffered_s_q_l_database.html">BufferedSQLDatabase</a>* HTTPReplyParser::db</td>
         </tr>
       </table>
   </td>

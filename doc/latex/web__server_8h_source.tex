@@ -1,0 +1,28 @@
+\doxysection{web\+\_\+server.\+h}
+\hypertarget{web__server_8h_source}{}\label{web__server_8h_source}\index{include/web\_server/web\_server.h@{include/web\_server/web\_server.h}}
+\mbox{\hyperlink{web__server_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ WEB\_SERVER\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ WEB\_SERVER\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}mongoose.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{buffered__db_8h}{buffered\_db.h}}"{}}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <atomic>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespaceweb__server}{web\_server}}\ \{}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceweb__server_adce4276336410f131a871a5f5d768a65}{event\_handler}}(mg\_connection\ *c,\ \textcolor{keywordtype}{int}\ ev,\ \textcolor{keywordtype}{void}\ *ev\_data);}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceweb__server_a86e4537afa1b9eec29a16d2328d4cc88}{initialize\_web\_server}}(\textcolor{keyword}{const}\ std::string\&\ address,\ BufferedSQLDatabase\&\ \mbox{\hyperlink{namespaceweb__server_a6538d46bdd7a140732593506ad4fdebd}{database}});}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceweb__server_ae8d580779b0699cab45a90ee85c488b2}{close\_web\_server}}();}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespaceweb__server_a9642cabcf5cff050614f10d6bab9f393}{run\_web\_server\_loop}}(std::atomic\_flag\&\ stop\_flag);}
+\DoxyCodeLine{00019\ \};}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,82 @@
+\doxysection{web\+\_\+server Namespace Reference}
+\hypertarget{namespaceweb__server}{}\label{namespaceweb__server}\index{web\_server@{web\_server}}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{namespaceweb__server_a86e4537afa1b9eec29a16d2328d4cc88}{initialize\+\_\+web\+\_\+server}} (const std\+::string \&address, \mbox{\hyperlink{class_buffered_s_q_l_database}{Buffered\+SQLDatabase}} \&db)
+\item 
+void \mbox{\hyperlink{namespaceweb__server_ae8d580779b0699cab45a90ee85c488b2}{close\+\_\+web\+\_\+server}} ()
+\item 
+void \mbox{\hyperlink{namespaceweb__server_a9642cabcf5cff050614f10d6bab9f393}{run\+\_\+web\+\_\+server\+\_\+loop}} (std\+::atomic\+\_\+flag \&stop\+\_\+flag)
+\item 
+void \mbox{\hyperlink{namespaceweb__server_a561f10aba636ae2ed149bbdbde180a25}{handle\+\_\+api\+\_\+data\+\_\+response}} (mg\+\_\+connection \texorpdfstring{$\ast$}{*}c, mg\+\_\+http\+\_\+message \texorpdfstring{$\ast$}{*}msg)
+\item 
+void \mbox{\hyperlink{namespaceweb__server_adce4276336410f131a871a5f5d768a65}{event\+\_\+handler}} (mg\+\_\+connection \texorpdfstring{$\ast$}{*}c, int ev, void \texorpdfstring{$\ast$}{*}ev\+\_\+data)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+mg\+\_\+mgr \mbox{\hyperlink{namespaceweb__server_aec910175c157403bc5411d7e3ea127b8}{mgr}}
+\item 
+\mbox{\hyperlink{class_h_t_t_p_reply_parser}{HTTPReply\+Parser}} \mbox{\hyperlink{namespaceweb__server_a6538d46bdd7a140732593506ad4fdebd}{database}} (nullptr)
+\item 
+thread\+\_\+local char \mbox{\hyperlink{namespaceweb__server_a507c77712f5a39fc95e8429a54964cb1}{api\+\_\+response\+\_\+buffer}} \mbox{[}\mbox{\hyperlink{json__parser_8h_aada2266a010e000a77b734289b67a26e}{MAX\+\_\+\+DATA\+\_\+\+PACKET\+\_\+\+JSON\+\_\+\+STRING\+\_\+\+LEN}}\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{namespaceweb__server_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespaceweb__server_ae8d580779b0699cab45a90ee85c488b2}\index{web\_server@{web\_server}!close\_web\_server@{close\_web\_server}}
+\index{close\_web\_server@{close\_web\_server}!web\_server@{web\_server}}
+\doxysubsubsection{\texorpdfstring{close\_web\_server()}{close\_web\_server()}}
+{\footnotesize\ttfamily \label{namespaceweb__server_ae8d580779b0699cab45a90ee85c488b2} 
+void web\+\_\+server\+::close\+\_\+web\+\_\+server (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{namespaceweb__server_adce4276336410f131a871a5f5d768a65}\index{web\_server@{web\_server}!event\_handler@{event\_handler}}
+\index{event\_handler@{event\_handler}!web\_server@{web\_server}}
+\doxysubsubsection{\texorpdfstring{event\_handler()}{event\_handler()}}
+{\footnotesize\ttfamily \label{namespaceweb__server_adce4276336410f131a871a5f5d768a65} 
+void web\+\_\+server\+::event\+\_\+handler (\begin{DoxyParamCaption}\item[{mg\+\_\+connection \texorpdfstring{$\ast$}{*}}]{c}{, }\item[{int}]{ev}{, }\item[{void \texorpdfstring{$\ast$}{*}}]{ev\+\_\+data}{}\end{DoxyParamCaption})}
+
+\Hypertarget{namespaceweb__server_a561f10aba636ae2ed149bbdbde180a25}\index{web\_server@{web\_server}!handle\_api\_data\_response@{handle\_api\_data\_response}}
+\index{handle\_api\_data\_response@{handle\_api\_data\_response}!web\_server@{web\_server}}
+\doxysubsubsection{\texorpdfstring{handle\_api\_data\_response()}{handle\_api\_data\_response()}}
+{\footnotesize\ttfamily \label{namespaceweb__server_a561f10aba636ae2ed149bbdbde180a25} 
+void web\+\_\+server\+::handle\+\_\+api\+\_\+data\+\_\+response (\begin{DoxyParamCaption}\item[{mg\+\_\+connection \texorpdfstring{$\ast$}{*}}]{c}{, }\item[{mg\+\_\+http\+\_\+message \texorpdfstring{$\ast$}{*}}]{msg}{}\end{DoxyParamCaption})}
+
+\Hypertarget{namespaceweb__server_a86e4537afa1b9eec29a16d2328d4cc88}\index{web\_server@{web\_server}!initialize\_web\_server@{initialize\_web\_server}}
+\index{initialize\_web\_server@{initialize\_web\_server}!web\_server@{web\_server}}
+\doxysubsubsection{\texorpdfstring{initialize\_web\_server()}{initialize\_web\_server()}}
+{\footnotesize\ttfamily \label{namespaceweb__server_a86e4537afa1b9eec29a16d2328d4cc88} 
+void web\+\_\+server\+::initialize\+\_\+web\+\_\+server (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{address}{, }\item[{\mbox{\hyperlink{class_buffered_s_q_l_database}{Buffered\+SQLDatabase}} \&}]{db}{}\end{DoxyParamCaption})}
+
+\Hypertarget{namespaceweb__server_a9642cabcf5cff050614f10d6bab9f393}\index{web\_server@{web\_server}!run\_web\_server\_loop@{run\_web\_server\_loop}}
+\index{run\_web\_server\_loop@{run\_web\_server\_loop}!web\_server@{web\_server}}
+\doxysubsubsection{\texorpdfstring{run\_web\_server\_loop()}{run\_web\_server\_loop()}}
+{\footnotesize\ttfamily \label{namespaceweb__server_a9642cabcf5cff050614f10d6bab9f393} 
+void web\+\_\+server\+::run\+\_\+web\+\_\+server\+\_\+loop (\begin{DoxyParamCaption}\item[{std\+::atomic\+\_\+flag \&}]{stop\+\_\+flag}{}\end{DoxyParamCaption})}
+
+
+
+\label{doc-var-members}
+\Hypertarget{namespaceweb__server_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{namespaceweb__server_a507c77712f5a39fc95e8429a54964cb1}\index{web\_server@{web\_server}!api\_response\_buffer@{api\_response\_buffer}}
+\index{api\_response\_buffer@{api\_response\_buffer}!web\_server@{web\_server}}
+\doxysubsubsection{\texorpdfstring{api\_response\_buffer}{api\_response\_buffer}}
+{\footnotesize\ttfamily \label{namespaceweb__server_a507c77712f5a39fc95e8429a54964cb1} 
+thread\+\_\+local char web\+\_\+server\+::api\+\_\+response\+\_\+buffer\mbox{[}\mbox{\hyperlink{json__parser_8h_aada2266a010e000a77b734289b67a26e}{MAX\+\_\+\+DATA\+\_\+\+PACKET\+\_\+\+JSON\+\_\+\+STRING\+\_\+\+LEN}}\mbox{]}}
+
+\Hypertarget{namespaceweb__server_a6538d46bdd7a140732593506ad4fdebd}\index{web\_server@{web\_server}!database@{database}}
+\index{database@{database}!web\_server@{web\_server}}
+\doxysubsubsection{\texorpdfstring{database}{database}}
+{\footnotesize\ttfamily \label{namespaceweb__server_a6538d46bdd7a140732593506ad4fdebd} 
+\mbox{\hyperlink{class_h_t_t_p_reply_parser}{HTTPReply\+Parser}} web\+\_\+server\+::database(nullptr) (\begin{DoxyParamCaption}\item[{nullptr}]{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{namespaceweb__server_aec910175c157403bc5411d7e3ea127b8}\index{web\_server@{web\_server}!mgr@{mgr}}
+\index{mgr@{mgr}!web\_server@{web\_server}}
+\doxysubsubsection{\texorpdfstring{mgr}{mgr}}
+{\footnotesize\ttfamily \label{namespaceweb__server_aec910175c157403bc5411d7e3ea127b8} 
+mg\+\_\+mgr web\+\_\+server\+::mgr}
+

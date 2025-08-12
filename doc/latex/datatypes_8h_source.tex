@@ -69,14 +69,17 @@
 \DoxyCodeLine{00072\ \ \ \ \ std::atomic<RocketKinematicsData>\ \mbox{\hyperlink{struct_data_collection_a539ed11becb0c333d192db2c46cacebe}{rocket\_kinematics\_data}};}
 \DoxyCodeLine{00073\ \ \ \ \ std::atomic<RocketSensorData>\ \mbox{\hyperlink{struct_data_collection_a74b582de27cd5a13de7b9b73dacf8e9f}{rocket\_sensor\_data}};}
 \DoxyCodeLine{00074\ }
-\DoxyCodeLine{00076\ \ \ \ \ \mbox{\hyperlink{struct_data_collection_a9b9255ce56dbe9bb37184cd81b46f1f7}{DataCollection}}()\ \{\ \}}
-\DoxyCodeLine{00077\ }
-\DoxyCodeLine{00079\ \ \ \ \ \mbox{\hyperlink{struct_data_collection_ad6b510aeb939eea95be1b134b1cfa720}{DataCollection}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_data_collection_a9b9255ce56dbe9bb37184cd81b46f1f7}{DataCollection}}\&\ other)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00076\ \ \ \ \ \mbox{\hyperlink{struct_data_collection_a9b9255ce56dbe9bb37184cd81b46f1f7}{DataCollection}}():}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_data_collection_a539ed11becb0c333d192db2c46cacebe}{rocket\_kinematics\_data}}(\mbox{\hyperlink{struct_rocket_kinematics_data}{RocketKinematicsData}}()),}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_data_collection_a74b582de27cd5a13de7b9b73dacf8e9f}{rocket\_sensor\_data}}(\mbox{\hyperlink{struct_rocket_sensor_data}{RocketSensorData}}())}
+\DoxyCodeLine{00079\ \ \ \ \ \{\ \}}
 \DoxyCodeLine{00080\ }
-\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>\ T\ \mbox{\hyperlink{struct_data_collection_afa685739b57867104d92d103d78872bd}{load}}();}
-\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_data_collection_a8a230e0d48ea8fb73b24df3ad06d4315}{store}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_data_entry}{DataEntry}}\&\ data);}
-\DoxyCodeLine{00083\ \};}
-\DoxyCodeLine{00084\ }
-\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00082\ \ \ \ \ \mbox{\hyperlink{struct_data_collection_ad6b510aeb939eea95be1b134b1cfa720}{DataCollection}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_data_collection_a9b9255ce56dbe9bb37184cd81b46f1f7}{DataCollection}}\&\ other)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>\ T\ \mbox{\hyperlink{struct_data_collection_afa685739b57867104d92d103d78872bd}{load}}();}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_data_collection_a8a230e0d48ea8fb73b24df3ad06d4315}{store}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_data_entry}{DataEntry}}\&\ data);}
+\DoxyCodeLine{00086\ \};}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#endif}}
 
 \end{DoxyCode}

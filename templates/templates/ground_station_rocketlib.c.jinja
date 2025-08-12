@@ -1,0 +1,290 @@
+#include "ground_station_rocketlib.h"
+
+/** Location of key bytes in each packet */
+const size_t PACKET_START_IDX = 0;
+const size_t MESSAGE_ID_IDX = 1;
+const size_t COBS_IDX = 2;
+const size_t PAYLOAD_START_IDX = 3;
+
+const size_t COMMAND_ID_IDX = PAYLOAD_START_IDX;
+const size_t COMMAND_UUID_IDX = COMMAND_ID_IDX + 1;
+const size_t COMMAND_PACKET_SIZE = COMMAND_UUID_IDX + 2;
+
+#define CRC_IDX(payload_len) ((payload_len) + PAYLOAD_START_IDX)
+
+// Precompute all hashes for crc key 0xe7
+const uint8_t crctable[256] = {0, 231, 41, 206, 82, 181, 123, 156, 164, 67, 141, 106, 246, 17,
+    223, 56, 175, 72, 134, 97, 253, 26, 212, 51, 11, 236, 34, 197, 89, 190, 112, 151, 185, 94, 
+    144, 119, 235, 12, 194, 37, 29, 250, 52, 211, 79, 168, 102, 129, 22, 241, 63, 216, 68, 163, 
+    109, 138, 178, 85, 155, 124, 224, 7, 201, 46, 149, 114, 188, 91, 199, 32, 238, 9, 49, 214, 24, 
+    255, 99, 132, 74, 173, 58, 221, 19, 244, 104, 143, 65, 166, 158, 121, 183, 80, 204, 43, 229, 2, 
+    44, 203, 5, 226, 126, 153, 87, 176, 136, 111, 161, 70, 218, 61, 243, 20, 131, 100, 170, 77, 209, 
+    54, 248, 31, 39, 192, 14, 233, 117, 146, 92, 187, 205, 42, 228, 3, 159, 120, 182, 81, 105, 142, 64, 
+    167, 59, 220, 18, 245, 98, 133, 75, 172, 48, 215, 25, 254, 198, 33, 239, 8, 148, 115, 189, 90, 116, 
+    147, 93, 186, 38, 193, 15, 232, 208, 55, 249, 30, 130, 101, 171, 76, 219, 60, 242, 21, 137, 110, 160, 71, 
+    127, 152, 86, 177, 45, 202, 4, 227, 88, 191, 113, 150, 10, 237, 35, 196, 252, 27, 213, 50, 174, 73, 135, 96, 
+    247, 16, 222, 57, 165, 66, 140, 107, 83, 180, 122, 157, 1, 230, 40, 207, 225, 6, 200, 47, 179, 84, 154, 125, 69, 
+    162, 108, 139, 23, 240, 62, 217, 78, 169, 103, 128, 28, 251, 53, 210, 234, 13, 195, 36, 184, 95, 145, 118
+};
+
+/** 
+ * Returns the 8-bit CRC hash of this data
+ * 
+ * @param rawData   pointer to the data that the hash should be calculated for
+ * @param dataSize  size of the data in bytes
+ * 
+ * @return the CRC8 hash of the data
+ */
+uint8_t calculate_crc8_hash(const uint8_t *raw_data, const size_t data_size) {
+    uint8_t crc = 0;
+    for (size_t i = 0; i < data_size; i++)
+    {
+        // XOR-in next input byte and get current CRC value = remainder 
+        crc = crctable[raw_data[i] ^ crc];
+    }
+
+    return crc;
+}
+
+/**
+ * Returns true if the crc8 hash is valid for this data. It assumes that the 8-bit crc hash immediately follows the data
+ * 
+ * @param rawData   pointer to the data that the hash should be verified for (last byte should be the hash)
+ * @param dataSize  size of the data in bytes (including the hash byte)
+ * 
+ * Note that size includes the hash byte. In other words, if you want to verify the hash of n bytes, pass in 
+ * an n+1 byte array where the first n bytes are the data and the n+1-th byte is the hash. 
+ * data_size should also equal n+1.
+ * 
+ * @return true if the hash was valid, and false otherwise
+ */
+bool verify_crc8_hash(const uint8_t *data, const size_t data_size) {
+    return 0 == calculate_crc8_hash(data, data_size);
+}
+
+/**
+ * Iterates through the inputted array and replaces all zeroes.
+ * Note that the first element in this array will be the COBS byte and will always be overwritten.
+ * 
+ * @param data_to_encode    the array of data to encode, including the initial COBS byte (will be modified in place)
+ * @param data_size         length of the array (including the first COBS byte)
+ * 
+ * It is guaranteed that the last replaced 0 will point to one after the end of the array
+ * @return the index of the last modified byte.
+ */
+int cobs_encode(uint8_t *data_to_encode, const uint8_t data_size) {
+    if (data_size == 0) return 0;
+    int last_stuffed_byte = 0;
+    data_to_encode[0] = data_size;
+
+    for (int i = 1; i < data_size; i++) {
+        if (data_to_encode[i] == 0x00) { // Add to internal linked list
+            data_to_encode[last_stuffed_byte] = i - last_stuffed_byte;
+            last_stuffed_byte = i;
+            data_to_encode[i] = data_size - i;
+        }
+    }
+
+    return last_stuffed_byte;
+}
+
+/** 
+ * Takes any raw data (up to 252 bytes), and converts into a packet (complete with byte stuffing and a checksum)
+ * Packet format: 0x00 [messageID - 1 byte] [COBS] [payload] [checksum(CRC-8) - 1 byte]
+ * 
+ * @param rawData           the raw payload data as an array of uint8_t
+ * @param packetizedData    a pointer to a uint8_t array where the generated packet should be stored
+ * @param dataSize          the length of the raw data in bytes
+ * @param messageID         a one-byte message id that should be associated with this data (must not be 0)
+ * @return                  The length of the packetized data in bytes (always dataSize + 4)
+ * 
+ * packetizedData should be at least 4 bytes longer then the rawData.
+ */
+int generate_packet(const uint8_t *rawData, const uint8_t dataSize, uint8_t *packetizedData, const uint8_t messageID) {
+    packetizedData[PACKET_START_IDX] = 0x00;                               // Byte 1: 0x00
+    packetizedData[MESSAGE_ID_IDX] = messageID;                            // Byte 2: message id
+    memcpy(packetizedData+PAYLOAD_START_IDX, rawData, dataSize);           // Copy payload starting at byte 4
+    int cobs_overwrite_index = cobs_encode(packetizedData + COBS_IDX, dataSize + 2);  // Apply COBS encoding
+
+    // Calculate the CRC-8 checksum
+    uint8_t crc = calculate_crc8_hash(packetizedData, dataSize + 4);
+                                                   
+    if (crc == 0x00) {                                      // Byte dataSize+5: checksum
+        packetizedData[CRC_IDX(dataSize)] = 1;
+    } else {
+        packetizedData[CRC_IDX(dataSize)] = crc;
+        packetizedData[cobs_overwrite_index + 2]++; // cobs encoding automatically assumed that crc == 0, so we correct the assumption by
+                                                    // incrementing the last jump by one
+    }
+
+    return dataSize + 4;
+}
+
+
+/** 
+ * Returns true if the crc hash for this packet matches the data. The four overhead bytes should be included in rawData
+ * This method may modify the final COBS byte in the packet (the crc hash)
+ * 
+ * @param rawData   the packet to verify
+ * @param packetSize  the size of the packet (including the five overhead bytes)
+ * 
+ * @return true if the packet could be verified, and false otherwise
+ * 
+ * THE LEADING 0 BYTE SHOULD BE INCLUDED IN THE DATA
+ */
+bool verify_packet(uint8_t *rawData, const size_t packetSize) {
+    if (packetSize < 4) return false;
+    // First either de-stuff the crc_hash byte if needed or move back the last cobs pointer
+
+    if (rawData[PACKET_START_IDX] != 0) return false; // Leading byte was not 0.
+    
+    size_t next_cobs_byte = 2;
+    while (next_cobs_byte < packetSize) {
+        size_t increment = rawData[next_cobs_byte];
+        if (increment == 0) return false; // Avoid infinite loops
+        else if (next_cobs_byte + increment == packetSize - 1) {
+            rawData[packetSize-1] = 0;
+            break;
+        } else if (next_cobs_byte + increment >= packetSize) {
+            rawData[next_cobs_byte]--;
+        }
+
+        next_cobs_byte += increment;
+    } 
+
+    return verify_crc8_hash(rawData, packetSize);
+}
+
+/** Extracts the stored data from a packet and copies it to the extractedData location 
+ * 
+ * This method assumes that the packet was verified. Please use verify_packet first.
+ * 
+ * @param rawData   the packet to extract
+ * @param dataSize  the size of the packet (including the 5 overhead bytes)
+ * @param extractedData the buffer where the extracted data should be stored
+ * 
+ * This method will store exactly dataSize-4 bytes in the extractedData buffer
+ * 
+ * @return      the message id, or 0 if the message was corrupted
+ */
+uint8_t extract_packet(uint8_t *rawData, const size_t dataSize, uint8_t *extractedData) {
+    if (dataSize < 4) return 0;
+
+    uint8_t message_id = rawData[MESSAGE_ID_IDX];
+
+    if (message_id == 0) return 0;
+
+    // First de-stuff the packet
+    size_t next_cobs_byte = COBS_IDX;
+    while (next_cobs_byte < dataSize - 1) {
+        uint8_t increment = rawData[next_cobs_byte];
+        if (increment == 0) return 0;
+        rawData[next_cobs_byte] = 0;
+
+        next_cobs_byte += increment;
+    }  
+
+    memcpy(extractedData, rawData + PAYLOAD_START_IDX, dataSize - 4);
+
+    return message_id;
+}
+
+enum GroundStationCommandType process_incoming_byte(struct GroundStationLink* gsl, const uint8_t inputted_byte) {
+    if (inputted_byte == 0x00) { // New message started
+        gsl->recv_buffer[0] = 0x00;
+        gsl->current_recv_buffer_size = 1;
+        return GSRL_CMD_EMPTY;
+    }
+
+    if (gsl->current_recv_buffer_size == 0) { // No currently active message
+        return GSRL_CMD_EMPTY;
+    }
+
+    gsl->recv_buffer[gsl->current_recv_buffer_size++] = inputted_byte;
+
+    if (gsl->current_recv_buffer_size >= 2) { // We know the message id
+        uint8_t msg_id = gsl->recv_buffer[1];
+
+        // The rocket should only ever recieve command packets.
+        if (msg_id != GSRL_CMD_PACKET_ID) {
+            gsl->current_recv_buffer_size = 0;
+            return GSRL_CMD_EMPTY; 
+        }
+
+        // Parse the entire command!
+        if (gsl->current_recv_buffer_size >= COMMAND_PACKET_SIZE) {
+            if (gsl->current_send_buffer_size + COMMAND_PACKET_SIZE > GSRL_SEND_BUFFER_LEN) {
+                gsl->current_recv_buffer_size--;
+                return GSRL_CMD_OOM_ERROR; // Not enough space.
+            }
+
+            if (!verify_packet(gsl->recv_buffer, COMMAND_PACKET_SIZE)) {
+                gsl->current_recv_buffer_size = 0;
+                return GSRL_CMD_EMPTY; // Corrupted command
+            }
+
+            uint8_t payload[2];
+            extract_packet(gsl->recv_buffer, COMMAND_PACKET_SIZE, payload);
+            gsl->current_send_buffer_size += generate_packet(payload, 2, gsl->send_buffer + gsl->current_send_buffer_size, GSRL_CMD_PACKET_ACK_ID);
+            
+            // Ping or invalid command
+            if (payload[0] == 0 || payload[0] > GSRL_NUM_COMMANDS) {
+                return GSRL_CMD_EMPTY;
+            }
+
+            // Repeat of old command
+            if (gsl->last_seen_cmd_uuids[payload[0] - 1] == payload[1]) {
+                return GSRL_CMD_EMPTY;
+            }
+
+            return payload[0];
+        }
+    }
+
+    return GSRL_CMD_EMPTY;
+}
+
+size_t flush_send_buffer(struct GroundStationLink* gsl, uint8_t* external_buffer, size_t external_buffer_size) {
+    size_t bytes_to_copy = (external_buffer_size < gsl->current_send_buffer_size) ? external_buffer_size : gsl->current_send_buffer_size;
+    memcpy(external_buffer, gsl->send_buffer, bytes_to_copy);
+    gsl->current_send_buffer_size -= bytes_to_copy;
+    return bytes_to_copy;
+}
+
+void initialize_ground_station_link(struct GroundStationLink* gsl) {
+    gsl->current_recv_buffer_size = 0;
+    gsl->current_send_buffer_size = 0;
+    for (size_t i = 0; i < GSRL_NUM_COMMANDS; i++) {
+        gsl->last_seen_cmd_uuids[i] = 0xFF;
+    }
+}
+
+{% for data_packet in all_data_packets %}
+/** Adds a data packet of type {{data_packet.titleName}} to the GroundStationLink's send buffer
+ * 
+ * @param gsl   The GroundStationLink object
+{% for variable in data_packet.variables %}
+ * @param {{variable.name}} Value of parameter {{variable.name}} from {{data_packet.title_name}}
+{% endfor %}
+ * @return true if the operation was successful, and false if the GroundStationLink's send buffer cannot fit this entry.
+ */
+bool send_{{data_packet.variable_name}}(
+    struct GroundStationLink* gsl,
+    {{data_packet.variables | map("strformat", "{0[type].typename} {0[name]}") | join(", ") }}
+) {
+    if (gsl->current_send_buffer_size + 16 > GSRL_SEND_BUFFER_LEN) {
+        return false;
+    }
+
+    uint8_t payload[{{data_packet.variables | map(attribute="type.size") | sum }}];
+    {% set ns = namespace(offset=0) %}
+    {% for variable in data_packet.variables %}
+    memcpy(payload + {{ns.offset}}, &{{variable.name}}, {{variable.type.size}});
+    {% set ns.offset = ns.offset + variable.length %}
+    {% endfor %}
+
+    gsl->current_send_buffer_size += generate_packet(payload, 16, gsl->send_buffer + gsl->current_send_buffer_size, {{loop.index0}});
+    return true;
+}
+
+{% endfor %}

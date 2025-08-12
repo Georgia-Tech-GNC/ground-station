@@ -10,17 +10,23 @@
 \DoxyCodeLine{00006\ }
 \DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <cstddef>}}
 \DoxyCodeLine{00008\ }
-\DoxyCodeLine{00010\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_h_t_t_p_reply_parser_a3fdeb0dc8060cefc0c5fc9dddd074135}{HTTPReplyParser}}\ \{}
-\DoxyCodeLine{00011\ }
-\DoxyCodeLine{00012\ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00013\ \ \ \ \ \mbox{\hyperlink{class_buffered_s_q_l_database}{BufferedSQLDatabase}}\&\ \mbox{\hyperlink{class_h_t_t_p_reply_parser_a77e3b9493e1faf373d0643135aacb68d}{db}};}
-\DoxyCodeLine{00014\ }
-\DoxyCodeLine{00015\ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{class_h_t_t_p_reply_parser_a3fdeb0dc8060cefc0c5fc9dddd074135}{HTTPReplyParser}}(\mbox{\hyperlink{class_buffered_s_q_l_database}{BufferedSQLDatabase}}\&\ \_db):\ \mbox{\hyperlink{class_h_t_t_p_reply_parser_a77e3b9493e1faf373d0643135aacb68d}{db}}(\_db)\ \{\ \}}
-\DoxyCodeLine{00017\ }
-\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_h_t_t_p_reply_parser_ab37029753129ce2b1d6ea639c41e1cae}{get\_json\_string\_by\_index}}(\textcolor{keywordtype}{char}*\ buffer,\ \textcolor{keywordtype}{size\_t}\ len,\ uint32\_t\ packet\_type);}
-\DoxyCodeLine{00025\ \};}
-\DoxyCodeLine{00026\ }
-\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00009\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{json__parser_8h_aada2266a010e000a77b734289b67a26e}{MAX\_DATA\_PACKET\_JSON\_STRING\_LEN}}\ =\ 145;}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_h_t_t_p_reply_parser_abcee85759c468fad350afa7678846737}{HTTPReplyParser}}\ \{}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00015\ \ \ \ \ \mbox{\hyperlink{class_buffered_s_q_l_database}{BufferedSQLDatabase}}*\ \mbox{\hyperlink{class_h_t_t_p_reply_parser_a427b23f3b09e4f07c63eab6f86de2b97}{db}};}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{class_h_t_t_p_reply_parser_abcee85759c468fad350afa7678846737}{HTTPReplyParser}}(\mbox{\hyperlink{class_buffered_s_q_l_database}{BufferedSQLDatabase}}*\ \_db):\ \mbox{\hyperlink{class_h_t_t_p_reply_parser_a427b23f3b09e4f07c63eab6f86de2b97}{db}}(\_db)\ \{\ \}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_h_t_t_p_reply_parser_a63ccefa5865818ca64404017b34e60c4}{set\_db}}(\mbox{\hyperlink{class_buffered_s_q_l_database}{BufferedSQLDatabase}}*\ \mbox{\hyperlink{class_h_t_t_p_reply_parser_a427b23f3b09e4f07c63eab6f86de2b97}{db}})\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ this-\/>db\ =\ \mbox{\hyperlink{class_h_t_t_p_reply_parser_a427b23f3b09e4f07c63eab6f86de2b97}{db}};}
+\DoxyCodeLine{00023\ \ \ \ \ \}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_h_t_t_p_reply_parser_ab37029753129ce2b1d6ea639c41e1cae}{get\_json\_string\_by\_index}}(\textcolor{keywordtype}{char}*\ buffer,\ \textcolor{keywordtype}{size\_t}\ len,\ uint32\_t\ packet\_type);}
+\DoxyCodeLine{00032\ \};}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#endif}}
 
 \end{DoxyCode}

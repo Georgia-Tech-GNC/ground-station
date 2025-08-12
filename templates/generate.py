@@ -9,7 +9,9 @@ TARGETS = [
     "include/globals/datatypes.h",
     "source/globals/datatypes.cpp",
     "source/web_server/json_parser.cpp",
-    "include/web_server/json_parser.h"
+    "include/web_server/json_parser.h",
+    "include/ground_station_rocketlib.h",
+    "source/ground_station_rocketlib.c"
 ]
 
 if __name__ == "__main__":
@@ -28,7 +30,8 @@ if __name__ == "__main__":
                 "gps_y": VariableType.INT32,
                 "gps_z": VariableType.INT32,
             }).__dict__,
-        ]
+        ],
+        "commands": ["fire_pyro", "run_test"]
     }
 
     environment = Environment(loader=FileSystemLoader("./"), trim_blocks=True, lstrip_blocks=True)
