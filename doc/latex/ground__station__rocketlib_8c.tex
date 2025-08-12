@@ -1,0 +1,355 @@
+\doxysection{source/ground\+\_\+station\+\_\+rocketlib.c File Reference}
+\hypertarget{ground__station__rocketlib_8c}{}\label{ground__station__rocketlib_8c}\index{source/ground\_station\_rocketlib.c@{source/ground\_station\_rocketlib.c}}
+{\ttfamily \#include "{}ground\+\_\+station\+\_\+rocketlib.\+h"{}}\newline
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{ground__station__rocketlib_8c_a882f74475c6b79c400432f13e1728a73}{CRC\+\_\+\+IDX}}(payload\+\_\+len)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{ground__station__rocketlib_8c_a49185d14ff50226ec2dca4957bd15095}{calculate\+\_\+crc8\+\_\+hash}} (const uint8\+\_\+t \texorpdfstring{$\ast$}{*}raw\+\_\+data, const size\+\_\+t data\+\_\+size)
+\item 
+bool \mbox{\hyperlink{ground__station__rocketlib_8c_a36f0bd65d2cbda1a019d34972eba000d}{verify\+\_\+crc8\+\_\+hash}} (const uint8\+\_\+t \texorpdfstring{$\ast$}{*}data, const size\+\_\+t data\+\_\+size)
+\item 
+int \mbox{\hyperlink{ground__station__rocketlib_8c_ad913be0cc0a37a6fd2f44e4e203437cb}{cobs\+\_\+encode}} (uint8\+\_\+t \texorpdfstring{$\ast$}{*}data\+\_\+to\+\_\+encode, const uint8\+\_\+t data\+\_\+size)
+\item 
+int \mbox{\hyperlink{ground__station__rocketlib_8c_a7ad0cd269040a20bae4a6399805087a9}{generate\+\_\+packet}} (const uint8\+\_\+t \texorpdfstring{$\ast$}{*}raw\+\_\+data, const uint8\+\_\+t data\+\_\+size, uint8\+\_\+t \texorpdfstring{$\ast$}{*}packetized\+\_\+data, const uint8\+\_\+t message\+ID)
+\item 
+bool \mbox{\hyperlink{ground__station__rocketlib_8c_ac89c922533b7708af517c4ed4309e8f2}{verify\+\_\+packet}} (uint8\+\_\+t \texorpdfstring{$\ast$}{*}raw\+\_\+data, const size\+\_\+t packet\+Size)
+\item 
+uint8\+\_\+t \mbox{\hyperlink{ground__station__rocketlib_8c_a4d4e8113c7654cae8887b6b65466e6e6}{extract\+\_\+packet}} (uint8\+\_\+t \texorpdfstring{$\ast$}{*}raw\+\_\+data, const size\+\_\+t data\+\_\+size, uint8\+\_\+t \texorpdfstring{$\ast$}{*}extracted\+\_\+data)
+\item 
+enum \mbox{\hyperlink{ground__station__rocketlib_8h_a271bab8046453eb2ec324005bd5ae1fb}{Ground\+Station\+Command\+Type}} \mbox{\hyperlink{ground__station__rocketlib_8c_a9a16427894b09263aea474b5e2ceeab4}{process\+\_\+incoming\+\_\+byte}} (struct \mbox{\hyperlink{struct_ground_station_link}{Ground\+Station\+Link}} \texorpdfstring{$\ast$}{*}gsl, const uint8\+\_\+t inputted\+\_\+byte)
+\item 
+size\+\_\+t \mbox{\hyperlink{ground__station__rocketlib_8c_a25219b19792c01351d7ebd88088a1ad7}{flush\+\_\+send\+\_\+buffer}} (struct \mbox{\hyperlink{struct_ground_station_link}{Ground\+Station\+Link}} \texorpdfstring{$\ast$}{*}gsl, uint8\+\_\+t \texorpdfstring{$\ast$}{*}external\+\_\+buffer, size\+\_\+t external\+\_\+buffer\+\_\+size)
+\item 
+void \mbox{\hyperlink{ground__station__rocketlib_8c_ab59c322dfb756168d04bb47e0c626a83}{initialize\+\_\+ground\+\_\+station\+\_\+link}} (struct \mbox{\hyperlink{struct_ground_station_link}{Ground\+Station\+Link}} \texorpdfstring{$\ast$}{*}gsl)
+\item 
+bool \mbox{\hyperlink{ground__station__rocketlib_8c_abd167771707ae2095b14caba0a3b652e}{send\+\_\+rocket\+\_\+kinematics\+\_\+data}} (struct \mbox{\hyperlink{struct_ground_station_link}{Ground\+Station\+Link}} \texorpdfstring{$\ast$}{*}gsl, float x, float y, float z, uint16\+\_\+t roll, uint16\+\_\+t pitch)
+\item 
+bool \mbox{\hyperlink{ground__station__rocketlib_8c_ab47f74d1954ec720d6ad5c9a0cb0d263}{send\+\_\+rocket\+\_\+sensor\+\_\+data}} (struct \mbox{\hyperlink{struct_ground_station_link}{Ground\+Station\+Link}} \texorpdfstring{$\ast$}{*}gsl, int64\+\_\+t gps\+\_\+x, int32\+\_\+t gps\+\_\+y, int32\+\_\+t gps\+\_\+z)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const size\+\_\+t \mbox{\hyperlink{ground__station__rocketlib_8c_a54208ad973e141fe20d43dad57da2d91}{PACKET\+\_\+\+START\+\_\+\+IDX}} = 0
+\item 
+const size\+\_\+t \mbox{\hyperlink{ground__station__rocketlib_8c_a2fb80c071b98ed57bcbf11ab32b2f8ff}{MESSAGE\+\_\+\+ID\+\_\+\+IDX}} = 1
+\item 
+const size\+\_\+t \mbox{\hyperlink{ground__station__rocketlib_8c_a1ed6551f97f1862e2cdab124ca306022}{COBS\+\_\+\+IDX}} = 2
+\item 
+const size\+\_\+t \mbox{\hyperlink{ground__station__rocketlib_8c_a28e081e9e6d2e70c010d48f848002c2a}{PAYLOAD\+\_\+\+START\+\_\+\+IDX}} = 3
+\item 
+const size\+\_\+t \mbox{\hyperlink{ground__station__rocketlib_8c_a21beb80e201ad42a2e7aa7dff068e277}{COMMAND\+\_\+\+ID\+\_\+\+IDX}} = \mbox{\hyperlink{ground__station__rocketlib_8c_a28e081e9e6d2e70c010d48f848002c2a}{PAYLOAD\+\_\+\+START\+\_\+\+IDX}}
+\item 
+const size\+\_\+t \mbox{\hyperlink{ground__station__rocketlib_8c_af117cebf03355521f67210f67b5a3383}{COMMAND\+\_\+\+UUID\+\_\+\+IDX}} = \mbox{\hyperlink{ground__station__rocketlib_8c_a21beb80e201ad42a2e7aa7dff068e277}{COMMAND\+\_\+\+ID\+\_\+\+IDX}} + 1
+\item 
+const size\+\_\+t \mbox{\hyperlink{ground__station__rocketlib_8c_a53cba6dce7a9762eb74501ec1d776e08}{COMMAND\+\_\+\+PACKET\+\_\+\+SIZE}} = \mbox{\hyperlink{ground__station__rocketlib_8c_af117cebf03355521f67210f67b5a3383}{COMMAND\+\_\+\+UUID\+\_\+\+IDX}} + 2
+\item 
+const uint8\+\_\+t \mbox{\hyperlink{ground__station__rocketlib_8c_a45155f12a8885f4b604d84cfd9006a2c}{crctable}} \mbox{[}256\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\label{doc-define-members}
+\Hypertarget{ground__station__rocketlib_8c_doc-define-members}
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{ground__station__rocketlib_8c_a882f74475c6b79c400432f13e1728a73}\index{ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}!CRC\_IDX@{CRC\_IDX}}
+\index{CRC\_IDX@{CRC\_IDX}!ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}}
+\doxysubsubsection{\texorpdfstring{CRC\_IDX}{CRC\_IDX}}
+{\footnotesize\ttfamily \label{ground__station__rocketlib_8c_a882f74475c6b79c400432f13e1728a73} 
+\#define CRC\+\_\+\+IDX(\begin{DoxyParamCaption}\item[{}]{payload\+\_\+len}{}\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{((payload\_len)\ +\ \mbox{\hyperlink{ground__station__rocketlib_8c_a28e081e9e6d2e70c010d48f848002c2a}{PAYLOAD\_START\_IDX}})}
+
+\end{DoxyCode}
+
+
+\label{doc-func-members}
+\Hypertarget{ground__station__rocketlib_8c_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{ground__station__rocketlib_8c_a49185d14ff50226ec2dca4957bd15095}\index{ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}!calculate\_crc8\_hash@{calculate\_crc8\_hash}}
+\index{calculate\_crc8\_hash@{calculate\_crc8\_hash}!ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}}
+\doxysubsubsection{\texorpdfstring{calculate\_crc8\_hash()}{calculate\_crc8\_hash()}}
+{\footnotesize\ttfamily \label{ground__station__rocketlib_8c_a49185d14ff50226ec2dca4957bd15095} 
+uint8\+\_\+t calculate\+\_\+crc8\+\_\+hash (\begin{DoxyParamCaption}\item[{const uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{raw\+\_\+data}{, }\item[{const size\+\_\+t}]{data\+\_\+size}{}\end{DoxyParamCaption})}
+
+Returns the 8-\/bit CRC hash of this data
+
+
+\begin{DoxyParams}{Parameters}
+{\em raw\+\_\+data} & pointer to the data that the hash should be calculated for \\
+\hline
+{\em data\+\_\+size} & size of the data in bytes\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the CRC8 hash of the data 
+\end{DoxyReturn}
+\Hypertarget{ground__station__rocketlib_8c_ad913be0cc0a37a6fd2f44e4e203437cb}\index{ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}!cobs\_encode@{cobs\_encode}}
+\index{cobs\_encode@{cobs\_encode}!ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}}
+\doxysubsubsection{\texorpdfstring{cobs\_encode()}{cobs\_encode()}}
+{\footnotesize\ttfamily \label{ground__station__rocketlib_8c_ad913be0cc0a37a6fd2f44e4e203437cb} 
+int cobs\+\_\+encode (\begin{DoxyParamCaption}\item[{uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{data\+\_\+to\+\_\+encode}{, }\item[{const uint8\+\_\+t}]{data\+\_\+size}{}\end{DoxyParamCaption})}
+
+Iterates through the inputted array and replaces all zeroes. Note that the first element in this array will be the COBS byte and will always be overwritten.
+
+
+\begin{DoxyParams}{Parameters}
+{\em data\+\_\+to\+\_\+encode} & the array of data to encode, including the initial COBS byte (will be modified in place) \\
+\hline
+{\em data\+\_\+size} & length of the array (including the first COBS byte)\\
+\hline
+\end{DoxyParams}
+It is guaranteed that the last replaced 0 will point to one after the end of the array \begin{DoxyReturn}{Returns}
+the index of the last modified byte. 
+\end{DoxyReturn}
+\Hypertarget{ground__station__rocketlib_8c_a4d4e8113c7654cae8887b6b65466e6e6}\index{ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}!extract\_packet@{extract\_packet}}
+\index{extract\_packet@{extract\_packet}!ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}}
+\doxysubsubsection{\texorpdfstring{extract\_packet()}{extract\_packet()}}
+{\footnotesize\ttfamily \label{ground__station__rocketlib_8c_a4d4e8113c7654cae8887b6b65466e6e6} 
+uint8\+\_\+t extract\+\_\+packet (\begin{DoxyParamCaption}\item[{uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{raw\+\_\+data}{, }\item[{const size\+\_\+t}]{data\+\_\+size}{, }\item[{uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{extracted\+\_\+data}{}\end{DoxyParamCaption})}
+
+Extracts the stored data from a packet and copies it to the extracted\+\_\+data location
+
+This method assumes that the packet was verified. Please use verify\+\_\+packet first.
+
+
+\begin{DoxyParams}{Parameters}
+{\em raw\+\_\+data} & the packet to extract \\
+\hline
+{\em data\+\_\+size} & the size of the packet (including the 5 overhead bytes) \\
+\hline
+{\em extracted\+\_\+data} & the buffer where the extracted data should be stored\\
+\hline
+\end{DoxyParams}
+This method will store exactly data\+\_\+size-\/4 bytes in the extracted\+\_\+data buffer
+
+\begin{DoxyReturn}{Returns}
+the message id, or 0 if the message was corrupted 
+\end{DoxyReturn}
+\Hypertarget{ground__station__rocketlib_8c_a25219b19792c01351d7ebd88088a1ad7}\index{ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}!flush\_send\_buffer@{flush\_send\_buffer}}
+\index{flush\_send\_buffer@{flush\_send\_buffer}!ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}}
+\doxysubsubsection{\texorpdfstring{flush\_send\_buffer()}{flush\_send\_buffer()}}
+{\footnotesize\ttfamily \label{ground__station__rocketlib_8c_a25219b19792c01351d7ebd88088a1ad7} 
+size\+\_\+t flush\+\_\+send\+\_\+buffer (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{struct_ground_station_link}{Ground\+Station\+Link}} \texorpdfstring{$\ast$}{*}}]{gsl}{, }\item[{uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{external\+\_\+buffer}{, }\item[{size\+\_\+t}]{external\+\_\+buffer\+\_\+size}{}\end{DoxyParamCaption})}
+
+Flushes any pending bytes in the \doxylink{struct_ground_station_link}{Ground\+Station\+Link}\textquotesingle{}s send buffer to an external buffer. Bytes in this buffer should be sent to the ground station.
+
+
+\begin{DoxyParams}{Parameters}
+{\em gsl} & The \doxylink{struct_ground_station_link}{Ground\+Station\+Link} object \\
+\hline
+{\em external\+\_\+buffer} & The character buffer that these bytes should be copied to \\
+\hline
+{\em external\+\_\+buffer\+\_\+size} & The size of external\+\_\+buffer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The number of bytes copied. 
+\end{DoxyReturn}
+\Hypertarget{ground__station__rocketlib_8c_a7ad0cd269040a20bae4a6399805087a9}\index{ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}!generate\_packet@{generate\_packet}}
+\index{generate\_packet@{generate\_packet}!ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}}
+\doxysubsubsection{\texorpdfstring{generate\_packet()}{generate\_packet()}}
+{\footnotesize\ttfamily \label{ground__station__rocketlib_8c_a7ad0cd269040a20bae4a6399805087a9} 
+int generate\+\_\+packet (\begin{DoxyParamCaption}\item[{const uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{raw\+\_\+data}{, }\item[{const uint8\+\_\+t}]{data\+\_\+size}{, }\item[{uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{packetized\+\_\+data}{, }\item[{const uint8\+\_\+t}]{message\+ID}{}\end{DoxyParamCaption})}
+
+Takes any raw data (up to 252 bytes), and converts into a packet (complete with byte stuffing and a checksum) Packet format\+: 0x00 \mbox{[}message\+ID -\/ 1 byte\mbox{]} \mbox{[}COBS\mbox{]} \mbox{[}payload\mbox{]} \mbox{[}checksum(CRC-\/8) -\/ 1 byte\mbox{]}
+
+
+\begin{DoxyParams}{Parameters}
+{\em raw\+\_\+data} & the raw payload data as an array of uint8\+\_\+t \\
+\hline
+{\em packetized\+\_\+data} & a pointer to a uint8\+\_\+t array where the generated packet should be stored \\
+\hline
+{\em data\+\_\+size} & the length of the raw data in bytes \\
+\hline
+{\em message\+ID} & a one-\/byte message id that should be associated with this data (must not be 0) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The length of the packetized data in bytes (always data\+\_\+size + 4)
+\end{DoxyReturn}
+packetized\+\_\+data should be at least 4 bytes longer then the raw\+\_\+data. \Hypertarget{ground__station__rocketlib_8c_ab59c322dfb756168d04bb47e0c626a83}\index{ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}!initialize\_ground\_station\_link@{initialize\_ground\_station\_link}}
+\index{initialize\_ground\_station\_link@{initialize\_ground\_station\_link}!ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}}
+\doxysubsubsection{\texorpdfstring{initialize\_ground\_station\_link()}{initialize\_ground\_station\_link()}}
+{\footnotesize\ttfamily \label{ground__station__rocketlib_8c_ab59c322dfb756168d04bb47e0c626a83} 
+void initialize\+\_\+ground\+\_\+station\+\_\+link (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{struct_ground_station_link}{Ground\+Station\+Link}} \texorpdfstring{$\ast$}{*}}]{gsl}{}\end{DoxyParamCaption})}
+
+Initializes a new \doxylink{struct_ground_station_link}{Ground\+Station\+Link} object \Hypertarget{ground__station__rocketlib_8c_a9a16427894b09263aea474b5e2ceeab4}\index{ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}!process\_incoming\_byte@{process\_incoming\_byte}}
+\index{process\_incoming\_byte@{process\_incoming\_byte}!ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}}
+\doxysubsubsection{\texorpdfstring{process\_incoming\_byte()}{process\_incoming\_byte()}}
+{\footnotesize\ttfamily \label{ground__station__rocketlib_8c_a9a16427894b09263aea474b5e2ceeab4} 
+enum \mbox{\hyperlink{ground__station__rocketlib_8h_a271bab8046453eb2ec324005bd5ae1fb}{Ground\+Station\+Command\+Type}} process\+\_\+incoming\+\_\+byte (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{struct_ground_station_link}{Ground\+Station\+Link}} \texorpdfstring{$\ast$}{*}}]{gsl}{, }\item[{const uint8\+\_\+t}]{inputted\+\_\+byte}{}\end{DoxyParamCaption})}
+
+Process the incoming byte and add it to a buffer. If a complete command has been parsed, the command type will be returned and an acknowledgement packet will be added to the \doxylink{struct_ground_station_link}{Ground\+Station\+Link}\textquotesingle{}s send buffer
+
+
+\begin{DoxyParams}{Parameters}
+{\em gsl} & A \doxylink{struct_ground_station_link}{Ground\+Station\+Link} object \\
+\hline
+{\em inputted\+\_\+byte} & The recieved byte \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The new buffer size. If the value is negative, then the complete message has been recieved (the length is the absolute value of the returned value)
+\end{DoxyReturn}
+Note that the return type GSRL\+\_\+\+CMD\+\_\+\+OOM\+\_\+\+ERROR indicates that the byte was not parsed due to the ground station\textquotesingle{}s recieve buffer being full. If GSRL\+\_\+\+CMD\+\_\+\+EMPTY is returned, then no command was recieved and no action is required. \Hypertarget{ground__station__rocketlib_8c_abd167771707ae2095b14caba0a3b652e}\index{ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}!send\_rocket\_kinematics\_data@{send\_rocket\_kinematics\_data}}
+\index{send\_rocket\_kinematics\_data@{send\_rocket\_kinematics\_data}!ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}}
+\doxysubsubsection{\texorpdfstring{send\_rocket\_kinematics\_data()}{send\_rocket\_kinematics\_data()}}
+{\footnotesize\ttfamily \label{ground__station__rocketlib_8c_abd167771707ae2095b14caba0a3b652e} 
+bool send\+\_\+rocket\+\_\+kinematics\+\_\+data (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{struct_ground_station_link}{Ground\+Station\+Link}} \texorpdfstring{$\ast$}{*}}]{gsl}{, }\item[{float}]{x}{, }\item[{float}]{y}{, }\item[{float}]{z}{, }\item[{uint16\+\_\+t}]{roll}{, }\item[{uint16\+\_\+t}]{pitch}{}\end{DoxyParamCaption})}
+
+Adds a data packet of type to the \doxylink{struct_ground_station_link}{Ground\+Station\+Link}\textquotesingle{}s send buffer
+
+
+\begin{DoxyParams}{Parameters}
+{\em gsl} & The \doxylink{struct_ground_station_link}{Ground\+Station\+Link} object \\
+\hline
+{\em x} & Value of parameter x from \doxylink{struct_rocket_kinematics_data}{Rocket\+Kinematics\+Data} \\
+\hline
+{\em y} & Value of parameter y from \doxylink{struct_rocket_kinematics_data}{Rocket\+Kinematics\+Data} \\
+\hline
+{\em z} & Value of parameter z from \doxylink{struct_rocket_kinematics_data}{Rocket\+Kinematics\+Data} \\
+\hline
+{\em roll} & Value of parameter roll from \doxylink{struct_rocket_kinematics_data}{Rocket\+Kinematics\+Data} \\
+\hline
+{\em pitch} & Value of parameter pitch from \doxylink{struct_rocket_kinematics_data}{Rocket\+Kinematics\+Data} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the operation was successful, and false if the \doxylink{struct_ground_station_link}{Ground\+Station\+Link}\textquotesingle{}s send buffer cannot fit this entry. 
+\end{DoxyReturn}
+\Hypertarget{ground__station__rocketlib_8c_ab47f74d1954ec720d6ad5c9a0cb0d263}\index{ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}!send\_rocket\_sensor\_data@{send\_rocket\_sensor\_data}}
+\index{send\_rocket\_sensor\_data@{send\_rocket\_sensor\_data}!ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}}
+\doxysubsubsection{\texorpdfstring{send\_rocket\_sensor\_data()}{send\_rocket\_sensor\_data()}}
+{\footnotesize\ttfamily \label{ground__station__rocketlib_8c_ab47f74d1954ec720d6ad5c9a0cb0d263} 
+bool send\+\_\+rocket\+\_\+sensor\+\_\+data (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{struct_ground_station_link}{Ground\+Station\+Link}} \texorpdfstring{$\ast$}{*}}]{gsl}{, }\item[{int64\+\_\+t}]{gps\+\_\+x}{, }\item[{int32\+\_\+t}]{gps\+\_\+y}{, }\item[{int32\+\_\+t}]{gps\+\_\+z}{}\end{DoxyParamCaption})}
+
+Adds a data packet of type to the \doxylink{struct_ground_station_link}{Ground\+Station\+Link}\textquotesingle{}s send buffer
+
+
+\begin{DoxyParams}{Parameters}
+{\em gsl} & The \doxylink{struct_ground_station_link}{Ground\+Station\+Link} object \\
+\hline
+{\em gps\+\_\+x} & Value of parameter gps\+\_\+x from \doxylink{struct_rocket_sensor_data}{Rocket\+Sensor\+Data} \\
+\hline
+{\em gps\+\_\+y} & Value of parameter gps\+\_\+y from \doxylink{struct_rocket_sensor_data}{Rocket\+Sensor\+Data} \\
+\hline
+{\em gps\+\_\+z} & Value of parameter gps\+\_\+z from \doxylink{struct_rocket_sensor_data}{Rocket\+Sensor\+Data} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the operation was successful, and false if the \doxylink{struct_ground_station_link}{Ground\+Station\+Link}\textquotesingle{}s send buffer cannot fit this entry. 
+\end{DoxyReturn}
+\Hypertarget{ground__station__rocketlib_8c_a36f0bd65d2cbda1a019d34972eba000d}\index{ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}!verify\_crc8\_hash@{verify\_crc8\_hash}}
+\index{verify\_crc8\_hash@{verify\_crc8\_hash}!ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}}
+\doxysubsubsection{\texorpdfstring{verify\_crc8\_hash()}{verify\_crc8\_hash()}}
+{\footnotesize\ttfamily \label{ground__station__rocketlib_8c_a36f0bd65d2cbda1a019d34972eba000d} 
+bool verify\+\_\+crc8\+\_\+hash (\begin{DoxyParamCaption}\item[{const uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{data}{, }\item[{const size\+\_\+t}]{data\+\_\+size}{}\end{DoxyParamCaption})}
+
+Returns true if the crc8 hash is valid for this data. It assumes that the 8-\/bit crc hash immediately follows the data
+
+
+\begin{DoxyParams}{Parameters}
+{\em data} & pointer to the data that the hash should be verified for (last byte should be the hash) \\
+\hline
+{\em data\+\_\+size} & size of the data in bytes (including the hash byte)\\
+\hline
+\end{DoxyParams}
+Note that size includes the hash byte. In other words, if you want to verify the hash of n bytes, pass in an n+1 byte array where the first n bytes are the data and the n+1-\/th byte is the hash. data\+\_\+size should also equal n+1.
+
+\begin{DoxyReturn}{Returns}
+true if the hash was valid, and false otherwise 
+\end{DoxyReturn}
+\Hypertarget{ground__station__rocketlib_8c_ac89c922533b7708af517c4ed4309e8f2}\index{ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}!verify\_packet@{verify\_packet}}
+\index{verify\_packet@{verify\_packet}!ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}}
+\doxysubsubsection{\texorpdfstring{verify\_packet()}{verify\_packet()}}
+{\footnotesize\ttfamily \label{ground__station__rocketlib_8c_ac89c922533b7708af517c4ed4309e8f2} 
+bool verify\+\_\+packet (\begin{DoxyParamCaption}\item[{uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{raw\+\_\+data}{, }\item[{const size\+\_\+t}]{packet\+Size}{}\end{DoxyParamCaption})}
+
+Returns true if the crc hash for this packet matches the data. The four overhead bytes should be included in raw\+\_\+data This method may modify the final COBS byte in the packet (the crc hash)
+
+
+\begin{DoxyParams}{Parameters}
+{\em raw\+\_\+data} & the packet to verify \\
+\hline
+{\em packet\+Size} & the size of the packet (including the five overhead bytes)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the packet could be verified, and false otherwise
+\end{DoxyReturn}
+THE LEADING 0 BYTE SHOULD BE INCLUDED IN THE DATA 
+
+\label{doc-var-members}
+\Hypertarget{ground__station__rocketlib_8c_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{ground__station__rocketlib_8c_a1ed6551f97f1862e2cdab124ca306022}\index{ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}!COBS\_IDX@{COBS\_IDX}}
+\index{COBS\_IDX@{COBS\_IDX}!ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}}
+\doxysubsubsection{\texorpdfstring{COBS\_IDX}{COBS\_IDX}}
+{\footnotesize\ttfamily \label{ground__station__rocketlib_8c_a1ed6551f97f1862e2cdab124ca306022} 
+const size\+\_\+t COBS\+\_\+\+IDX = 2}
+
+\Hypertarget{ground__station__rocketlib_8c_a21beb80e201ad42a2e7aa7dff068e277}\index{ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}!COMMAND\_ID\_IDX@{COMMAND\_ID\_IDX}}
+\index{COMMAND\_ID\_IDX@{COMMAND\_ID\_IDX}!ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}}
+\doxysubsubsection{\texorpdfstring{COMMAND\_ID\_IDX}{COMMAND\_ID\_IDX}}
+{\footnotesize\ttfamily \label{ground__station__rocketlib_8c_a21beb80e201ad42a2e7aa7dff068e277} 
+const size\+\_\+t COMMAND\+\_\+\+ID\+\_\+\+IDX = \mbox{\hyperlink{ground__station__rocketlib_8c_a28e081e9e6d2e70c010d48f848002c2a}{PAYLOAD\+\_\+\+START\+\_\+\+IDX}}}
+
+\Hypertarget{ground__station__rocketlib_8c_a53cba6dce7a9762eb74501ec1d776e08}\index{ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}!COMMAND\_PACKET\_SIZE@{COMMAND\_PACKET\_SIZE}}
+\index{COMMAND\_PACKET\_SIZE@{COMMAND\_PACKET\_SIZE}!ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}}
+\doxysubsubsection{\texorpdfstring{COMMAND\_PACKET\_SIZE}{COMMAND\_PACKET\_SIZE}}
+{\footnotesize\ttfamily \label{ground__station__rocketlib_8c_a53cba6dce7a9762eb74501ec1d776e08} 
+const size\+\_\+t COMMAND\+\_\+\+PACKET\+\_\+\+SIZE = \mbox{\hyperlink{ground__station__rocketlib_8c_af117cebf03355521f67210f67b5a3383}{COMMAND\+\_\+\+UUID\+\_\+\+IDX}} + 2}
+
+\Hypertarget{ground__station__rocketlib_8c_af117cebf03355521f67210f67b5a3383}\index{ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}!COMMAND\_UUID\_IDX@{COMMAND\_UUID\_IDX}}
+\index{COMMAND\_UUID\_IDX@{COMMAND\_UUID\_IDX}!ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}}
+\doxysubsubsection{\texorpdfstring{COMMAND\_UUID\_IDX}{COMMAND\_UUID\_IDX}}
+{\footnotesize\ttfamily \label{ground__station__rocketlib_8c_af117cebf03355521f67210f67b5a3383} 
+const size\+\_\+t COMMAND\+\_\+\+UUID\+\_\+\+IDX = \mbox{\hyperlink{ground__station__rocketlib_8c_a21beb80e201ad42a2e7aa7dff068e277}{COMMAND\+\_\+\+ID\+\_\+\+IDX}} + 1}
+
+\Hypertarget{ground__station__rocketlib_8c_a45155f12a8885f4b604d84cfd9006a2c}\index{ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}!crctable@{crctable}}
+\index{crctable@{crctable}!ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}}
+\doxysubsubsection{\texorpdfstring{crctable}{crctable}}
+{\footnotesize\ttfamily \label{ground__station__rocketlib_8c_a45155f12a8885f4b604d84cfd9006a2c} 
+const uint8\+\_\+t crctable\mbox{[}256\mbox{]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=\ \{0,\ 231,\ 41,\ 206,\ 82,\ 181,\ 123,\ 156,\ 164,\ 67,\ 141,\ 106,\ 246,\ 17,}
+\DoxyCodeLine{\ \ \ \ 223,\ 56,\ 175,\ 72,\ 134,\ 97,\ 253,\ 26,\ 212,\ 51,\ 11,\ 236,\ 34,\ 197,\ 89,\ 190,\ 112,\ 151,\ 185,\ 94,\ }
+\DoxyCodeLine{\ \ \ \ 144,\ 119,\ 235,\ 12,\ 194,\ 37,\ 29,\ 250,\ 52,\ 211,\ 79,\ 168,\ 102,\ 129,\ 22,\ 241,\ 63,\ 216,\ 68,\ 163,\ }
+\DoxyCodeLine{\ \ \ \ 109,\ 138,\ 178,\ 85,\ 155,\ 124,\ 224,\ 7,\ 201,\ 46,\ 149,\ 114,\ 188,\ 91,\ 199,\ 32,\ 238,\ 9,\ 49,\ 214,\ 24,\ }
+\DoxyCodeLine{\ \ \ \ 255,\ 99,\ 132,\ 74,\ 173,\ 58,\ 221,\ 19,\ 244,\ 104,\ 143,\ 65,\ 166,\ 158,\ 121,\ 183,\ 80,\ 204,\ 43,\ 229,\ 2,\ }
+\DoxyCodeLine{\ \ \ \ 44,\ 203,\ 5,\ 226,\ 126,\ 153,\ 87,\ 176,\ 136,\ 111,\ 161,\ 70,\ 218,\ 61,\ 243,\ 20,\ 131,\ 100,\ 170,\ 77,\ 209,\ }
+\DoxyCodeLine{\ \ \ \ 54,\ 248,\ 31,\ 39,\ 192,\ 14,\ 233,\ 117,\ 146,\ 92,\ 187,\ 205,\ 42,\ 228,\ 3,\ 159,\ 120,\ 182,\ 81,\ 105,\ 142,\ 64,\ }
+\DoxyCodeLine{\ \ \ \ 167,\ 59,\ 220,\ 18,\ 245,\ 98,\ 133,\ 75,\ 172,\ 48,\ 215,\ 25,\ 254,\ 198,\ 33,\ 239,\ 8,\ 148,\ 115,\ 189,\ 90,\ 116,\ }
+\DoxyCodeLine{\ \ \ \ 147,\ 93,\ 186,\ 38,\ 193,\ 15,\ 232,\ 208,\ 55,\ 249,\ 30,\ 130,\ 101,\ 171,\ 76,\ 219,\ 60,\ 242,\ 21,\ 137,\ 110,\ 160,\ 71,\ }
+\DoxyCodeLine{\ \ \ \ 127,\ 152,\ 86,\ 177,\ 45,\ 202,\ 4,\ 227,\ 88,\ 191,\ 113,\ 150,\ 10,\ 237,\ 35,\ 196,\ 252,\ 27,\ 213,\ 50,\ 174,\ 73,\ 135,\ 96,\ }
+\DoxyCodeLine{\ \ \ \ 247,\ 16,\ 222,\ 57,\ 165,\ 66,\ 140,\ 107,\ 83,\ 180,\ 122,\ 157,\ 1,\ 230,\ 40,\ 207,\ 225,\ 6,\ 200,\ 47,\ 179,\ 84,\ 154,\ 125,\ 69,\ }
+\DoxyCodeLine{\ \ \ \ 162,\ 108,\ 139,\ 23,\ 240,\ 62,\ 217,\ 78,\ 169,\ 103,\ 128,\ 28,\ 251,\ 53,\ 210,\ 234,\ 13,\ 195,\ 36,\ 184,\ 95,\ 145,\ 118}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\Hypertarget{ground__station__rocketlib_8c_a2fb80c071b98ed57bcbf11ab32b2f8ff}\index{ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}!MESSAGE\_ID\_IDX@{MESSAGE\_ID\_IDX}}
+\index{MESSAGE\_ID\_IDX@{MESSAGE\_ID\_IDX}!ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}}
+\doxysubsubsection{\texorpdfstring{MESSAGE\_ID\_IDX}{MESSAGE\_ID\_IDX}}
+{\footnotesize\ttfamily \label{ground__station__rocketlib_8c_a2fb80c071b98ed57bcbf11ab32b2f8ff} 
+const size\+\_\+t MESSAGE\+\_\+\+ID\+\_\+\+IDX = 1}
+
+\Hypertarget{ground__station__rocketlib_8c_a54208ad973e141fe20d43dad57da2d91}\index{ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}!PACKET\_START\_IDX@{PACKET\_START\_IDX}}
+\index{PACKET\_START\_IDX@{PACKET\_START\_IDX}!ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}}
+\doxysubsubsection{\texorpdfstring{PACKET\_START\_IDX}{PACKET\_START\_IDX}}
+{\footnotesize\ttfamily \label{ground__station__rocketlib_8c_a54208ad973e141fe20d43dad57da2d91} 
+const size\+\_\+t PACKET\+\_\+\+START\+\_\+\+IDX = 0}
+
+Location of key bytes in each packet \Hypertarget{ground__station__rocketlib_8c_a28e081e9e6d2e70c010d48f848002c2a}\index{ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}!PAYLOAD\_START\_IDX@{PAYLOAD\_START\_IDX}}
+\index{PAYLOAD\_START\_IDX@{PAYLOAD\_START\_IDX}!ground\_station\_rocketlib.c@{ground\_station\_rocketlib.c}}
+\doxysubsubsection{\texorpdfstring{PAYLOAD\_START\_IDX}{PAYLOAD\_START\_IDX}}
+{\footnotesize\ttfamily \label{ground__station__rocketlib_8c_a28e081e9e6d2e70c010d48f848002c2a} 
+const size\+\_\+t PAYLOAD\+\_\+\+START\+\_\+\+IDX = 3}
+

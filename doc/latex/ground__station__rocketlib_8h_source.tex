@@ -1,0 +1,70 @@
+\doxysection{ground\+\_\+station\+\_\+rocketlib.\+h}
+\hypertarget{ground__station__rocketlib_8h_source}{}\label{ground__station__rocketlib_8h_source}\index{include/ground\_station\_rocketlib.h@{include/ground\_station\_rocketlib.h}}
+\mbox{\hyperlink{ground__station__rocketlib_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ GROUND\_STATION\_ROCKETLIB}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ GROUND\_STATION\_ROCKETLIB}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus\ }}
+\DoxyCodeLine{00005\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}stdint.h"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}stddef.h"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}stdbool.h"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ GSRL\_NUM\_COMMANDS\ 2}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ GSRL\_CMD\_PACKET\_ID\ 1}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ GSRL\_CMD\_PACKET\_ACK\_ID\ 2}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ GSRL\_RECV\_BUFFER\_LEN\ 6}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#ifndef\ GSRL\_SEND\_BUFFER\_LEN}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\ \ \ \ \#define\ GSRL\_SEND\_BUFFER\_LEN\ 256}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{enum}\ \mbox{\hyperlink{ground__station__rocketlib_8h_a271bab8046453eb2ec324005bd5ae1fb}{GroundStationCommandType}}\ \{}
+\DoxyCodeLine{00023\ \ \ \ \ \mbox{\hyperlink{ground__station__rocketlib_8h_a271bab8046453eb2ec324005bd5ae1fba3267e81ca31c9a100fb959f81bac8f4d}{GSRL\_CMD\_FIRE\_PYRO}}\ =\ 1,}
+\DoxyCodeLine{00024\ \ \ \ \ \mbox{\hyperlink{ground__station__rocketlib_8h_a271bab8046453eb2ec324005bd5ae1fba1dbeb1060ad52e350164841dad4a4930}{GSRL\_CMD\_RUN\_TEST}}\ =\ 2,}
+\DoxyCodeLine{00025\ \ \ \ \ \mbox{\hyperlink{ground__station__rocketlib_8h_a271bab8046453eb2ec324005bd5ae1fba6409e47d359fc610911c39ccc0151535}{GSRL\_CMD\_OOM\_ERROR}}\ =\ 3,}
+\DoxyCodeLine{00026\ \ \ \ \ \mbox{\hyperlink{ground__station__rocketlib_8h_a271bab8046453eb2ec324005bd5ae1fba667a10e94d777c6f72a9b1a85b2a1787}{GSRL\_CMD\_EMPTY}}\ =\ 4}
+\DoxyCodeLine{00027\ \};}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_ground_station_link}{GroundStationLink}}\ \{}
+\DoxyCodeLine{00030\ \ \ \ \ uint8\_t\ \mbox{\hyperlink{struct_ground_station_link_aa6fa201ed2c13ea27ad265f9e1db7899}{send\_buffer}}[\mbox{\hyperlink{ground__station__rocketlib_8h_a87af9a99d02daddf715201a98228960a}{GSRL\_SEND\_BUFFER\_LEN}}];}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{struct_ground_station_link_a9357c2241ef931270963c5a3eb17fb70}{current\_send\_buffer\_size}};}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ uint8\_t\ \mbox{\hyperlink{struct_ground_station_link_acf58157e72a8816bd1f5cfac420aefc5}{recv\_buffer}}[\mbox{\hyperlink{ground__station__rocketlib_8h_a7e4f7e3673d22af3158b055a3f540055}{GSRL\_RECV\_BUFFER\_LEN}}];}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \mbox{\hyperlink{struct_ground_station_link_a885bd2431533bba088a4b44156775805}{current\_recv\_buffer\_size}};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ uint8\_t\ \mbox{\hyperlink{struct_ground_station_link_a237c52b1aec23fc643b6c17b6fb5b7ef}{last\_seen\_cmd\_uuids}}[\mbox{\hyperlink{ground__station__rocketlib_8h_a3dad5c7323991fb91ffcb46f381e86db}{GSRL\_NUM\_COMMANDS}}];}
+\DoxyCodeLine{00037\ \};}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00047\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{ground__station__rocketlib_8h_a25219b19792c01351d7ebd88088a1ad7}{flush\_send\_buffer}}(\textcolor{keyword}{struct}\ \mbox{\hyperlink{struct_ground_station_link}{GroundStationLink}}*\ gsl,\ uint8\_t*\ external\_buffer,\ \textcolor{keywordtype}{size\_t}\ external\_buffer\_size);}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00050\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{ground__station__rocketlib_8h_ab59c322dfb756168d04bb47e0c626a83}{initialize\_ground\_station\_link}}(\textcolor{keyword}{struct}\ \mbox{\hyperlink{struct_ground_station_link}{GroundStationLink}}*\ gsl);}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00064\ \textcolor{keyword}{enum}\ \mbox{\hyperlink{ground__station__rocketlib_8h_a271bab8046453eb2ec324005bd5ae1fb}{GroundStationCommandType}}\ \mbox{\hyperlink{ground__station__rocketlib_8h_a9a16427894b09263aea474b5e2ceeab4}{process\_incoming\_byte}}(\textcolor{keyword}{struct}\ \mbox{\hyperlink{struct_ground_station_link}{GroundStationLink}}*\ gsl,\ \textcolor{keyword}{const}\ uint8\_t\ inputted\_byte);}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00076\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{ground__station__rocketlib_8h_abd167771707ae2095b14caba0a3b652e}{send\_rocket\_kinematics\_data}}(}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keyword}{struct}\ \mbox{\hyperlink{struct_ground_station_link}{GroundStationLink}}*\ gsl,}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordtype}{float}\ x,\ }
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordtype}{float}\ y,\ }
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordtype}{float}\ z,\ }
+\DoxyCodeLine{00081\ \ \ \ \ uint16\_t\ roll,\ }
+\DoxyCodeLine{00082\ \ \ \ \ uint16\_t\ pitch}
+\DoxyCodeLine{00083\ );}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00093\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{ground__station__rocketlib_8h_ab47f74d1954ec720d6ad5c9a0cb0d263}{send\_rocket\_sensor\_data}}(}
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keyword}{struct}\ \mbox{\hyperlink{struct_ground_station_link}{GroundStationLink}}*\ gsl,}
+\DoxyCodeLine{00095\ \ \ \ \ int64\_t\ gps\_x,\ }
+\DoxyCodeLine{00096\ \ \ \ \ int32\_t\ gps\_y,\ }
+\DoxyCodeLine{00097\ \ \ \ \ int32\_t\ gps\_z}
+\DoxyCodeLine{00098\ );}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus\ }}
+\DoxyCodeLine{00101\ \}\ \textcolor{comment}{//\ extern\ "{}C"{}}}
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -54,7 +54,7 @@ void initialize_ground_station_link(struct GroundStationLink* gsl);
  * an acknowledgement packet will be added to the GroundStationLink's send buffer
  * 
  * @param gsl                       A GroundStationLink object
- * @param inputted_byte             the recieved byte
+ * @param inputted_byte             The recieved byte
  * @return                          The new buffer size. If the value is negative, then the
  *                                  complete message has been recieved (the length is the absolute value of the returned value)
  *                                  

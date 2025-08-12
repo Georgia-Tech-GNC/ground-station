@@ -1,0 +1,206 @@
+\doxysection{include/ground\+\_\+station\+\_\+rocketlib.h File Reference}
+\hypertarget{ground__station__rocketlib_8h}{}\label{ground__station__rocketlib_8h}\index{include/ground\_station\_rocketlib.h@{include/ground\_station\_rocketlib.h}}
+{\ttfamily \#include "{}stdint.\+h"{}}\newline
+{\ttfamily \#include "{}stddef.\+h"{}}\newline
+{\ttfamily \#include "{}stdbool.\+h"{}}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_ground_station_link}{Ground\+Station\+Link}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{ground__station__rocketlib_8h_a3dad5c7323991fb91ffcb46f381e86db}{GSRL\+\_\+\+NUM\+\_\+\+COMMANDS}}~2
+\item 
+\#define \mbox{\hyperlink{ground__station__rocketlib_8h_a15d58060059cce54cb09ead973309f0a}{GSRL\+\_\+\+CMD\+\_\+\+PACKET\+\_\+\+ID}}~1
+\item 
+\#define \mbox{\hyperlink{ground__station__rocketlib_8h_abdc5817bc41a4f198fcd53279a65b6d8}{GSRL\+\_\+\+CMD\+\_\+\+PACKET\+\_\+\+ACK\+\_\+\+ID}}~2
+\item 
+\#define \mbox{\hyperlink{ground__station__rocketlib_8h_a7e4f7e3673d22af3158b055a3f540055}{GSRL\+\_\+\+RECV\+\_\+\+BUFFER\+\_\+\+LEN}}~6
+\item 
+\#define \mbox{\hyperlink{ground__station__rocketlib_8h_a87af9a99d02daddf715201a98228960a}{GSRL\+\_\+\+SEND\+\_\+\+BUFFER\+\_\+\+LEN}}~256
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{ground__station__rocketlib_8h_a271bab8046453eb2ec324005bd5ae1fb}{Ground\+Station\+Command\+Type}} \{ \mbox{\hyperlink{ground__station__rocketlib_8h_a271bab8046453eb2ec324005bd5ae1fba3267e81ca31c9a100fb959f81bac8f4d}{GSRL\+\_\+\+CMD\+\_\+\+FIRE\+\_\+\+PYRO}} = 1
+, \mbox{\hyperlink{ground__station__rocketlib_8h_a271bab8046453eb2ec324005bd5ae1fba1dbeb1060ad52e350164841dad4a4930}{GSRL\+\_\+\+CMD\+\_\+\+RUN\+\_\+\+TEST}} = 2
+, \mbox{\hyperlink{ground__station__rocketlib_8h_a271bab8046453eb2ec324005bd5ae1fba6409e47d359fc610911c39ccc0151535}{GSRL\+\_\+\+CMD\+\_\+\+OOM\+\_\+\+ERROR}} = 3
+, \mbox{\hyperlink{ground__station__rocketlib_8h_a271bab8046453eb2ec324005bd5ae1fba667a10e94d777c6f72a9b1a85b2a1787}{GSRL\+\_\+\+CMD\+\_\+\+EMPTY}} = 4
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+size\+\_\+t \mbox{\hyperlink{ground__station__rocketlib_8h_a25219b19792c01351d7ebd88088a1ad7}{flush\+\_\+send\+\_\+buffer}} (struct \mbox{\hyperlink{struct_ground_station_link}{Ground\+Station\+Link}} \texorpdfstring{$\ast$}{*}gsl, uint8\+\_\+t \texorpdfstring{$\ast$}{*}external\+\_\+buffer, size\+\_\+t external\+\_\+buffer\+\_\+size)
+\item 
+void \mbox{\hyperlink{ground__station__rocketlib_8h_ab59c322dfb756168d04bb47e0c626a83}{initialize\+\_\+ground\+\_\+station\+\_\+link}} (struct \mbox{\hyperlink{struct_ground_station_link}{Ground\+Station\+Link}} \texorpdfstring{$\ast$}{*}gsl)
+\item 
+enum \mbox{\hyperlink{ground__station__rocketlib_8h_a271bab8046453eb2ec324005bd5ae1fb}{Ground\+Station\+Command\+Type}} \mbox{\hyperlink{ground__station__rocketlib_8h_a9a16427894b09263aea474b5e2ceeab4}{process\+\_\+incoming\+\_\+byte}} (struct \mbox{\hyperlink{struct_ground_station_link}{Ground\+Station\+Link}} \texorpdfstring{$\ast$}{*}gsl, const uint8\+\_\+t inputted\+\_\+byte)
+\item 
+bool \mbox{\hyperlink{ground__station__rocketlib_8h_abd167771707ae2095b14caba0a3b652e}{send\+\_\+rocket\+\_\+kinematics\+\_\+data}} (struct \mbox{\hyperlink{struct_ground_station_link}{Ground\+Station\+Link}} \texorpdfstring{$\ast$}{*}gsl, float x, float y, float z, uint16\+\_\+t roll, uint16\+\_\+t pitch)
+\item 
+bool \mbox{\hyperlink{ground__station__rocketlib_8h_ab47f74d1954ec720d6ad5c9a0cb0d263}{send\+\_\+rocket\+\_\+sensor\+\_\+data}} (struct \mbox{\hyperlink{struct_ground_station_link}{Ground\+Station\+Link}} \texorpdfstring{$\ast$}{*}gsl, int64\+\_\+t gps\+\_\+x, int32\+\_\+t gps\+\_\+y, int32\+\_\+t gps\+\_\+z)
+\end{DoxyCompactItemize}
+
+
+\label{doc-define-members}
+\Hypertarget{ground__station__rocketlib_8h_doc-define-members}
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{ground__station__rocketlib_8h_abdc5817bc41a4f198fcd53279a65b6d8}\index{ground\_station\_rocketlib.h@{ground\_station\_rocketlib.h}!GSRL\_CMD\_PACKET\_ACK\_ID@{GSRL\_CMD\_PACKET\_ACK\_ID}}
+\index{GSRL\_CMD\_PACKET\_ACK\_ID@{GSRL\_CMD\_PACKET\_ACK\_ID}!ground\_station\_rocketlib.h@{ground\_station\_rocketlib.h}}
+\doxysubsubsection{\texorpdfstring{GSRL\_CMD\_PACKET\_ACK\_ID}{GSRL\_CMD\_PACKET\_ACK\_ID}}
+{\footnotesize\ttfamily \label{ground__station__rocketlib_8h_abdc5817bc41a4f198fcd53279a65b6d8} 
+\#define GSRL\+\_\+\+CMD\+\_\+\+PACKET\+\_\+\+ACK\+\_\+\+ID~2}
+
+\Hypertarget{ground__station__rocketlib_8h_a15d58060059cce54cb09ead973309f0a}\index{ground\_station\_rocketlib.h@{ground\_station\_rocketlib.h}!GSRL\_CMD\_PACKET\_ID@{GSRL\_CMD\_PACKET\_ID}}
+\index{GSRL\_CMD\_PACKET\_ID@{GSRL\_CMD\_PACKET\_ID}!ground\_station\_rocketlib.h@{ground\_station\_rocketlib.h}}
+\doxysubsubsection{\texorpdfstring{GSRL\_CMD\_PACKET\_ID}{GSRL\_CMD\_PACKET\_ID}}
+{\footnotesize\ttfamily \label{ground__station__rocketlib_8h_a15d58060059cce54cb09ead973309f0a} 
+\#define GSRL\+\_\+\+CMD\+\_\+\+PACKET\+\_\+\+ID~1}
+
+\Hypertarget{ground__station__rocketlib_8h_a3dad5c7323991fb91ffcb46f381e86db}\index{ground\_station\_rocketlib.h@{ground\_station\_rocketlib.h}!GSRL\_NUM\_COMMANDS@{GSRL\_NUM\_COMMANDS}}
+\index{GSRL\_NUM\_COMMANDS@{GSRL\_NUM\_COMMANDS}!ground\_station\_rocketlib.h@{ground\_station\_rocketlib.h}}
+\doxysubsubsection{\texorpdfstring{GSRL\_NUM\_COMMANDS}{GSRL\_NUM\_COMMANDS}}
+{\footnotesize\ttfamily \label{ground__station__rocketlib_8h_a3dad5c7323991fb91ffcb46f381e86db} 
+\#define GSRL\+\_\+\+NUM\+\_\+\+COMMANDS~2}
+
+\Hypertarget{ground__station__rocketlib_8h_a7e4f7e3673d22af3158b055a3f540055}\index{ground\_station\_rocketlib.h@{ground\_station\_rocketlib.h}!GSRL\_RECV\_BUFFER\_LEN@{GSRL\_RECV\_BUFFER\_LEN}}
+\index{GSRL\_RECV\_BUFFER\_LEN@{GSRL\_RECV\_BUFFER\_LEN}!ground\_station\_rocketlib.h@{ground\_station\_rocketlib.h}}
+\doxysubsubsection{\texorpdfstring{GSRL\_RECV\_BUFFER\_LEN}{GSRL\_RECV\_BUFFER\_LEN}}
+{\footnotesize\ttfamily \label{ground__station__rocketlib_8h_a7e4f7e3673d22af3158b055a3f540055} 
+\#define GSRL\+\_\+\+RECV\+\_\+\+BUFFER\+\_\+\+LEN~6}
+
+\Hypertarget{ground__station__rocketlib_8h_a87af9a99d02daddf715201a98228960a}\index{ground\_station\_rocketlib.h@{ground\_station\_rocketlib.h}!GSRL\_SEND\_BUFFER\_LEN@{GSRL\_SEND\_BUFFER\_LEN}}
+\index{GSRL\_SEND\_BUFFER\_LEN@{GSRL\_SEND\_BUFFER\_LEN}!ground\_station\_rocketlib.h@{ground\_station\_rocketlib.h}}
+\doxysubsubsection{\texorpdfstring{GSRL\_SEND\_BUFFER\_LEN}{GSRL\_SEND\_BUFFER\_LEN}}
+{\footnotesize\ttfamily \label{ground__station__rocketlib_8h_a87af9a99d02daddf715201a98228960a} 
+\#define GSRL\+\_\+\+SEND\+\_\+\+BUFFER\+\_\+\+LEN~256}
+
+The length of the send buffer used to pending rocket-\/to-\/ground messages in bytes 
+
+\label{doc-enum-members}
+\Hypertarget{ground__station__rocketlib_8h_doc-enum-members}
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{ground__station__rocketlib_8h_a271bab8046453eb2ec324005bd5ae1fb}\index{ground\_station\_rocketlib.h@{ground\_station\_rocketlib.h}!GroundStationCommandType@{GroundStationCommandType}}
+\index{GroundStationCommandType@{GroundStationCommandType}!ground\_station\_rocketlib.h@{ground\_station\_rocketlib.h}}
+\doxysubsubsection{\texorpdfstring{GroundStationCommandType}{GroundStationCommandType}}
+{\footnotesize\ttfamily \label{ground__station__rocketlib_8h_a271bab8046453eb2ec324005bd5ae1fb} 
+enum \mbox{\hyperlink{ground__station__rocketlib_8h_a271bab8046453eb2ec324005bd5ae1fb}{Ground\+Station\+Command\+Type}}}
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{GSRL\_CMD\_FIRE\_PYRO@{GSRL\_CMD\_FIRE\_PYRO}!ground\_station\_rocketlib.h@{ground\_station\_rocketlib.h}}\index{ground\_station\_rocketlib.h@{ground\_station\_rocketlib.h}!GSRL\_CMD\_FIRE\_PYRO@{GSRL\_CMD\_FIRE\_PYRO}}}\Hypertarget{ground__station__rocketlib_8h_a271bab8046453eb2ec324005bd5ae1fba3267e81ca31c9a100fb959f81bac8f4d}\label{ground__station__rocketlib_8h_a271bab8046453eb2ec324005bd5ae1fba3267e81ca31c9a100fb959f81bac8f4d} 
+GSRL\+\_\+\+CMD\+\_\+\+FIRE\+\_\+\+PYRO&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{GSRL\_CMD\_RUN\_TEST@{GSRL\_CMD\_RUN\_TEST}!ground\_station\_rocketlib.h@{ground\_station\_rocketlib.h}}\index{ground\_station\_rocketlib.h@{ground\_station\_rocketlib.h}!GSRL\_CMD\_RUN\_TEST@{GSRL\_CMD\_RUN\_TEST}}}\Hypertarget{ground__station__rocketlib_8h_a271bab8046453eb2ec324005bd5ae1fba1dbeb1060ad52e350164841dad4a4930}\label{ground__station__rocketlib_8h_a271bab8046453eb2ec324005bd5ae1fba1dbeb1060ad52e350164841dad4a4930} 
+GSRL\+\_\+\+CMD\+\_\+\+RUN\+\_\+\+TEST&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{GSRL\_CMD\_OOM\_ERROR@{GSRL\_CMD\_OOM\_ERROR}!ground\_station\_rocketlib.h@{ground\_station\_rocketlib.h}}\index{ground\_station\_rocketlib.h@{ground\_station\_rocketlib.h}!GSRL\_CMD\_OOM\_ERROR@{GSRL\_CMD\_OOM\_ERROR}}}\Hypertarget{ground__station__rocketlib_8h_a271bab8046453eb2ec324005bd5ae1fba6409e47d359fc610911c39ccc0151535}\label{ground__station__rocketlib_8h_a271bab8046453eb2ec324005bd5ae1fba6409e47d359fc610911c39ccc0151535} 
+GSRL\+\_\+\+CMD\+\_\+\+OOM\+\_\+\+ERROR&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{GSRL\_CMD\_EMPTY@{GSRL\_CMD\_EMPTY}!ground\_station\_rocketlib.h@{ground\_station\_rocketlib.h}}\index{ground\_station\_rocketlib.h@{ground\_station\_rocketlib.h}!GSRL\_CMD\_EMPTY@{GSRL\_CMD\_EMPTY}}}\Hypertarget{ground__station__rocketlib_8h_a271bab8046453eb2ec324005bd5ae1fba667a10e94d777c6f72a9b1a85b2a1787}\label{ground__station__rocketlib_8h_a271bab8046453eb2ec324005bd5ae1fba667a10e94d777c6f72a9b1a85b2a1787} 
+GSRL\+\_\+\+CMD\+\_\+\+EMPTY&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\label{doc-func-members}
+\Hypertarget{ground__station__rocketlib_8h_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{ground__station__rocketlib_8h_a25219b19792c01351d7ebd88088a1ad7}\index{ground\_station\_rocketlib.h@{ground\_station\_rocketlib.h}!flush\_send\_buffer@{flush\_send\_buffer}}
+\index{flush\_send\_buffer@{flush\_send\_buffer}!ground\_station\_rocketlib.h@{ground\_station\_rocketlib.h}}
+\doxysubsubsection{\texorpdfstring{flush\_send\_buffer()}{flush\_send\_buffer()}}
+{\footnotesize\ttfamily \label{ground__station__rocketlib_8h_a25219b19792c01351d7ebd88088a1ad7} 
+size\+\_\+t flush\+\_\+send\+\_\+buffer (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{struct_ground_station_link}{Ground\+Station\+Link}} \texorpdfstring{$\ast$}{*}}]{gsl}{, }\item[{uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{external\+\_\+buffer}{, }\item[{size\+\_\+t}]{external\+\_\+buffer\+\_\+size}{}\end{DoxyParamCaption})}
+
+Flushes any pending bytes in the \doxylink{struct_ground_station_link}{Ground\+Station\+Link}\textquotesingle{}s send buffer to an external buffer. Bytes in this buffer should be sent to the ground station.
+
+
+\begin{DoxyParams}{Parameters}
+{\em gsl} & The \doxylink{struct_ground_station_link}{Ground\+Station\+Link} object \\
+\hline
+{\em external\+\_\+buffer} & The character buffer that these bytes should be copied to \\
+\hline
+{\em external\+\_\+buffer\+\_\+size} & The size of external\+\_\+buffer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The number of bytes copied. 
+\end{DoxyReturn}
+\Hypertarget{ground__station__rocketlib_8h_ab59c322dfb756168d04bb47e0c626a83}\index{ground\_station\_rocketlib.h@{ground\_station\_rocketlib.h}!initialize\_ground\_station\_link@{initialize\_ground\_station\_link}}
+\index{initialize\_ground\_station\_link@{initialize\_ground\_station\_link}!ground\_station\_rocketlib.h@{ground\_station\_rocketlib.h}}
+\doxysubsubsection{\texorpdfstring{initialize\_ground\_station\_link()}{initialize\_ground\_station\_link()}}
+{\footnotesize\ttfamily \label{ground__station__rocketlib_8h_ab59c322dfb756168d04bb47e0c626a83} 
+void initialize\+\_\+ground\+\_\+station\+\_\+link (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{struct_ground_station_link}{Ground\+Station\+Link}} \texorpdfstring{$\ast$}{*}}]{gsl}{}\end{DoxyParamCaption})}
+
+Initializes a new \doxylink{struct_ground_station_link}{Ground\+Station\+Link} object \Hypertarget{ground__station__rocketlib_8h_a9a16427894b09263aea474b5e2ceeab4}\index{ground\_station\_rocketlib.h@{ground\_station\_rocketlib.h}!process\_incoming\_byte@{process\_incoming\_byte}}
+\index{process\_incoming\_byte@{process\_incoming\_byte}!ground\_station\_rocketlib.h@{ground\_station\_rocketlib.h}}
+\doxysubsubsection{\texorpdfstring{process\_incoming\_byte()}{process\_incoming\_byte()}}
+{\footnotesize\ttfamily \label{ground__station__rocketlib_8h_a9a16427894b09263aea474b5e2ceeab4} 
+enum \mbox{\hyperlink{ground__station__rocketlib_8h_a271bab8046453eb2ec324005bd5ae1fb}{Ground\+Station\+Command\+Type}} process\+\_\+incoming\+\_\+byte (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{struct_ground_station_link}{Ground\+Station\+Link}} \texorpdfstring{$\ast$}{*}}]{gsl}{, }\item[{const uint8\+\_\+t}]{inputted\+\_\+byte}{}\end{DoxyParamCaption})}
+
+Process the incoming byte and add it to a buffer. If a complete command has been parsed, the command type will be returned and an acknowledgement packet will be added to the \doxylink{struct_ground_station_link}{Ground\+Station\+Link}\textquotesingle{}s send buffer
+
+
+\begin{DoxyParams}{Parameters}
+{\em gsl} & A \doxylink{struct_ground_station_link}{Ground\+Station\+Link} object \\
+\hline
+{\em inputted\+\_\+byte} & The recieved byte \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The new buffer size. If the value is negative, then the complete message has been recieved (the length is the absolute value of the returned value)
+\end{DoxyReturn}
+Note that the return type GSRL\+\_\+\+CMD\+\_\+\+OOM\+\_\+\+ERROR indicates that the byte was not parsed due to the ground station\textquotesingle{}s recieve buffer being full. If GSRL\+\_\+\+CMD\+\_\+\+EMPTY is returned, then no command was recieved and no action is required. \Hypertarget{ground__station__rocketlib_8h_abd167771707ae2095b14caba0a3b652e}\index{ground\_station\_rocketlib.h@{ground\_station\_rocketlib.h}!send\_rocket\_kinematics\_data@{send\_rocket\_kinematics\_data}}
+\index{send\_rocket\_kinematics\_data@{send\_rocket\_kinematics\_data}!ground\_station\_rocketlib.h@{ground\_station\_rocketlib.h}}
+\doxysubsubsection{\texorpdfstring{send\_rocket\_kinematics\_data()}{send\_rocket\_kinematics\_data()}}
+{\footnotesize\ttfamily \label{ground__station__rocketlib_8h_abd167771707ae2095b14caba0a3b652e} 
+bool send\+\_\+rocket\+\_\+kinematics\+\_\+data (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{struct_ground_station_link}{Ground\+Station\+Link}} \texorpdfstring{$\ast$}{*}}]{gsl}{, }\item[{float}]{x}{, }\item[{float}]{y}{, }\item[{float}]{z}{, }\item[{uint16\+\_\+t}]{roll}{, }\item[{uint16\+\_\+t}]{pitch}{}\end{DoxyParamCaption})}
+
+Adds a data packet of type to the \doxylink{struct_ground_station_link}{Ground\+Station\+Link}\textquotesingle{}s send buffer
+
+
+\begin{DoxyParams}{Parameters}
+{\em gsl} & The \doxylink{struct_ground_station_link}{Ground\+Station\+Link} object \\
+\hline
+{\em x} & Value of parameter x from \doxylink{struct_rocket_kinematics_data}{Rocket\+Kinematics\+Data} \\
+\hline
+{\em y} & Value of parameter y from \doxylink{struct_rocket_kinematics_data}{Rocket\+Kinematics\+Data} \\
+\hline
+{\em z} & Value of parameter z from \doxylink{struct_rocket_kinematics_data}{Rocket\+Kinematics\+Data} \\
+\hline
+{\em roll} & Value of parameter roll from \doxylink{struct_rocket_kinematics_data}{Rocket\+Kinematics\+Data} \\
+\hline
+{\em pitch} & Value of parameter pitch from \doxylink{struct_rocket_kinematics_data}{Rocket\+Kinematics\+Data} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the operation was successful, and false if the \doxylink{struct_ground_station_link}{Ground\+Station\+Link}\textquotesingle{}s send buffer cannot fit this entry. 
+\end{DoxyReturn}
+\Hypertarget{ground__station__rocketlib_8h_ab47f74d1954ec720d6ad5c9a0cb0d263}\index{ground\_station\_rocketlib.h@{ground\_station\_rocketlib.h}!send\_rocket\_sensor\_data@{send\_rocket\_sensor\_data}}
+\index{send\_rocket\_sensor\_data@{send\_rocket\_sensor\_data}!ground\_station\_rocketlib.h@{ground\_station\_rocketlib.h}}
+\doxysubsubsection{\texorpdfstring{send\_rocket\_sensor\_data()}{send\_rocket\_sensor\_data()}}
+{\footnotesize\ttfamily \label{ground__station__rocketlib_8h_ab47f74d1954ec720d6ad5c9a0cb0d263} 
+bool send\+\_\+rocket\+\_\+sensor\+\_\+data (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{struct_ground_station_link}{Ground\+Station\+Link}} \texorpdfstring{$\ast$}{*}}]{gsl}{, }\item[{int64\+\_\+t}]{gps\+\_\+x}{, }\item[{int32\+\_\+t}]{gps\+\_\+y}{, }\item[{int32\+\_\+t}]{gps\+\_\+z}{}\end{DoxyParamCaption})}
+
+Adds a data packet of type to the \doxylink{struct_ground_station_link}{Ground\+Station\+Link}\textquotesingle{}s send buffer
+
+
+\begin{DoxyParams}{Parameters}
+{\em gsl} & The \doxylink{struct_ground_station_link}{Ground\+Station\+Link} object \\
+\hline
+{\em gps\+\_\+x} & Value of parameter gps\+\_\+x from \doxylink{struct_rocket_sensor_data}{Rocket\+Sensor\+Data} \\
+\hline
+{\em gps\+\_\+y} & Value of parameter gps\+\_\+y from \doxylink{struct_rocket_sensor_data}{Rocket\+Sensor\+Data} \\
+\hline
+{\em gps\+\_\+z} & Value of parameter gps\+\_\+z from \doxylink{struct_rocket_sensor_data}{Rocket\+Sensor\+Data} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the operation was successful, and false if the \doxylink{struct_ground_station_link}{Ground\+Station\+Link}\textquotesingle{}s send buffer cannot fit this entry. 
+\end{DoxyReturn}

@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['load_0',['load',['../struct_data_collection.html#afa685739b57867104d92d103d78872bd',1,'DataCollection::load()'],['../struct_data_collection.html#a8b299a4a2507294f92177298c30ced89',1,'DataCollection::load()'],['../struct_data_collection.html#a1567421952098490e63612cd7b5af8ec',1,'DataCollection::load()']]]
+  ['initialize_5fground_5fstation_5flink_0',['initialize_ground_station_link',['../ground__station__rocketlib_8c.html#ab59c322dfb756168d04bb47e0c626a83',1,'initialize_ground_station_link(struct GroundStationLink *gsl):&#160;ground_station_rocketlib.c'],['../ground__station__rocketlib_8h.html#ab59c322dfb756168d04bb47e0c626a83',1,'initialize_ground_station_link(struct GroundStationLink *gsl):&#160;ground_station_rocketlib.c']]],
+  ['initialize_5fweb_5fserver_1',['initialize_web_server',['../namespaceweb__server.html#a86e4537afa1b9eec29a16d2328d4cc88',1,'web_server']]],
+  ['insert_5fdata_2',['insert_data',['../class_s_q_l_database.html#a7980d9f0c9fd2e85389451d2245151f1',1,'SQLDatabase']]]
 ];

@@ -30,8 +30,8 @@ const uint8_t crctable[256] = {0, 231, 41, 206, 82, 181, 123, 156, 164, 67, 141,
 /** 
  * Returns the 8-bit CRC hash of this data
  * 
- * @param rawData   pointer to the data that the hash should be calculated for
- * @param dataSize  size of the data in bytes
+ * @param raw_data   pointer to the data that the hash should be calculated for
+ * @param data_size  size of the data in bytes
  * 
  * @return the CRC8 hash of the data
  */
@@ -49,8 +49,8 @@ uint8_t calculate_crc8_hash(const uint8_t *raw_data, const size_t data_size) {
 /**
  * Returns true if the crc8 hash is valid for this data. It assumes that the 8-bit crc hash immediately follows the data
  * 
- * @param rawData   pointer to the data that the hash should be verified for (last byte should be the hash)
- * @param dataSize  size of the data in bytes (including the hash byte)
+ * @param data   pointer to the data that the hash should be verified for (last byte should be the hash)
+ * @param data_size  size of the data in bytes (including the hash byte)
  * 
  * Note that size includes the hash byte. In other words, if you want to verify the hash of n bytes, pass in 
  * an n+1 byte array where the first n bytes are the data and the n+1-th byte is the hash. 
@@ -92,99 +92,99 @@ int cobs_encode(uint8_t *data_to_encode, const uint8_t data_size) {
  * Takes any raw data (up to 252 bytes), and converts into a packet (complete with byte stuffing and a checksum)
  * Packet format: 0x00 [messageID - 1 byte] [COBS] [payload] [checksum(CRC-8) - 1 byte]
  * 
- * @param rawData           the raw payload data as an array of uint8_t
- * @param packetizedData    a pointer to a uint8_t array where the generated packet should be stored
- * @param dataSize          the length of the raw data in bytes
+ * @param raw_data           the raw payload data as an array of uint8_t
+ * @param packetized_data    a pointer to a uint8_t array where the generated packet should be stored
+ * @param data_size          the length of the raw data in bytes
  * @param messageID         a one-byte message id that should be associated with this data (must not be 0)
- * @return                  The length of the packetized data in bytes (always dataSize + 4)
+ * @return                  The length of the packetized data in bytes (always data_size + 4)
  * 
- * packetizedData should be at least 4 bytes longer then the rawData.
+ * packetized_data should be at least 4 bytes longer then the raw_data.
  */
-int generate_packet(const uint8_t *rawData, const uint8_t dataSize, uint8_t *packetizedData, const uint8_t messageID) {
-    packetizedData[PACKET_START_IDX] = 0x00;                               // Byte 1: 0x00
-    packetizedData[MESSAGE_ID_IDX] = messageID;                            // Byte 2: message id
-    memcpy(packetizedData+PAYLOAD_START_IDX, rawData, dataSize);           // Copy payload starting at byte 4
-    int cobs_overwrite_index = cobs_encode(packetizedData + COBS_IDX, dataSize + 2);  // Apply COBS encoding
+int generate_packet(const uint8_t *raw_data, const uint8_t data_size, uint8_t *packetized_data, const uint8_t messageID) {
+    packetized_data[PACKET_START_IDX] = 0x00;                               // Byte 1: 0x00
+    packetized_data[MESSAGE_ID_IDX] = messageID;                            // Byte 2: message id
+    memcpy(packetized_data+PAYLOAD_START_IDX, raw_data, data_size);           // Copy payload starting at byte 4
+    int cobs_overwrite_index = cobs_encode(packetized_data + COBS_IDX, data_size + 2);  // Apply COBS encoding
 
     // Calculate the CRC-8 checksum
-    uint8_t crc = calculate_crc8_hash(packetizedData, dataSize + 4);
+    uint8_t crc = calculate_crc8_hash(packetized_data, data_size + 4);
                                                    
-    if (crc == 0x00) {                                      // Byte dataSize+5: checksum
-        packetizedData[CRC_IDX(dataSize)] = 1;
+    if (crc == 0x00) {                                      // Byte data_size+5: checksum
+        packetized_data[CRC_IDX(data_size)] = 1;
     } else {
-        packetizedData[CRC_IDX(dataSize)] = crc;
-        packetizedData[cobs_overwrite_index + 2]++; // cobs encoding automatically assumed that crc == 0, so we correct the assumption by
+        packetized_data[CRC_IDX(data_size)] = crc;
+        packetized_data[cobs_overwrite_index + 2]++; // cobs encoding automatically assumed that crc == 0, so we correct the assumption by
                                                     // incrementing the last jump by one
     }
 
-    return dataSize + 4;
+    return data_size + 4;
 }
 
 
 /** 
- * Returns true if the crc hash for this packet matches the data. The four overhead bytes should be included in rawData
+ * Returns true if the crc hash for this packet matches the data. The four overhead bytes should be included in raw_data
  * This method may modify the final COBS byte in the packet (the crc hash)
  * 
- * @param rawData   the packet to verify
+ * @param raw_data   the packet to verify
  * @param packetSize  the size of the packet (including the five overhead bytes)
  * 
  * @return true if the packet could be verified, and false otherwise
  * 
  * THE LEADING 0 BYTE SHOULD BE INCLUDED IN THE DATA
  */
-bool verify_packet(uint8_t *rawData, const size_t packetSize) {
+bool verify_packet(uint8_t *raw_data, const size_t packetSize) {
     if (packetSize < 4) return false;
     // First either de-stuff the crc_hash byte if needed or move back the last cobs pointer
 
-    if (rawData[PACKET_START_IDX] != 0) return false; // Leading byte was not 0.
+    if (raw_data[PACKET_START_IDX] != 0) return false; // Leading byte was not 0.
     
     size_t next_cobs_byte = 2;
     while (next_cobs_byte < packetSize) {
-        size_t increment = rawData[next_cobs_byte];
+        size_t increment = raw_data[next_cobs_byte];
         if (increment == 0) return false; // Avoid infinite loops
         else if (next_cobs_byte + increment == packetSize - 1) {
-            rawData[packetSize-1] = 0;
+            raw_data[packetSize-1] = 0;
             break;
         } else if (next_cobs_byte + increment >= packetSize) {
-            rawData[next_cobs_byte]--;
+            raw_data[next_cobs_byte]--;
         }
 
         next_cobs_byte += increment;
     } 
 
-    return verify_crc8_hash(rawData, packetSize);
+    return verify_crc8_hash(raw_data, packetSize);
 }
 
-/** Extracts the stored data from a packet and copies it to the extractedData location 
+/** Extracts the stored data from a packet and copies it to the extracted_data location 
  * 
  * This method assumes that the packet was verified. Please use verify_packet first.
  * 
- * @param rawData   the packet to extract
- * @param dataSize  the size of the packet (including the 5 overhead bytes)
- * @param extractedData the buffer where the extracted data should be stored
+ * @param raw_data   the packet to extract
+ * @param data_size  the size of the packet (including the 5 overhead bytes)
+ * @param extracted_data the buffer where the extracted data should be stored
  * 
- * This method will store exactly dataSize-4 bytes in the extractedData buffer
+ * This method will store exactly data_size-4 bytes in the extracted_data buffer
  * 
  * @return      the message id, or 0 if the message was corrupted
  */
-uint8_t extract_packet(uint8_t *rawData, const size_t dataSize, uint8_t *extractedData) {
-    if (dataSize < 4) return 0;
+uint8_t extract_packet(uint8_t *raw_data, const size_t data_size, uint8_t *extracted_data) {
+    if (data_size < 4) return 0;
 
-    uint8_t message_id = rawData[MESSAGE_ID_IDX];
+    uint8_t message_id = raw_data[MESSAGE_ID_IDX];
 
     if (message_id == 0) return 0;
 
     // First de-stuff the packet
     size_t next_cobs_byte = COBS_IDX;
-    while (next_cobs_byte < dataSize - 1) {
-        uint8_t increment = rawData[next_cobs_byte];
+    while (next_cobs_byte < data_size - 1) {
+        uint8_t increment = raw_data[next_cobs_byte];
         if (increment == 0) return 0;
-        rawData[next_cobs_byte] = 0;
+        raw_data[next_cobs_byte] = 0;
 
         next_cobs_byte += increment;
     }  
 
-    memcpy(extractedData, rawData + PAYLOAD_START_IDX, dataSize - 4);
+    memcpy(extracted_data, raw_data + PAYLOAD_START_IDX, data_size - 4);
 
     return message_id;
 }

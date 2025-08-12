@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['qcpy_0',['qcpy',['../mongoose_8c.html#a4ced14d6928b0916ff43924b97ffb160',1,'mongoose.c']]]
+  ['terminate_5fstorage_5floop_0',['terminate_storage_loop',['../class_buffered_s_q_l_database.html#a6a14258bb6ee256f023771fbc8fa983c',1,'BufferedSQLDatabase']]]
 ];
