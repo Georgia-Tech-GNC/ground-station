@@ -8,5 +8,6 @@ var datatypes_8h =
     [ "DataPacketType", "datatypes_8h.html#a8177281edf91c9421c33891469a41308", [
       [ "ROCKET_KINEMATICS_DATA", "datatypes_8h.html#a8177281edf91c9421c33891469a41308a5625e1605c55761fe8abb144de312d7d", null ],
       [ "ROCKET_SENSOR_DATA", "datatypes_8h.html#a8177281edf91c9421c33891469a41308a4efffbb76c598efeeafb176ae7b97645", null ]
-    ] ]
+    ] ],
+    [ "data_packet_sizes_bytes", "datatypes_8h.html#a02276874ff39bb043ae4fa0591bbcc0d", null ]
 ];

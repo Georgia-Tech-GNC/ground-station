@@ -1,0 +1,66 @@
+\doxysection{source/packets/packet\+\_\+encode.cpp File Reference}
+\hypertarget{packet__encode_8cpp}{}\label{packet__encode_8cpp}\index{source/packets/packet\_encode.cpp@{source/packets/packet\_encode.cpp}}
+{\ttfamily \#include "{}packet\+\_\+encode.\+h"{}}\newline
+{\ttfamily \#include "{}crc\+\_\+hash.\+h"{}}\newline
+{\ttfamily \#include $<$cstring$>$}\newline
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{packet__encode_8cpp_a882f74475c6b79c400432f13e1728a73}{CRC\+\_\+\+IDX}}(payload\+\_\+len)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const size\+\_\+t \mbox{\hyperlink{packet__encode_8cpp_a54208ad973e141fe20d43dad57da2d91}{PACKET\+\_\+\+START\+\_\+\+IDX}} = 0
+\item 
+const size\+\_\+t \mbox{\hyperlink{packet__encode_8cpp_a2fb80c071b98ed57bcbf11ab32b2f8ff}{MESSAGE\+\_\+\+ID\+\_\+\+IDX}} = 1
+\item 
+const size\+\_\+t \mbox{\hyperlink{packet__encode_8cpp_a1ed6551f97f1862e2cdab124ca306022}{COBS\+\_\+\+IDX}} = 2
+\item 
+const size\+\_\+t \mbox{\hyperlink{packet__encode_8cpp_a28e081e9e6d2e70c010d48f848002c2a}{PAYLOAD\+\_\+\+START\+\_\+\+IDX}} = 3
+\end{DoxyCompactItemize}
+
+
+\label{doc-define-members}
+\Hypertarget{packet__encode_8cpp_doc-define-members}
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{packet__encode_8cpp_a882f74475c6b79c400432f13e1728a73}\index{packet\_encode.cpp@{packet\_encode.cpp}!CRC\_IDX@{CRC\_IDX}}
+\index{CRC\_IDX@{CRC\_IDX}!packet\_encode.cpp@{packet\_encode.cpp}}
+\doxysubsubsection{\texorpdfstring{CRC\_IDX}{CRC\_IDX}}
+{\footnotesize\ttfamily \label{packet__encode_8cpp_a882f74475c6b79c400432f13e1728a73} 
+\#define CRC\+\_\+\+IDX(\begin{DoxyParamCaption}\item[{}]{payload\+\_\+len}{}\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{((payload\_len)\ +\ \mbox{\hyperlink{ground__station__rocketlib_8c_a28e081e9e6d2e70c010d48f848002c2a}{PAYLOAD\_START\_IDX}})}
+
+\end{DoxyCode}
+
+
+\label{doc-var-members}
+\Hypertarget{packet__encode_8cpp_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{packet__encode_8cpp_a1ed6551f97f1862e2cdab124ca306022}\index{packet\_encode.cpp@{packet\_encode.cpp}!COBS\_IDX@{COBS\_IDX}}
+\index{COBS\_IDX@{COBS\_IDX}!packet\_encode.cpp@{packet\_encode.cpp}}
+\doxysubsubsection{\texorpdfstring{COBS\_IDX}{COBS\_IDX}}
+{\footnotesize\ttfamily \label{packet__encode_8cpp_a1ed6551f97f1862e2cdab124ca306022} 
+const size\+\_\+t COBS\+\_\+\+IDX = 2}
+
+\Hypertarget{packet__encode_8cpp_a2fb80c071b98ed57bcbf11ab32b2f8ff}\index{packet\_encode.cpp@{packet\_encode.cpp}!MESSAGE\_ID\_IDX@{MESSAGE\_ID\_IDX}}
+\index{MESSAGE\_ID\_IDX@{MESSAGE\_ID\_IDX}!packet\_encode.cpp@{packet\_encode.cpp}}
+\doxysubsubsection{\texorpdfstring{MESSAGE\_ID\_IDX}{MESSAGE\_ID\_IDX}}
+{\footnotesize\ttfamily \label{packet__encode_8cpp_a2fb80c071b98ed57bcbf11ab32b2f8ff} 
+const size\+\_\+t MESSAGE\+\_\+\+ID\+\_\+\+IDX = 1}
+
+\Hypertarget{packet__encode_8cpp_a54208ad973e141fe20d43dad57da2d91}\index{packet\_encode.cpp@{packet\_encode.cpp}!PACKET\_START\_IDX@{PACKET\_START\_IDX}}
+\index{PACKET\_START\_IDX@{PACKET\_START\_IDX}!packet\_encode.cpp@{packet\_encode.cpp}}
+\doxysubsubsection{\texorpdfstring{PACKET\_START\_IDX}{PACKET\_START\_IDX}}
+{\footnotesize\ttfamily \label{packet__encode_8cpp_a54208ad973e141fe20d43dad57da2d91} 
+const size\+\_\+t PACKET\+\_\+\+START\+\_\+\+IDX = 0}
+
+\Hypertarget{packet__encode_8cpp_a28e081e9e6d2e70c010d48f848002c2a}\index{packet\_encode.cpp@{packet\_encode.cpp}!PAYLOAD\_START\_IDX@{PAYLOAD\_START\_IDX}}
+\index{PAYLOAD\_START\_IDX@{PAYLOAD\_START\_IDX}!packet\_encode.cpp@{packet\_encode.cpp}}
+\doxysubsubsection{\texorpdfstring{PAYLOAD\_START\_IDX}{PAYLOAD\_START\_IDX}}
+{\footnotesize\ttfamily \label{packet__encode_8cpp_a28e081e9e6d2e70c010d48f848002c2a} 
+const size\+\_\+t PAYLOAD\+\_\+\+START\+\_\+\+IDX = 3}
+

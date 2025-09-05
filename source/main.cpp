@@ -16,6 +16,7 @@ int main() {
 
     std::thread t1(&BufferedSQLDatabase::run_storage_loop, std::ref(db));
 
+    // TODO: read these from serial as packets.
     db.add_entry(DataEntry(RocketKinematicsData(.1, .2, .3, 12, 13)), 0);
     db.add_entry(DataEntry(RocketKinematicsData(.2, .2, .3, 12, 13)), 1);
     db.add_entry(DataEntry(RocketKinematicsData(.3, .2, .3, 12, 13)), 2);

@@ -24,7 +24,7 @@ struct {{data_packet.title_name}} {
     {{data_packet.title_name}}(): 
         {{ data_packet.variables | map("strformat", "{0[name]}({0[type].default_value})" ) | join(", ") }} { }
 
-    {{data_packet.title_name}}(const std::byte (&raw_array)[{{data_packet.byteform.length}}]); 
+    {{data_packet.title_name}}(const std::byte (&raw_array)[{{data_packet.variables | map(attribute="type.size") | sum}}]); 
     {{data_packet.title_name}}({{ data_packet.variables | map("strformat", "{0[type].typename} _{0[name]}" )| join(", ") }}):
         {{ data_packet.variables | map(attribute="name") | map("strformat", "{0}(_{0})" ) | join(", ") }} { }
     {{data_packet.title_name}}(const {{data_packet.title_name}}&) = default;

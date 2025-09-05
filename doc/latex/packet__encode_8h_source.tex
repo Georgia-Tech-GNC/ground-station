@@ -1,0 +1,22 @@
+\doxysection{packet\+\_\+encode.\+h}
+\hypertarget{packet__encode_8h_source}{}\label{packet__encode_8h_source}\index{include/packets/packet\_encode.h@{include/packets/packet\_encode.h}}
+\mbox{\hyperlink{packet__encode_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ PACKET\_ENCODE}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ PACKET\_ENCODE}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <cstddef>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00019\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{packet__encode_8h_a13430e23feecde26df33bba9bfa1724f}{generate\_packet}}(\textcolor{keyword}{const}\ uint8\_t\ *raw\_data,\ \textcolor{keyword}{const}\ uint8\_t\ data\_size,\ uint8\_t\ *packetized\_data,\ \textcolor{keyword}{const}\ uint8\_t\ message\_id);}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00032\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{packet__encode_8h_a55b2eb83462202a3f10a77d08b9adf44}{verify\_packet}}(uint8\_t\ *raw\_data,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ packet\_size);}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00046\ uint8\_t\ \mbox{\hyperlink{packet__encode_8h_ae0c2aa141e02c88730de71a03e71212d}{extract\_packet}}(uint8\_t\ *rawData,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ dataSize,\ uint8\_t\ *extractedData);}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00057\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{packet__encode_8h_a569c9ac7863b6c24d6ce2de67fb66d3d}{process\_incoming\_byte}}(\textcolor{keyword}{const}\ uint8\_t\ inputted\_byte,\ uint8\_t\ *buffer,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ current\_buffer\_size);}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

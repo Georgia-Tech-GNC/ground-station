@@ -8,6 +8,10 @@
 
 #include "sqlite3.h"
 
+const size_t data_packet_sizes_bytes[] = {
+    
+};
+
 enum class DataPacketType {
     ROCKET_KINEMATICS_DATA,
     ROCKET_SENSOR_DATA,

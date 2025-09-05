@@ -1,0 +1,155 @@
+\doxysection{include/packets/packet\+\_\+encode.h File Reference}
+\hypertarget{packet__encode_8h}{}\label{packet__encode_8h}\index{include/packets/packet\_encode.h@{include/packets/packet\_encode.h}}
+{\ttfamily \#include $<$cstdint$>$}\newline
+{\ttfamily \#include $<$cstddef$>$}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{packet__encode_8h_a13430e23feecde26df33bba9bfa1724f}{generate\+\_\+packet}} (const uint8\+\_\+t \texorpdfstring{$\ast$}{*}raw\+\_\+data, const uint8\+\_\+t data\+\_\+size, uint8\+\_\+t \texorpdfstring{$\ast$}{*}packetized\+\_\+data, const uint8\+\_\+t message\+\_\+id)
+\item 
+bool \mbox{\hyperlink{packet__encode_8h_a55b2eb83462202a3f10a77d08b9adf44}{verify\+\_\+packet}} (uint8\+\_\+t \texorpdfstring{$\ast$}{*}raw\+\_\+data, const size\+\_\+t packet\+\_\+size)
+\item 
+uint8\+\_\+t \mbox{\hyperlink{packet__encode_8h_ae0c2aa141e02c88730de71a03e71212d}{extract\+\_\+packet}} (uint8\+\_\+t \texorpdfstring{$\ast$}{*}raw\+Data, const size\+\_\+t data\+Size, uint8\+\_\+t \texorpdfstring{$\ast$}{*}extracted\+Data)
+\item 
+int \mbox{\hyperlink{packet__encode_8h_a569c9ac7863b6c24d6ce2de67fb66d3d}{process\+\_\+incoming\+\_\+byte}} (const uint8\+\_\+t inputted\+\_\+byte, uint8\+\_\+t \texorpdfstring{$\ast$}{*}buffer, const int current\+\_\+buffer\+\_\+size)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{packet__encode_8h_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{packet__encode_8h_ae0c2aa141e02c88730de71a03e71212d}\index{packet\_encode.h@{packet\_encode.h}!extract\_packet@{extract\_packet}}
+\index{extract\_packet@{extract\_packet}!packet\_encode.h@{packet\_encode.h}}
+\doxysubsubsection{\texorpdfstring{extract\_packet()}{extract\_packet()}}
+{\footnotesize\ttfamily \label{packet__encode_8h_ae0c2aa141e02c88730de71a03e71212d} 
+uint8\+\_\+t extract\+\_\+packet (\begin{DoxyParamCaption}\item[{uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{raw\+\_\+data}{, }\item[{const size\+\_\+t}]{data\+\_\+size}{, }\item[{uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{extracted\+\_\+data}{}\end{DoxyParamCaption})}
+
+Extracts the stored data from a packet and copies it to the extracted\+Data location
+
+This method assumes that the packet was verified. Please use verify\+\_\+packet first.
+
+
+\begin{DoxyParams}{Parameters}
+{\em raw\+Data} & the packet to extract \\
+\hline
+{\em data\+Size} & the size of the packet (including the 5 overhead bytes) \\
+\hline
+{\em extracted\+Data} & the buffer where the extracted data should be stored\\
+\hline
+\end{DoxyParams}
+This method will store exactly data\+Size-\/5 bytes in the extracted\+Data buffer
+
+\begin{DoxyReturn}{Returns}
+the message id, or 0 if the message was corrupted
+\end{DoxyReturn}
+Extracts the stored data from a packet and copies it to the extracted\+\_\+data location
+
+This method assumes that the packet was verified. Please use verify\+\_\+packet first.
+
+
+\begin{DoxyParams}{Parameters}
+{\em raw\+\_\+data} & the packet to extract \\
+\hline
+{\em data\+\_\+size} & the size of the packet (including the 5 overhead bytes) \\
+\hline
+{\em extracted\+\_\+data} & the buffer where the extracted data should be stored\\
+\hline
+\end{DoxyParams}
+This method will store exactly data\+\_\+size-\/4 bytes in the extracted\+\_\+data buffer
+
+\begin{DoxyReturn}{Returns}
+the message id, or 0 if the message was corrupted 
+\end{DoxyReturn}
+\Hypertarget{packet__encode_8h_a13430e23feecde26df33bba9bfa1724f}\index{packet\_encode.h@{packet\_encode.h}!generate\_packet@{generate\_packet}}
+\index{generate\_packet@{generate\_packet}!packet\_encode.h@{packet\_encode.h}}
+\doxysubsubsection{\texorpdfstring{generate\_packet()}{generate\_packet()}}
+{\footnotesize\ttfamily \label{packet__encode_8h_a13430e23feecde26df33bba9bfa1724f} 
+int generate\+\_\+packet (\begin{DoxyParamCaption}\item[{const uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{raw\+\_\+data}{, }\item[{const uint8\+\_\+t}]{data\+\_\+size}{, }\item[{uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{packetized\+\_\+data}{, }\item[{const uint8\+\_\+t}]{message\+ID}{}\end{DoxyParamCaption})}
+
+Takes any raw data (up to 252 bytes), and converts into a packet (complete with byte stuffing and a checksum) Packet format\+: 0x00 \mbox{[}message\+\_\+id -\/ 1 byte\mbox{]} \mbox{[}COBS\mbox{]} \mbox{[}payload\mbox{]} \mbox{[}checksum(CRC-\/8) -\/ 1 byte\mbox{]}
+
+
+\begin{DoxyParams}{Parameters}
+{\em raw\+\_\+data} & the raw payload data as an array of uint8\+\_\+t \\
+\hline
+{\em packetized\+\_\+data} & a pointer to a uint8\+\_\+t array where the generated packet should be stored \\
+\hline
+{\em data\+\_\+size} & the length of the raw data in bytes \\
+\hline
+{\em message\+\_\+id} & a one-\/byte message id that should be associated with this data (must not be 0) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The length of the packetized data in bytes (always data\+\_\+size + 4)
+\end{DoxyReturn}
+packetized\+\_\+data should be at least 4 bytes longer then the raw\+\_\+data.
+
+Takes any raw data (up to 252 bytes), and converts into a packet (complete with byte stuffing and a checksum) Packet format\+: 0x00 \mbox{[}message\+ID -\/ 1 byte\mbox{]} \mbox{[}COBS\mbox{]} \mbox{[}payload\mbox{]} \mbox{[}checksum(CRC-\/8) -\/ 1 byte\mbox{]}
+
+
+\begin{DoxyParams}{Parameters}
+{\em raw\+\_\+data} & the raw payload data as an array of uint8\+\_\+t \\
+\hline
+{\em packetized\+\_\+data} & a pointer to a uint8\+\_\+t array where the generated packet should be stored \\
+\hline
+{\em data\+\_\+size} & the length of the raw data in bytes \\
+\hline
+{\em message\+ID} & a one-\/byte message id that should be associated with this data (must not be 0) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The length of the packetized data in bytes (always data\+\_\+size + 4)
+\end{DoxyReturn}
+packetized\+\_\+data should be at least 4 bytes longer then the raw\+\_\+data. \Hypertarget{packet__encode_8h_a569c9ac7863b6c24d6ce2de67fb66d3d}\index{packet\_encode.h@{packet\_encode.h}!process\_incoming\_byte@{process\_incoming\_byte}}
+\index{process\_incoming\_byte@{process\_incoming\_byte}!packet\_encode.h@{packet\_encode.h}}
+\doxysubsubsection{\texorpdfstring{process\_incoming\_byte()}{process\_incoming\_byte()}}
+{\footnotesize\ttfamily \label{packet__encode_8h_a569c9ac7863b6c24d6ce2de67fb66d3d} 
+int process\+\_\+incoming\+\_\+byte (\begin{DoxyParamCaption}\item[{const uint8\+\_\+t}]{inputted\+\_\+byte}{, }\item[{uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{buffer}{, }\item[{const int}]{current\+\_\+buffer\+\_\+size}{}\end{DoxyParamCaption})}
+
+Process the incoming byte and add it to a buffer
+
+
+\begin{DoxyParams}{Parameters}
+{\em inputted\+\_\+byte} & the recieved byte \\
+\hline
+{\em buffer} & the buffer that stores recieved bytes \\
+\hline
+{\em current\+\_\+buffer\+\_\+size} & the size of the buffer currently in use \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The new buffer size. If the value is negative, then the complete message has been recieved (the length is the absolute value of the returned value) 
+\end{DoxyReturn}
+\Hypertarget{packet__encode_8h_a55b2eb83462202a3f10a77d08b9adf44}\index{packet\_encode.h@{packet\_encode.h}!verify\_packet@{verify\_packet}}
+\index{verify\_packet@{verify\_packet}!packet\_encode.h@{packet\_encode.h}}
+\doxysubsubsection{\texorpdfstring{verify\_packet()}{verify\_packet()}}
+{\footnotesize\ttfamily \label{packet__encode_8h_a55b2eb83462202a3f10a77d08b9adf44} 
+bool verify\+\_\+packet (\begin{DoxyParamCaption}\item[{uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{raw\+\_\+data}{, }\item[{const size\+\_\+t}]{packet\+Size}{}\end{DoxyParamCaption})}
+
+Returns true if the crc hash for this packet matches the data. The four overhead bytes should be included in raw\+\_\+data This method may modify the final COBS byte in the packet (the crc hash)
+
+
+\begin{DoxyParams}{Parameters}
+{\em raw\+\_\+data} & the packet to verify \\
+\hline
+{\em packet\+\_\+size} & the size of the packet (including the five overhead bytes)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the packet could be verified, and false otherwise
+\end{DoxyReturn}
+THE LEADING 0 BYTE SHOULD BE INCLUDED IN THE DATA
+
+Returns true if the crc hash for this packet matches the data. The four overhead bytes should be included in raw\+\_\+data This method may modify the final COBS byte in the packet (the crc hash)
+
+
+\begin{DoxyParams}{Parameters}
+{\em raw\+\_\+data} & the packet to verify \\
+\hline
+{\em packet\+Size} & the size of the packet (including the five overhead bytes)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the packet could be verified, and false otherwise
+\end{DoxyReturn}
+THE LEADING 0 BYTE SHOULD BE INCLUDED IN THE DATA 

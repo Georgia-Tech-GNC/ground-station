@@ -1,0 +1,19 @@
+\doxysection{crc\+\_\+hash.\+h}
+\hypertarget{crc__hash_8h_source}{}\label{crc__hash_8h_source}\index{include/packets/crc\_hash.h@{include/packets/crc\_hash.h}}
+\mbox{\hyperlink{crc__hash_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ CRC\_HASH}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ CRC\_HASH}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <cstddef>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00015\ uint8\_t\ \mbox{\hyperlink{crc__hash_8h_a49185d14ff50226ec2dca4957bd15095}{calculate\_crc8\_hash}}(\textcolor{keyword}{const}\ uint8\_t\ *raw\_data,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ data\_size);}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00029\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{crc__hash_8h_a36f0bd65d2cbda1a019d34972eba000d}{verify\_crc8\_hash}}(\textcolor{keyword}{const}\ uint8\_t\ *data,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ data\_size)\ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordflow}{return}\ 0\ ==\ \mbox{\hyperlink{crc__hash_8h_a49185d14ff50226ec2dca4957bd15095}{calculate\_crc8\_hash}}(data,\ data\_size);}
+\DoxyCodeLine{00031\ \}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

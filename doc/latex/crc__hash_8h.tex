@@ -1,0 +1,54 @@
+\doxysection{include/packets/crc\+\_\+hash.h File Reference}
+\hypertarget{crc__hash_8h}{}\label{crc__hash_8h}\index{include/packets/crc\_hash.h@{include/packets/crc\_hash.h}}
+{\ttfamily \#include $<$cstdint$>$}\newline
+{\ttfamily \#include $<$cstddef$>$}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{crc__hash_8h_a49185d14ff50226ec2dca4957bd15095}{calculate\+\_\+crc8\+\_\+hash}} (const uint8\+\_\+t \texorpdfstring{$\ast$}{*}raw\+\_\+data, const size\+\_\+t data\+\_\+size)
+\item 
+bool \mbox{\hyperlink{crc__hash_8h_a36f0bd65d2cbda1a019d34972eba000d}{verify\+\_\+crc8\+\_\+hash}} (const uint8\+\_\+t \texorpdfstring{$\ast$}{*}data, const size\+\_\+t data\+\_\+size)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{crc__hash_8h_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{crc__hash_8h_a49185d14ff50226ec2dca4957bd15095}\index{crc\_hash.h@{crc\_hash.h}!calculate\_crc8\_hash@{calculate\_crc8\_hash}}
+\index{calculate\_crc8\_hash@{calculate\_crc8\_hash}!crc\_hash.h@{crc\_hash.h}}
+\doxysubsubsection{\texorpdfstring{calculate\_crc8\_hash()}{calculate\_crc8\_hash()}}
+{\footnotesize\ttfamily \label{crc__hash_8h_a49185d14ff50226ec2dca4957bd15095} 
+uint8\+\_\+t calculate\+\_\+crc8\+\_\+hash (\begin{DoxyParamCaption}\item[{const uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{raw\+\_\+data}{, }\item[{const size\+\_\+t}]{data\+\_\+size}{}\end{DoxyParamCaption})}
+
+Returns the 8-\/bit CRC hash of this data
+
+
+\begin{DoxyParams}{Parameters}
+{\em raw\+\_\+data} & pointer to the data that the hash should be calculated for \\
+\hline
+{\em data\+\_\+size} & size of the data in bytes\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the CRC8 hash of the data 
+\end{DoxyReturn}
+\Hypertarget{crc__hash_8h_a36f0bd65d2cbda1a019d34972eba000d}\index{crc\_hash.h@{crc\_hash.h}!verify\_crc8\_hash@{verify\_crc8\_hash}}
+\index{verify\_crc8\_hash@{verify\_crc8\_hash}!crc\_hash.h@{crc\_hash.h}}
+\doxysubsubsection{\texorpdfstring{verify\_crc8\_hash()}{verify\_crc8\_hash()}}
+{\footnotesize\ttfamily \label{crc__hash_8h_a36f0bd65d2cbda1a019d34972eba000d} 
+bool verify\+\_\+crc8\+\_\+hash (\begin{DoxyParamCaption}\item[{const uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{data}{, }\item[{const size\+\_\+t}]{data\+\_\+size}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Returns true if the crc8 hash is valid for this data. It assumes that the 8-\/bit crc hash immediately follows the data
+
+
+\begin{DoxyParams}{Parameters}
+{\em data} & pointer to the data that the hash should be verified for (last byte should be the hash) \\
+\hline
+{\em data\+\_\+size} & size of the data in bytes (including the hash byte)\\
+\hline
+\end{DoxyParams}
+Note that size includes the hash byte. In other words, if you want to verify the hash of n bytes, pass in an n+1 byte array where the first n bytes are the data and the n+1-\/th byte is the hash. data\+\_\+size should also equal n+1.
+
+\begin{DoxyReturn}{Returns}
+true if the hash was valid, and false otherwise 
+\end{DoxyReturn}
