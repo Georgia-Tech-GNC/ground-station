@@ -31,7 +31,7 @@ class RocketHealthTracker:
 
     def update(self):
         try:
-            r = requests.get('http://0.0.0.0:8080/api/packets/info', timeout=0.1)
+            r = requests.get('http://0.0.0.0:8000/api/packets/info', timeout=0.1)
             if (r.status_code != 200):
                 self.connected_to_ground = False
                 return

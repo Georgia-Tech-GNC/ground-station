@@ -71,7 +71,7 @@ void toggle_radio_log(int sig_no) {
 
 bool initialize() {
   if (generate_new_database(&db) != PROCESS_SUCCESSFUL_CODE) return false;
-  if (!initialize_web_server(&manager, "http://0.0.0.0:8080", db)) return false;
+  if (!initialize_web_server(&manager, "http://0.0.0.0:8000", db)) return false;
   initialize_command_stack();
 
   // TODO: Open Serial Port
