@@ -2,7 +2,7 @@
     "WEB_SERVER_URL": "http://0.0.0.0:8000",
 
     "COMMANDS": [
-        "PING_ROCKET", "ARM", "DEPLOY_PYRO", "ESTOP"
+        "PING_ROCKET", "ARM", "DEPLOY_PYRO", "ESTOP", "FLASH_SD"
     ],
 
     "DATA_MESSAGES": {
