@@ -6,7 +6,7 @@ protocol/build/
 build-*
 .direnv
 __pycache__
-*.db
+.db
 result
 passwords.txt
 .nixos-test-history
