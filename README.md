@@ -1,22 +1,14 @@
-## Development (ground-station-core)
 
-Shell environment (with Python, etc):
-`nix develop`
 
-Shell for cross-compiling (only when running gcc et al yourself):
-`nix develop .#devShells.x86_64-linux.cross`
+## Packet Structure
 
-```bash
-# run an interactive test with a virtual machine
-nix build -L .#checks.x86_64-linux.<test-name>.driverInteractive && ./result/bin/nixos-test-driver
-```
+| 0x00 | abxxxxxx | counter | ... | crc-8 |
+| :------: | :------: | :------: | :------: | :------: |
+| start byte | Packet identifier | Counter or COBS byte | optional payload | checksum (or 0xFF if a=1) |
 
-## Building (ground-station-core)
-
-To cross-compile for Raspberry Pi (64-bit):
-```sh
-apt install build-essential crossbuild-essential-arm64 # Debian
-
-cd ground-station-core
-CROSS=aarch64-linux-gnu make
-```
+#### Packet identifier rules:
+| bit | description | details |
+| :------: | :------: | :------: | 
+| a | crc8 zero flag | If set, the packet checksum is 0 and the crc-8 bit will be 0xFF as a placeholder |
+| b | acknowledgement flag  | If set, this packet is the an acknowledgement packet |
+| xxxxxx | packet identifier | Unique packet identifier. Also determines if the packet contains a payload. |

@@ -1,0 +1,33 @@
+#ifndef GS_CORE_H
+#define GS_CORE_H
+
+#include "stddef.h"
+#include "stdint.h"
+
+enum : size_t {
+    {% for data_packet in data_packets %}
+    GS_{{data_packet.name.c_name | upper}}_DATA_PAYLOAD_SIZE = {{data_packet.encoded_length}}{{"," if not loop.last }}
+    {% endfor %}
+};
+
+{% for data_packet in data_packets %}
+typedef struct GS_{{data_packet.name.c_name | upper}} {
+    {% for field in data_packet.fields %}
+    {{field.datatype.c_type}} {{field.name.c_name}};
+    {% endfor %}
+} gs_{{data_packet.name.c_name}}_data_t;
+
+void gs_encode_{{data_packet.name.c_name}}_data(
+    {% for field in data_packet.fields %}
+    const {{field.datatype.c_type}} {{field.name.c_name}},
+    {% endfor %}
+    uint8_t* buffer
+);
+
+void gs_decode_{{data_packet.name.c_name}}_data(
+    const uint8_t* const buffer,
+    gs_{{data_packet.name.c_name}}_data_t* data
+);
+{% endfor %}
+
+#endif
