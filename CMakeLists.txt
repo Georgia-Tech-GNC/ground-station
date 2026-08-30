@@ -6,9 +6,10 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS ON)
 
 ########################################### Run Templating ###########################################
-find_package(Python REQUIRED COMPONENTS Interpreter)
+find_program(UV_EXECUTABLE uv REQUIRED)
 add_custom_target(configure_ground_station
-    COMMAND ${Python_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/templating/parser.py"
+    COMMAND ${UV_EXECUTABLE} run --project "${CMAKE_CURRENT_SOURCE_DIR}" 
+        python "${CMAKE_CURRENT_SOURCE_DIR}/templating/parser.py"
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     COMMENT "Configuring ground station source..."
 )
