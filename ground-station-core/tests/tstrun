@@ -1,4 +1,0 @@
-#!/bin/bash
-
-./t_crc_hash 2> output/output_crc_hash.txt
-./t_packet_encode 2> output/output_packet_encode.txt

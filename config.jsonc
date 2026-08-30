@@ -1,0 +1,15 @@
+{
+    "data_packets": [
+        {
+            "name": "rocket kinematics",
+            "attributes": {
+                "yaw": "float",
+                "pitch": "float",
+                "state": "int8",
+                "roll": "float",
+                "x": {"name": "q16", "max": 10},
+                "velocity": {"name": "qfloat16", "max": 123.2347934, "min": 0}
+            }
+        }
+    ]
+}

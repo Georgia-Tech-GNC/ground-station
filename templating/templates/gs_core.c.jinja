@@ -1,0 +1,33 @@
+#include "gs_core.h"
+#include "data_helpers.h"
+#include "packet_helpers.h"
+
+#include "string.h"
+
+{% set temp = namespace(i=0) %}
+{% for data_packet in data_packets %}
+
+void gs_encode_{{data_packet.name.c_name}}_data(
+    {% for field in data_packet.fields %}
+    const {{field.datatype.c_type}} {{field.name.c_name}},
+    {% endfor %}
+    uint8_t* buffer
+) {
+    {% set temp.i = 0%}
+    {% for field in data_packet.fields | reverse %}
+    {{field.datatype.encoding_method | format("buffer + %d", field.name.c_name) | format(temp.i)}};
+    {% set temp.i = temp.i + field.datatype.num_bytes %}
+    {% endfor -%} 
+}
+
+void gs_decode_{{data_packet.name.c_name}}_data(
+    const uint8_t* const buffer,
+    gs_{{data_packet.name.c_name}}_data_t* data
+) {
+    {% set temp.i = 0%}
+    {% for field in data_packet.fields | reverse %}
+    {{field.datatype.decoding_method | format("data->%s", "buffer + %d") | format(field.name.c_name, temp.i)}};
+    {% set temp.i = temp.i + field.datatype.num_bytes %}
+    {% endfor -%} 
+}
+{% endfor %}
