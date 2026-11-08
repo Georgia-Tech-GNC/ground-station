@@ -14,7 +14,7 @@ add_custom_target(configure_ground_station
 )
 
 ################################## Build Ground Station Core Module ##################################
-add_library(ground_station_core STATIC 
+add_library(ground_station_core STATIC
     ${CMAKE_CURRENT_SOURCE_DIR}/core/gs_core.c
     ${CMAKE_CURRENT_SOURCE_DIR}/core/private/data_helpers.c 
     ${CMAKE_CURRENT_SOURCE_DIR}/core/private/packet_helpers.c 
@@ -24,3 +24,6 @@ target_include_directories(ground_station_core
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/core
 )
 add_dependencies(ground_station_core configure_ground_station)
+
+#################################### Build Ground Station Server #####################################
+add_subdirectory(server)
