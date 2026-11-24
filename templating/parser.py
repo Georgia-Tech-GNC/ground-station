@@ -1,5 +1,5 @@
 import jinja2
-from pyjson5 import decode
+from json5 import loads
 from dataclasses import dataclass, asdict
 
 from datatypes import DataType, parse_type
@@ -36,7 +36,7 @@ class DataPacket:
 
 # Generate specification
 with open('config.jsonc', 'r') as f:
-    raw_json = decode(f.read())
+    raw_json = loads(f.read())
 
 data_packets = [DataPacket.from_dict(i) for i in raw_json['data_packets']]
 
